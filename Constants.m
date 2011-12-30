@@ -1,0 +1,42 @@
+//
+//  Constants.m
+//
+//  Created by Ian Binnie on 24/07/12.
+//  Copyright (c) 2012 Ian Binnie. All rights reserved.
+//
+
+// PreferencesController Key Constants
+NSString *const PREF_SORT_FIELD = @"sortField";
+NSString *const PREF_SORT_DIRECTION = @"ascendingSort";
+NSString *const PREF_DIRECTORY_ICON = @"iconInDirectory";
+NSString *const PREF_FILE_ICON = @"iconInFile";
+NSString *const PREF_HIDDEN_FILES = @"hiddenFiles";
+NSString *const PREF_AUTOMATIC_REFRESH = @"automaticRefresh";
+NSString *const PREF_SPLIT_PERCENTAGE = @"splitPercentage";
+NSString *const PREF_DEFAULT_DIR = @"defaultDirectory";
+NSString *const PREF_REFRESH_DIR = @"refreshDirectory";
+
+NSString *const PREF_FILE_COLUMN_WIDTH = @"FileColumnWidth";
+NSString *const PREF_FILE_COLUMN_HIDDEN = @"FileColumnHidden";
+NSString *const PREF_FILE_COLUMN_ORDER = @"FileColumnOrder";
+NSString *const PREF_DIR_COLUMN_WIDTH = @"DirColumnWidth";
+NSString *const PREF_DIR_COLUMN_HIDDEN = @"DirColumnHidden";
+NSString *const PREF_DIR_COLUMN_ORDER = @"DirColumnOrder";
+
+NSString *const PREF_DATE_WIDTH = @"DateWidth";
+NSString *const PREF_DATE_RELATIVE = @"relativeDate";
+NSString *const PREF_DATE_FORMAT = @"dateFormat";
+NSString *const PREF_DATE_SHOW_CREATE = @"createTime";
+
+NSString *const PreferencesControllerDateWidthsDidChangeNotification = @"DateChanged";
+NSString *const DirectoryItemDidRemoveDirectoriesNotification = @"DirectoriesRemoved";
+
+// Column Identifier Key Constants
+NSString *const COLUMNID_NAME = @"relativePath";
+NSString *const COLUMNID_DATE = @"wDate";
+NSString *const COLUMNID_CREATION = @"cDate";
+NSString *const COLUMNID_SIZE = @"fileSize";
+NSString *const COLUMNID_KIND = @"kind";
+NSString *const COLUMNID_TAG = @"tag";
+
+

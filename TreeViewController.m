@@ -1,0 +1,413 @@
+//
+//  TreeViewController.m
+//  QuollEyeTree
+//
+//  Created by Ian Binnie on 13/06/11.
+//  Copyright 2011 Ian Binnie. All rights reserved.
+//
+
+#import "TreeViewController.h"
+#import "MyWindowController.h"
+#import "volume.h"
+#import "DirectoryItem.h"
+#import "FileItem.h"
+#import "ImageAndTextCell.h"
+#import "NSString+Parse.h"
+#import "IBDateFormatter.h"
+#import "TextViewerController.h"
+
+@interface TreeViewController()
+- (void)setTreeRootNode:(DirectoryItem *)node;
+- (BOOL)restoreSplitView;
+- (void)toggleTopSubView:(id)sender;
+- (BOOL)areFilesVisible;
+- (BOOL)isFileSelected;
+- (void)setDirMenu;
+- (void)setFileMenu;
+- (void)enterFileView;
+- (void)enterDirView;
+- (BOOL)areFilesTagged;
+- (void)setPanel;
+- (void)applyFileAndTagFilter:(NSPredicate *)filePredicate;
+@end
+@interface TreeViewController(Files)
+- (void)exitFileViewer;
+@end
+@interface TreeViewController(Dirs)
+- (void)updateSelectedDir;
+@end
+
+@implementation TreeViewController
+
+- (void)setRoot {
+	[self setTreeRootNode:[self.selectedDir rootDir]];
+}
+- (IBAction)setNewRoot:(id)sender {
+	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
+	[self setTreeRootNode:self.selectedDir];
+}
+- (NSString *)rootDirName {
+	return [dataRoot relativePath];
+}
+// toggle the expanded/collapsed state of splitViewTop
+- (void)toggleTopSubView:(id)sender {
+	if(![self restoreSplitView]) {
+		if([self isFileSelected]) {
+			// Normal split - save position
+			previousSplitViewHeight = [self.splitViewTop frame].size.height;
+			[self.splitViewTop setHidden:YES];
+			[self.fileList.window makeFirstResponder:self.fileList];
+		}
+	}
+    [self.split adjustSubviews];
+}
+- (void)setPanel {
+	NSArray *selection = [self.arrayController selectedObjects];
+	if ([selection count] == 1) {
+		[self.delegate treeViewController:self setPanelData:[NSArray arrayWithObject:[selection objectAtIndex:0]]];
+	}
+}
+
+#pragma mark Toolbar Button Actions
+- (void)segControlClicked:(id)sender {
+    int clickedSegment = [sender selectedSegment];
+    int clickedSegmentTag = [[sender cell] tagForSegment:clickedSegment];
+	switch (clickedSegmentTag) {
+		case 0:	// left - return to root directory
+			[self setRoot];
+//			[sender setEnabled:NO forSegment:0];
+			break;
+		case 1:	// middle - set new root directory
+			[self setNewRoot:self];
+//			[sender setEnabled:YES forSegment:0];
+			break;
+		case 2:	// toggle the File List View
+			[self toggleTopSubView:self];
+			[self enterFileView];
+			break;
+		default:
+			break;
+	}
+}
+// Make compound Predicate from file Predicate depending on state of showOnlyTagged
+- (void)applyFileAndTagFilter:(NSPredicate *)filePredicate {
+	if(showOnlyTagged) {
+        NSPredicate *filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filePredicate, tagPredicate, nil]];
+        [self.arrayController setFilterPredicate:filterPredicate];
+        return;
+	}
+	[self.arrayController setFilterPredicate:filePredicate];
+}
+#pragma mark  Selectors
+- (void)dClickPath:(id)sender {
+    NSString *pp = [[[sender clickedPathComponentCell] URL] path];
+    DirectoryItem *targetDir = findPathInVolumes(pp);
+    [self restoreSplitView];    // back to normal Dir view if necessary
+    [self setTreeRootNode:targetDir];
+}
+#pragma mark Menu Actions
+- (void)togglePreviewPanel {
+    if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible]) {
+        [[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
+		quickLook = NO;
+    } else {
+        [[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
+		quickLook = YES;
+		[self setPanel];
+    }
+}
+- (void)toggleShowTagged {
+	showOnlyTagged = !showOnlyTagged;
+	[self.delegate treeViewController:self tabState:showOnlyTagged];
+	[self applyFileAndTagFilter:fileFilterPredicate];
+}
+- (void)toggleColumn:(id)sender {
+	NSTableColumn *col = [sender representedObject];
+	[col setHidden:![col isHidden]];
+}
+
+#pragma mark -
+- (void)initViewHeaderMenu:(id)view {
+    //create our contextual menu
+    NSMenu *menu = [[view headerView] menu];
+    //loop through columns, creating a menu item for each
+    for (NSTableColumn *col in [view tableColumns]) {
+        if ([[col identifier] isEqualToString:COLUMNID_NAME])
+            continue;   // Cannot hide name column
+        NSMenuItem *mi = [[NSMenuItem alloc] initWithTitle:[col.headerCell stringValue]
+                                                    action:@selector(toggleColumn:)  keyEquivalent:@""];
+        mi.target = self;
+        mi.representedObject = col;
+        [menu addItem:mi];
+    }
+    return;
+}
+- (void)saveTableColumns {
+    NSTableColumn *col;
+    NSArray * tables;
+    NSString *identifier;
+    tables = [self.fileList tableColumns];
+    NSMutableDictionary *columnWidths = [NSMutableDictionary dictionaryWithCapacity:[tables count]];
+    NSMutableDictionary *columnHidden = [NSMutableDictionary dictionaryWithCapacity:[tables count]];
+    NSMutableArray *columnOrder = [NSMutableArray arrayWithCapacity:[tables count]];
+    for (col in tables) {
+        identifier = [[col headerCell] title];
+        [columnWidths setObject:[NSNumber numberWithFloat:[col width]] forKey:identifier];
+        [columnHidden setValue:[NSNumber numberWithBool:[col isHidden]] forKey:identifier];
+        [columnOrder addObject:[col identifier]];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:columnWidths forKey:PREF_FILE_COLUMN_WIDTH];
+    [[NSUserDefaults standardUserDefaults] setObject:columnHidden forKey:PREF_FILE_COLUMN_HIDDEN];
+    [[NSUserDefaults standardUserDefaults] setObject:columnOrder forKey:PREF_FILE_COLUMN_ORDER];
+    tables = [self.dirTree tableColumns];
+    columnWidths = [NSMutableDictionary dictionaryWithCapacity:[tables count]];
+    columnHidden = [NSMutableDictionary dictionaryWithCapacity:[tables count]];
+    columnOrder = [NSMutableArray arrayWithCapacity:[tables count]];
+    for (col in tables) {
+        [columnWidths setObject:[NSNumber numberWithFloat:[col width]] forKey:[[col headerCell] title]];
+        [columnHidden setValue:[NSNumber numberWithBool:[col isHidden]] forKey:[[col headerCell] title]];
+        [columnOrder addObject:[col identifier]];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:columnWidths forKey:PREF_DIR_COLUMN_WIDTH];
+    [[NSUserDefaults standardUserDefaults] setObject:columnHidden forKey:PREF_DIR_COLUMN_HIDDEN];
+    [[NSUserDefaults standardUserDefaults] setObject:columnOrder forKey:PREF_DIR_COLUMN_ORDER];
+}
+- (void)updateDateColumns:(NSNotification *)notification {
+    NSString *identifier;
+    NSDictionary *widths = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_DATE_WIDTH];
+    if (widths)
+        for (identifier in widths) {
+            [[self.fileList tableColumnWithIdentifier:identifier] setWidth:[[widths objectForKey:identifier] floatValue]];
+            [[self.dirTree tableColumnWithIdentifier:identifier] setWidth:[[widths objectForKey:identifier] floatValue]];
+            [self.fileList sizeToFit];
+            [self.dirTree sizeToFit];
+        }
+}
+- (void)restoreColumns {
+    NSString *identifier;
+    NSTableColumn *col;
+    NSDictionary *columnDefaults;
+    NSArray *tables = [self.fileList tableColumns];
+    NSDictionary *widths = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_DATE_WIDTH];
+    columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_FILE_COLUMN_WIDTH];
+    if (columnDefaults)
+        for (col in tables) {
+            identifier = [[col headerCell] title];
+            [col setWidth:[[columnDefaults objectForKey:identifier] floatValue]];
+        }
+    else if (widths)
+        for (identifier in widths) {
+            [[self.fileList tableColumnWithIdentifier:identifier] setWidth:[[widths objectForKey:identifier] floatValue]];
+        }
+    columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_FILE_COLUMN_HIDDEN];
+    if (columnDefaults)
+        for (col in tables) {
+            identifier = [[col headerCell] title];
+            [col setHidden:[[columnDefaults objectForKey:identifier] boolValue]];
+        }
+    NSArray *columnOrder = [[NSUserDefaults standardUserDefaults] arrayForKey:PREF_FILE_COLUMN_ORDER];
+    if (columnOrder) {
+		NSUInteger indx = 2;
+        for (NSUInteger index = indx; index < [columnOrder count]; index++) {
+            identifier = [columnOrder objectAtIndex:index];
+            NSInteger colIndex = [self.fileList columnWithIdentifier:identifier];
+			if (colIndex < 0)	continue;
+            if (indx != colIndex)
+				[self.fileList moveColumn:colIndex toColumn:indx];
+			indx++;
+        }
+	}
+    [self.fileList sizeToFit];
+
+    tables = [self.dirTree tableColumns];
+    columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_DIR_COLUMN_WIDTH];
+    if (columnDefaults)
+        for (col in tables) {
+            identifier = [[col headerCell] title];
+            [col setWidth:[[columnDefaults objectForKey:identifier] floatValue]];
+        }
+    else if (widths)
+        for (identifier in widths) {
+            [[self.dirTree tableColumnWithIdentifier:identifier] setWidth:[[widths objectForKey:identifier] floatValue]];
+        }
+    columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_DIR_COLUMN_HIDDEN];
+    if (columnDefaults)
+        for (col in tables) {
+            identifier = [[col headerCell] title];
+            [col setHidden:[[columnDefaults objectForKey:identifier] boolValue]];
+        }
+    columnOrder = [[NSUserDefaults standardUserDefaults] arrayForKey:PREF_DIR_COLUMN_ORDER];
+    if (columnOrder) {
+		NSUInteger indx = 1;
+        for (NSUInteger index = indx; index < [columnOrder count]; index++) {
+            identifier = [columnOrder objectAtIndex:index];
+            NSInteger colIndex = [self.dirTree columnWithIdentifier:identifier];
+			if (colIndex < 0)	continue;
+            if (indx != colIndex)
+				[self.dirTree moveColumn:colIndex toColumn:indx];
+			indx++;
+        }
+	}
+    [self.dirTree sizeToFit];
+}
+- (void)awakeFromNib {
+	CGFloat defaultSplit = [[NSUserDefaults standardUserDefaults] floatForKey:PREF_SPLIT_PERCENTAGE];
+	[self.split setPosition:[self.split frame].size.height * defaultSplit ofDividerAtIndex:0];
+	// make our outline view appear with gradient selection, and behave like the Finder, iTunes, etc.
+	[self.dirTree setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleSourceList];
+	[self.split adjustSubviews];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREF_DIRECTORY_ICON]) {
+        // apply custom ImageAndTextCell for rendering the first column's cells
+		NSTableColumn *tableColumn = [self.dirTree tableColumnWithIdentifier:COLUMNID_NAME];
+		ImageAndTextCell *imageAndTextCell = [[ImageAndTextCell alloc] init];
+		[imageAndTextCell setEditable:YES];
+		[tableColumn setDataCell:imageAndTextCell];
+	}
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREF_FILE_ICON]) {
+        // apply custom ImageAndTextCell for rendering the first column's cells
+		NSTableColumn *tableColumn = [self.fileList tableColumnWithIdentifier:COLUMNID_NAME];
+		ImageAndTextCell *imageAndTextCell = [[ImageAndTextCell alloc] init];
+		[imageAndTextCell setEditable:YES];
+		[tableColumn setDataCell:imageAndTextCell];	
+	}
+	[[[self.fileList tableColumnWithIdentifier:COLUMNID_DATE] dataCell] setFormatter:[IBDateFormatter sharedDateFormatter].writeDateFormatter];
+	[[[self.dirTree tableColumnWithIdentifier:COLUMNID_DATE] dataCell] setFormatter:[IBDateFormatter sharedDateFormatter].writeDateFormatter];
+	[[[self.fileList tableColumnWithIdentifier:COLUMNID_CREATION] dataCell] setFormatter:[IBDateFormatter sharedDateFormatter].createDateFormatter];
+	[[[self.dirTree tableColumnWithIdentifier:COLUMNID_CREATION] dataCell] setFormatter:[IBDateFormatter sharedDateFormatter].createDateFormatter];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDateColumns:) name:PreferencesControllerDateWidthsDidChangeNotification object:nil];
+
+	savedSearchString =	[NSString string];
+	showOnlyTagged = NO;
+	fileFilterPredicate = [NSPredicate predicateWithValue:YES];
+	tagPredicate = [NSPredicate predicateWithFormat:@"SELF.tag == YES"];
+    notEmptyPredicate = [NSPredicate predicateWithFormat:@"SELF.fileSize > 0"];
+	inFileView = NO;	
+	inBranch = NO;
+    [self initViewHeaderMenu:self.fileList];
+    [self initViewHeaderMenu:self.dirTree];
+    [self restoreColumns];
+	[self.dirTree expandItem:dataRoot];  // setTreeRootNode may be called before NIB finishes loading
+    [self.currentPath setDoubleAction:@selector(dClickPath:)];
+    [self.currentPath setTarget:self];
+}
+// activate TreeView - initialisation on creation or reactivation
+- (void)activateTreeView {
+    [self.dirTree reloadData];
+    [self updateSelectedDir];
+	if (inFileView) {
+        if (textViewer) {
+            [self.fileList.window makeFirstResponder:textViewer.view];
+        } else {
+            [self.fileList.window makeFirstResponder:self.fileList];
+            [self.delegate treeviewDidEnterFileWindow:self];
+        }
+	} else {
+		[self.dirTree.window makeFirstResponder:self.dirTree];
+		[self.delegate treeviewDidEnterDirWindow:self];
+	}
+	[self.delegate treeViewController:self tabState:showOnlyTagged];
+	[self.delegate treeViewController:self filterValue:savedSearchString];
+}
+- (BOOL)shouldTerminate {
+	if (inFileView)
+        if (textViewer) {
+            [self exitFileViewer];
+            return NO;  // exit textViewer but do not quit
+        }
+    return YES;    
+}
+    
+- (void)reloadData {
+	[self.dirTree reloadData];
+	[self.arrayController rearrangeObjects];
+}
+
+#pragma mark NSMenu Delegate Methods
+-(void)menuWillOpen:(NSMenu *)menu {
+	for (NSMenuItem *mi in menu.itemArray) {
+		NSTableColumn *col = [mi representedObject];
+		[mi setState:col.isHidden ? NSOffState : NSOnState];
+	}
+}
+
+#pragma mark Private Methods
+// There are files visible in List View (files in Dir which pass Filter predicate)
+- (BOOL)areFilesVisible {
+	NSArray *currentContents = [self.arrayController arrangedObjects];
+	return ([currentContents count] > 0);
+}
+// There is a file in List View
+- (BOOL)isFileSelected {
+	NSArray *selection = [self.arrayController selectedObjects];
+	return ([selection count] == 1);
+}
+- (BOOL)areFilesTagged {
+	NSArray *currentContents = [[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate];
+	return ([currentContents count] > 0);
+}
+- (void)setDirMenu {
+	if (inFileView) {
+		[self.delegate treeviewDidEnterDirWindow:self];
+	}
+	inFileView = NO;	
+	if (inBranch) {
+        [self updateSelectedDir];
+		self.filesInDir = self.selectedDir.files;
+        [self.fileList setBackgroundColor:[NSColor controlBackgroundColor]];
+	}	
+	inBranch = NO;
+}
+- (void)setFileMenu {
+	if (!inFileView) {
+		[self.delegate treeviewDidEnterFileWindow:self];
+	}
+	inFileView = YES;	
+}
+- (void)enterDirView {
+	[self.dirTree.window makeFirstResponder:self.dirTree];
+	[self setDirMenu];
+}
+- (void)enterFileView {
+	if(![self isFileSelected]) {
+		[self.arrayController setSelectionIndex:0];
+	}
+	if([self areFilesVisible]) {
+		[self.fileList.window makeFirstResponder:self.fileList];
+		[self setFileMenu];
+	}
+}
+- (DirectoryItem *)treeRootNode {
+	return dataRoot;
+}
+- (void)setTreeRootNode:(DirectoryItem *)node {
+	if (dataRoot == node) {
+		return;
+	}
+	dataRoot = node;
+	if (![dataRoot isPathLoaded])
+		[dataRoot subDirectories];	// Force logging of root
+	[self enterDirView];
+	[self.dirTree reloadData];
+	self.selectedDir = node;
+	[self.dirTree expandItem:node];
+	self.filesInDir = node.files;	
+    self.currDir = node.url;
+	[self.delegate treeViewController:self rootChangedInTreeView:[self rootDirName]];
+}
+// restore Tree in SplitView; return YES if restored
+- (BOOL)restoreSplitView {
+	if ([self.splitViewTop isHidden]) {
+		[self.splitViewTop setHidden:NO];
+        [self.split setPosition:previousSplitViewHeight ofDividerAtIndex:0];
+		return YES;
+	}
+	return NO;
+}
+- (void)copyToPasteboard:(id)object {
+	NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+	[pasteboard clearContents];
+	NSArray *objectsToCopy = [NSArray arrayWithObject:object];
+    [pasteboard writeObjects:objectsToCopy];
+}
+
+@end
