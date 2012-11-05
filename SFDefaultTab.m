@@ -45,21 +45,21 @@ static CGImageRef  inactiveTab;
     _representedObject = [representedObject copy];
     self.frame = CGRectMake(0, 0, 125, 22);
 	if(!activeTab) {
-		CFStringRef path = (CFStringRef)[[NSBundle mainBundle] pathForResource:@"activeTab" ofType:@"png"];
+		CFStringRef path = (__bridge CFStringRef)[[NSBundle mainBundle] pathForResource:@"activeTab" ofType:@"png"];
 		CFURLRef imageURL = CFURLCreateWithFileSystemPath(nil, path, kCFURLPOSIXPathStyle, NO);
 		CGImageSourceRef imageSource = CGImageSourceCreateWithURL(imageURL, nil);
 		activeTab = CGImageSourceCreateImageAtIndex(imageSource, 0, nil);
 		CFRelease(imageURL); CFRelease(imageSource);
 
 
-		path = (CFStringRef)[[NSBundle mainBundle] pathForResource:@"inactiveTab" ofType:@"png"];
+		path = (__bridge CFStringRef)[[NSBundle mainBundle] pathForResource:@"inactiveTab" ofType:@"png"];
 		imageURL = CFURLCreateWithFileSystemPath(nil, path, kCFURLPOSIXPathStyle, NO);
 		imageSource = CGImageSourceCreateWithURL(imageURL, nil);
 		inactiveTab = CGImageSourceCreateImageAtIndex(imageSource, 0, nil);
 		CFRelease(imageURL); CFRelease(imageSource);
 	}
 
-	[self setContents: (id)inactiveTab];
+	[self setContents: (__bridge id)inactiveTab];
 
     SFLabelLayer *tabLabel = [SFLabelLayer layer];
 
@@ -110,9 +110,9 @@ static CGImageRef  inactiveTab;
     [CATransaction setValue: (id) kCFBooleanTrue forKey: kCATransactionDisableActions];
 
     if (selected)
-        [self setContents: (id)activeTab];
+        [self setContents: (__bridge id)activeTab];
     else
-        [self setContents: (id)inactiveTab];
+        [self setContents: (__bridge id)inactiveTab];
 
     [CATransaction commit];
 }

@@ -234,8 +234,8 @@ static NSArray *properties = nil;
 			CFURLRef resolvedUrl = CFURLCreateFromFSRef(kCFAllocatorDefault, &fsRef);
 			if (resolvedUrl != NULL)
 			{
-				resolvedPath = (NSString*)CFURLCopyFileSystemPath(resolvedUrl, kCFURLPOSIXPathStyle);
-				NSMakeCollectable(resolvedPath);
+				resolvedPath = (NSString*)CFBridgingRelease(CFURLCopyFileSystemPath(resolvedUrl, kCFURLPOSIXPathStyle));
+//				CFBridgingRelease(CFBridgingRetain(resolvedPath));
 				CFRelease(resolvedUrl);
 			}
 		}
@@ -467,23 +467,6 @@ static NSArray *properties = nil;
 - (DirectoryItem *)loadPath:(NSString *)path {
 	return [self loadPath:path expandHidden:NO];
 }
-
-#pragma mark - Key Value Properties
-// Returns the array of subDirectories
-// Loads subDirectories if not already loaded
-- (NSArray *)subDirectories {
-    if(_subDirectories == nil)
-		[self loadSubDirectories];
-    return _subDirectories;
-}
-- (DirectoryItem *)directoryAtIndex:(NSUInteger)n {
-    return [[self subDirectories] objectAtIndex:n];
-}
-- (NSInteger)numberOfSubDirs {
-    NSArray *tmp = [self subDirectories];
-    return (tmp == leafNode) ? (0) : [tmp count];
-}
-
 - (void)subBranch:(NSArray *)directories accumulatedDirs:(NSMutableArray **)fileArrayInBranch {
     NSMutableArray *accumulatedFiles = *fileArrayInBranch;
     for (DirectoryItem *node in directories) {
@@ -506,6 +489,22 @@ static NSArray *properties = nil;
     }
 	[branch sortUsingDescriptors:fileSortDescriptor];
 	return 	branch;
+}
+
+#pragma mark - Key Value Properties
+// Returns the array of subDirectories
+// Loads subDirectories if not already loaded
+- (NSArray *)subDirectories {
+    if(_subDirectories == nil)
+		[self loadSubDirectories];
+    return _subDirectories;
+}
+- (DirectoryItem *)directoryAtIndex:(NSUInteger)n {
+    return [[self subDirectories] objectAtIndex:n];
+}
+- (NSInteger)numberOfSubDirs {
+    NSArray *tmp = [self subDirectories];
+    return (tmp == leafNode) ? (0) : [tmp count];
 }
 
 @end

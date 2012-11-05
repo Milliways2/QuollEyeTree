@@ -14,7 +14,7 @@
 
 @property (strong) DirectoryItem *volumeRoot;
 @property (copy) NSString *relativePath;
-@property (assign) id parent;
+@property (strong) id parent;
 
 - (NSString *)fullPath;
 - (NSString *)volumePath;

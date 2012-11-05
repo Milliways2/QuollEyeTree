@@ -17,15 +17,15 @@
 	NSURL *foundApp = [openWithApplications objectAtIndex:idx];
 	NSArray *itemURLs = [NSArray arrayWithObject:urlToOpen];
 	LSLaunchURLSpec inLaunchSpec;
-	inLaunchSpec.appURL = (CFURLRef)foundApp;
-	inLaunchSpec.itemURLs = (CFArrayRef)itemURLs;
+	inLaunchSpec.appURL = (__bridge CFURLRef)foundApp;
+	inLaunchSpec.itemURLs = (__bridge CFArrayRef)itemURLs;
 	inLaunchSpec.passThruParams = NULL;
 	inLaunchSpec.launchFlags = kLSLaunchDefaults;
 	inLaunchSpec.asyncRefCon = NULL;
 	LSOpenFromURLSpec(&inLaunchSpec, NULL);
 }
 - (void)openInDefault:(id)sender {
-	LSOpenCFURLRef((CFURLRef)urlToOpen, nil);
+	LSOpenCFURLRef((__bridge CFURLRef)urlToOpen, nil);
 }
 - (id)initMenu:(NSURL *)url  {
 	if(self = [super init]) {
@@ -33,16 +33,16 @@
 		_openWithMenu = [[NSMenu alloc] initWithTitle:@"Open With"];
 		CFURLRef preferredApp;
 		CFStringRef outDisplayName;
-		OSStatus isPref = LSGetApplicationForURL((CFURLRef)url, kLSRolesAll, NULL, &preferredApp);
+		OSStatus isPref = LSGetApplicationForURL((__bridge CFURLRef)url, kLSRolesAll, NULL, &preferredApp);
 		if(isPref == kLSApplicationNotFoundErr) {
 			[_openWithMenu addItemWithTitle:@"<None>" action:nil keyEquivalent:@""];
 		}
 		else {
 			LSCopyDisplayNameForURL(preferredApp, &outDisplayName);
-			NSMenuItem *mi = [_openWithMenu addItemWithTitle:(NSString *)outDisplayName action:@selector(openInDefault:) keyEquivalent:@""];
+			NSMenuItem *mi = [_openWithMenu addItemWithTitle:(__bridge NSString *)outDisplayName action:@selector(openInDefault:) keyEquivalent:@""];
 			[mi setTarget:self];
             CFRelease(outDisplayName);
-            CFArrayRef apps = LSCopyApplicationURLsForURL((CFURLRef)url, kLSRolesAll);
+            CFArrayRef apps = LSCopyApplicationURLsForURL((__bridge CFURLRef)url, kLSRolesAll);
 			if(apps) {
 				[_openWithMenu addItem:[NSMenuItem separatorItem]];
  				int i;
@@ -53,7 +53,7 @@
 				for(i=0; i < appCount; i++) {
 					CFURLRef thisApp = CFArrayGetValueAtIndex(apps, i);
                     if(CFEqual(thisApp, preferredApp))  continue;
-                    thisUrl = (NSURL *)thisApp;
+                    thisUrl = (__bridge NSURL *)thisApp;
                     if (![[thisUrl path] hasPrefix:@"/Volumes"]) {
                         [openWithApplications addObject:thisUrl];
                         [thisUrl getResourceValue:&name forKey:NSURLLocalizedNameKey error:nil];

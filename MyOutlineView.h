@@ -20,7 +20,7 @@
 @interface MyOutlineView: NSOutlineView {
 }
 
-@property (assign) IBOutlet NSObject <MyOutlineViewDelegate> *keyDelegate;
+@property (strong) IBOutlet NSObject <MyOutlineViewDelegate> *keyDelegate;
 @property (strong) id focusedItem;
 
 @end

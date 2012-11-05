@@ -38,7 +38,7 @@
     initializeVolumes();
     
     // create and register ArrayCountTransformer value transformer
-    ArrayCountTransformer *countTransformer = [[[ArrayCountTransformer alloc] init] autorelease];
+    ArrayCountTransformer *countTransformer = [[ArrayCountTransformer alloc] init];
     [NSValueTransformer setValueTransformer:countTransformer forName:@"ArrayCountTransformer"];
 }
 
@@ -119,7 +119,7 @@
 
 - (IBAction)openDocumentation:(id)sender {
 	NSURL *docFile = [[NSBundle mainBundle] URLForResource:@"QuollEyeTree" withExtension:@"pdf"];
-	LSOpenCFURLRef((CFURLRef)docFile, nil);
+	LSOpenCFURLRef((__bridge CFURLRef)docFile, nil);
 }
 - (IBAction)openHomePage:(id)sender {
 	NSURL *url = [NSURL URLWithString:@"http://binnie.id.au/QuollEyeTree.html"];

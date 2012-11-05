@@ -37,17 +37,17 @@
     NSOperationQueue *queue;
 }
 
-@property (assign) IBOutlet NSSplitView *split;
-@property (assign) IBOutlet NSScrollView *splitViewTop;
-@property (assign) IBOutlet NSArrayController *arrayController;
-@property (assign) IBOutlet NSOutlineView *dirTree;
-@property (assign) IBOutlet NSTableView *fileList;
-@property (assign) IBOutlet NSPathControl *currentPath;
-@property (assign) IBOutlet NSProgressIndicator *progress;
+@property (strong) IBOutlet NSSplitView *split;
+@property (strong) IBOutlet NSScrollView *splitViewTop;
+@property (strong) IBOutlet NSArrayController *arrayController;
+@property (strong) IBOutlet NSOutlineView *dirTree;
+@property (strong) IBOutlet NSTableView *fileList;
+@property (strong) IBOutlet NSPathControl *currentPath;
+@property (strong) IBOutlet NSProgressIndicator *progress;
 
-@property (assign) id delegate;
-@property (assign) NSMutableArray *filesInDir;
-@property (assign) DirectoryItem *selectedDir;    // item to display
+@property (strong) id delegate;
+@property (strong) NSMutableArray *filesInDir;
+@property (strong) DirectoryItem *selectedDir;    // item to display
 @property (copy) NSURL *currDir;    // binding to NSPathControl *currentPath
 
 - (NSString *)rootDirName;

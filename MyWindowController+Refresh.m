@@ -20,11 +20,11 @@ void fsevents_callback(ConstFSEventStreamRef streamRef,
                        const FSEventStreamEventFlags eventFlags[],
                        const FSEventStreamEventId eventIds[])
 {
-    MyWindowController *wc = (MyWindowController *)userData;
+    MyWindowController *wc = (__bridge MyWindowController *)userData;
 	NSMutableArray *dirsToRefresh = [[NSMutableArray alloc] initWithCapacity:numEvents];
 	size_t i;
 	for(i=0; i<numEvents; i++){
-		DirectoryItem *node = findPathInVolumes([[(NSArray *)eventPaths objectAtIndex:i] stringByStandardizingPath]);
+		DirectoryItem *node = findPathInVolumes([[(__bridge NSArray *)eventPaths objectAtIndex:i] stringByStandardizingPath]);
 		if (node) {
 			if ([node isPathLoaded]) {
 				[dirsToRefresh addObject:node];	// Only if subDirectories loaded
@@ -41,13 +41,13 @@ void fsevents_callback(ConstFSEventStreamRef streamRef,
 
 - (void)initializeEventStream {
     NSArray *pathsToWatch = [NSArray arrayWithObject:[[[NSUserDefaults standardUserDefaults] stringForKey:PREF_REFRESH_DIR] stringByResolvingSymlinksInPath]];
-    void *appPointer = (void *)self;
+    void *appPointer = (__bridge void *)self;
     FSEventStreamContext context = {0, appPointer, NULL, NULL, NULL};
     NSTimeInterval latency = 3.0;
 	stream = FSEventStreamCreate(NULL,
 	                             &fsevents_callback,
 	                             &context,
-	                             (CFArrayRef) pathsToWatch,
+	                             (__bridge CFArrayRef) pathsToWatch,
 								 kFSEventStreamEventIdSinceNow,
 	                             (CFAbsoluteTime) latency,
 	                             kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagIgnoreSelf

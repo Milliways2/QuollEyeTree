@@ -692,6 +692,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -701,7 +702,9 @@
 				GCC_PREFIX_HEADER = QuollEyeTree_Prefix.pch;
 				INFOPLIST_FILE = "QuollEyeTree-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = QuollEyeTree;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -709,6 +712,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
@@ -716,7 +720,9 @@
 				GCC_PREFIX_HEADER = QuollEyeTree_Prefix.pch;
 				INFOPLIST_FILE = "QuollEyeTree-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = QuollEyeTree;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -725,7 +731,6 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_MODEL_TUNING = "";
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -742,7 +747,6 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_MODEL_TUNING = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

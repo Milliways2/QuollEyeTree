@@ -20,6 +20,6 @@
 
 @interface MyTableView: NSTableView {
 }
-@property (assign) IBOutlet NSObject <MyTableViewDelegate> *keyDelegate;
+@property (strong) IBOutlet NSObject <MyTableViewDelegate> *keyDelegate;
 
 @end

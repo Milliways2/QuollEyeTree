@@ -27,11 +27,6 @@
 @implementation SidebarViewController
 @synthesize delegate;
 
-- (void)listPlaces {
-	NSArray	*children = [[[[treeController arrangedObjects]descendantNodeAtIndexPath:places] representedObject] children];
-	for (BaseNode *place in children) {
-	}
-}
 - (void)savePlaces {
 	NSArray	*children = [[[[treeController arrangedObjects]descendantNodeAtIndexPath:places] representedObject] children];
 	NSMutableArray *userPlaces = [NSMutableArray arrayWithCapacity:[children count]];
@@ -159,7 +154,7 @@
 - (void)awakeFromNib {
 	// apply our custom ImageAndTextCell for rendering the first column's cells
 	NSTableColumn *tableColumn = [myOutlineView tableColumnWithIdentifier:SIDEBAR_COLUMNID_NAME];
-	ImageAndTextCell *imageAndTextCell = [[[ImageAndTextCell alloc] init] autorelease];
+	ImageAndTextCell *imageAndTextCell = [[ImageAndTextCell alloc] init];
 	[imageAndTextCell setEditable:YES];
 	[tableColumn setDataCell:imageAndTextCell];
 
@@ -201,28 +196,28 @@ void volumeEvents_callback(ConstFSEventStreamRef streamRef,
                        void *eventPaths,
                        const FSEventStreamEventFlags eventFlags[],
                        const FSEventStreamEventId eventIds[]) {
-    SidebarViewController *sidebar = (SidebarViewController *)userData;
+    SidebarViewController *sidebar = (__bridge SidebarViewController *)userData;
 	size_t i;
 	for(i=0; i<numEvents; i++){
 		if (eventFlags[i] == kFSEventStreamEventFlagMount) {
-			[sidebar addVolume:[(NSArray *)eventPaths objectAtIndex:i]];
+			[sidebar addVolume:[(__bridge NSArray *)eventPaths objectAtIndex:i]];
 		}
 		if (eventFlags[i] == kFSEventStreamEventFlagUnmount) {
-			[sidebar removeVolume:[(NSArray *)eventPaths objectAtIndex:i]];
-			[sidebar.delegate sidebarViewController:sidebar shouldRemoveVolume:[(NSArray *)eventPaths objectAtIndex:i]];	// notify delegate
+			[sidebar removeVolume:[(__bridge NSArray *)eventPaths objectAtIndex:i]];
+			[sidebar.delegate sidebarViewController:sidebar shouldRemoveVolume:[(__bridge NSArray *)eventPaths objectAtIndex:i]];	// notify delegate
 		}
 	}
 }
 // Watch /Volumes for changes
 - (void)initializeVolumeMonitoring {
     NSArray *pathsToWatch = [NSArray arrayWithObject:@"/Volumes"];
-    void *appPointer = (void *)self;
+    void *appPointer = (__bridge void *)self;
     FSEventStreamContext context = {0, appPointer, NULL, NULL, NULL};
     NSTimeInterval latency = 3.0;
 	stream = FSEventStreamCreate(NULL,
 	                             &volumeEvents_callback,
 	                             &context,
-	                             (CFArrayRef) pathsToWatch,
+	                             (__bridge CFArrayRef) pathsToWatch,
 								 kFSEventStreamEventIdSinceNow,
 	                             (CFAbsoluteTime) latency,
 	                             kFSEventStreamCreateFlagUseCFTypes

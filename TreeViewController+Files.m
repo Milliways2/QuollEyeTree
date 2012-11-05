@@ -63,7 +63,7 @@
                         change:(NSDictionary *)change
                        context:(void *)context {
     if ([keyPath isEqual:@"operationCount"]) {
-        NSNumber *noObjects = (NSNumber *)(context);
+        NSNumber *noObjects = (__bridge NSNumber *)(context);
         NSNumber *ops = [change objectForKey:NSKeyValueChangeNewKey];
             [self.progress setDoubleValue:[noObjects doubleValue] - [ops doubleValue]];
         if ([ops integerValue] == 0) {
@@ -105,7 +105,7 @@
         [searchQueue addObserver:self
                       forKeyPath:@"operationCount"
                          options:NSKeyValueObservingOptionNew
-                         context:[NSNumber numberWithInteger:noObjects]];
+                         context:(__bridge void *)([NSNumber numberWithInteger:noObjects])];
 	}
 }
 - (BOOL)isPackage {
@@ -360,7 +360,7 @@
 - (IBAction)openFile:(id)sender {
     FileItem *node = [self selectedFile];
 	if (node == nil)    return;
-    LSOpenCFURLRef((CFURLRef)node.url, nil);
+    LSOpenCFURLRef((__bridge CFURLRef)node.url, nil);
 }
 - (IBAction)revealFileInFinder:(id)sender {
     FileItem *node = [self selectedFile];

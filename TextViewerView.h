@@ -12,6 +12,6 @@
 @end
 
 @interface TextViewerView : NSView
-@property (assign) IBOutlet NSObject <TextViewerViewDelegate> *delegate;
+@property (strong) IBOutlet NSObject <TextViewerViewDelegate> *delegate;
 
 @end

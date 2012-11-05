@@ -265,7 +265,7 @@
 }
 - (IBAction)openDirectory:(id)sender {
 	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
-	LSOpenCFURLRef((CFURLRef)self.selectedDir.url, nil);
+	LSOpenCFURLRef((__bridge CFURLRef)self.selectedDir.url, nil);
 }
 - (IBAction)revealDirInFinder:(id)sender {
 	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
