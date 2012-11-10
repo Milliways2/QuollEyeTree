@@ -8,17 +8,20 @@
 
 #import "DirectoryItem.h"
 #import "FileItem.h"
-#include <sys/stat.h>
+#import "volume.h"
+#import "alias.h"
+#import "folderSize.h"
 
 @implementation DirectoryItem
 
-@synthesize files=_files, loggedSubDirectories=_subDirectories, alias, package;
+@synthesize files=_files, loggedSubDirectories=_subDirectories;
 
 static NSMutableArray *leafNode = nil;
 static NSArray *fileSortDescriptor = nil;
 static NSArray *dirSortDescriptor = nil;
 static BOOL showHiddenFiles = NO;
 static NSArray *properties = nil;
+NSOperationQueue *loggingQueue = nil;
 
 + (void)loadPreferences {
 	// Read default sortDescriptor from Preferences
@@ -41,6 +44,8 @@ static NSArray *properties = nil;
                              [[NSSortDescriptor alloc] initWithKey:COLUMNID_NAME
                                                          ascending:YES
                                                           selector:@selector(localizedStandardCompare:)]];
+		loggingQueue = [NSOperationQueue new];
+		[loggingQueue setMaxConcurrentOperationCount:10];
     }
 }
 
@@ -65,8 +70,8 @@ static NSArray *properties = nil;
     return [NSURL fileURLWithPath:[self fullPath] isDirectory:YES];
 }
 
-// This is the main routine to populate a directory
-- (NSArray *)loadDirectory:(NSString *)path error:(NSError **)error {	
+// This is the main routine to read the contents of a directory (into array of URL)
+- (NSArray *)readDirectory:(NSString *)path error:(NSError **)error {
 	NSURL *url = [NSURL fileURLWithPath:path isDirectory:YES];
 	NSArray *array = [[NSFileManager new]
 					  contentsOfDirectoryAtURL:url
@@ -102,12 +107,16 @@ static NSArray *properties = nil;
     unHideAllDir = NO;
     unHideDir = !unHideDir;
 }
+- (void)cloneHidden:(DirectoryItem *)dir {
+    unHideAllDir = dir->unHideAllDir;
+    unHideDir = dir->unHideDir;
+}
 - (BOOL)convertPackageToDirectory:(FileSystemItem *)fNode {
     NSURL *fUrl = fNode.url;
     id value = nil;
     [fUrl getResourceValue:&value forKey:NSURLIsDirectoryKey error:nil];
     if (![value boolValue])	return NO;
-    
+
     if (_subDirectories == nil || _subDirectories == leafNode) {
         _subDirectories = [[NSMutableArray alloc] initWithCapacity:1];
     }
@@ -115,7 +124,6 @@ static NSArray *properties = nil;
                                 initWithPath:fUrl
                                 parent:self];
     [_subDirectories addObject:newSubDir];
-    newSubDir->package = YES;
     [_subDirectories sortUsingDescriptors:dirSortDescriptor];
     return YES;
 }
@@ -142,11 +150,11 @@ static NSArray *properties = nil;
         }
         return NO;
 	}];
-    
+
 	// create array of Files "fileArray" by removing dirs from array
 	NSMutableArray *fileArray = [NSMutableArray new];
 	[fileArray setArray:array];
-    
+
 	if([dirs count]) {
 		[fileArray removeObjectsAtIndexes:dirs];	// remove dirs from fileArray, leaving Files
 		if (_subDirectories == nil || _subDirectories == leafNode) {
@@ -166,7 +174,7 @@ static NSArray *properties = nil;
 	} else {
 		if (_subDirectories == nil)	_subDirectories = leafNode;
 	}
-    
+
 	if([fileArray count]) {
 		if (_files == nil) {
 			_files = [[NSMutableArray alloc] initWithCapacity:[fileArray count]];
@@ -180,6 +188,12 @@ static NSArray *properties = nil;
                 [element getResourceValue:&size forKey:NSURLFileSizeKey error:nil];
                 newFile.fileSize = size;
                 [_files addObject:newFile];
+			if (newFile.isPackage) {
+				[loggingQueue addOperationWithBlock:^{
+				newFile.fileSize = folderSize(element);
+				}];
+
+			}
         }
 		[_files sortUsingDescriptors:fileSortDescriptor];
 	} else {
@@ -190,58 +204,19 @@ static NSArray *properties = nil;
 // If not found loads target
 - (void)copyDirContent:(NSString *)linkPath {
 	if (linkPath) {
-		DirectoryItem *loadedPath = [self loadPath:linkPath];			
+//		alias = YES;
+		DirectoryItem *loadedPath = [self loadPath:linkPath];
 		if (loadedPath == nil) {
+			loadedPath = locateOrAddDirectoryInVolumes(linkPath);
+			if (loadedPath == nil) {
 				_subDirectories = leafNode;
 				return;
         }
+        }
 		_subDirectories = [loadedPath subDirectories];
 		_files = [loadedPath files];
-		alias = YES;
 		return;
 	}
-}
-// get target of Symlink or Alias
-- (NSString *)getTarget:(NSString *)fPath {
-	NSString *resolvedPath = nil;
-	// Use lstat to determine if the file is a symlink
-	struct stat fileInfo;
-	NSFileManager *fileManager = [NSFileManager new];
-	if (lstat([fileManager fileSystemRepresentationWithPath:fPath], &fileInfo) < 0)
-		return nil;
-	if (S_ISLNK(fileInfo.st_mode)) {
-		// Resolve the symlink component in the path
-		NSError *error = nil;
-		resolvedPath = [fileManager destinationOfSymbolicLinkAtPath:fPath error:&error];
-		if (resolvedPath == nil) {
-			NSAlert *alert = [NSAlert alertWithError:error];
-			[alert runModal];
-			return nil;
-		}
-		if ([resolvedPath isAbsolutePath])
-			return resolvedPath;
-		else
-			return [[fPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:resolvedPath];
-	}
-	// Resolve alias
-	CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (CFStringRef)fPath, kCFURLPOSIXPathStyle, NO);
-	FSRef fsRef;
-	if (CFURLGetFSRef((CFURLRef)url, &fsRef)) {
-		Boolean targetIsFolder, wasAliased;
-		OSErr err = FSResolveAliasFile (&fsRef, true, &targetIsFolder, &wasAliased);
-		if ((err == noErr) && wasAliased)
-		{
-			CFURLRef resolvedUrl = CFURLCreateFromFSRef(kCFAllocatorDefault, &fsRef);
-			if (resolvedUrl != NULL)
-			{
-				resolvedPath = (NSString*)CFBridgingRelease(CFURLCopyFileSystemPath(resolvedUrl, kCFURLPOSIXPathStyle));
-//				CFBridgingRelease(CFBridgingRetain(resolvedPath));
-				CFRelease(resolvedUrl);
-			}
-		}
-	}
-	CFRelease(url);
-	return resolvedPath;
 }
 
 // This routine populates all the subdirectories and files in a directory
@@ -251,18 +226,18 @@ static NSArray *properties = nil;
 	NSString *fPath = [self fullPath];
 	BOOL isDir, valid;
 	NSError *error = nil;
-	
+
 	valid = [fileManager fileExistsAtPath:fPath isDirectory:&isDir];
 	if (valid && isDir) {
 		// array is contents of Directory
-		NSArray *array = [self loadDirectory:fPath error:&error];
+		NSArray *array = [self readDirectory:fPath error:&error];
 		if (array == nil) {
 			if ([error code] == NSFileReadNoPermissionError) {
 				_subDirectories = leafNode;
 				return;
 			}
 			// This is probably a symbolic link
-			[self copyDirContent:[self getTarget:fPath]];
+			[self copyDirContent:getTarget(fPath)];
 			return;
 		}
 		[self setFileAndDirDetails:array];
@@ -270,7 +245,7 @@ static NSArray *properties = nil;
 	}
 	if (valid && !isDir) {
 		// Resolve alias
-		[self copyDirContent:[self getTarget:fPath]];
+		[self copyDirContent:getTarget(fPath)];
 		return;
 	}
 	// We should never reach this point (error excepted)
@@ -282,12 +257,12 @@ static NSArray *properties = nil;
 	NSError *error = nil;
 	NSString *fPath = [self fullPath];
 	NSMutableArray *array = [NSMutableArray new];
-	NSArray *temp = [self loadDirectory:fPath error:&error];
+	NSArray *temp = [self readDirectory:fPath error:&error];
 	if (temp == nil) {
 		if ([error code] == NSFileReadNoPermissionError)	return;
-		fPath = [self getTarget:fPath];	// Possible Symlink or Alias
+		fPath = getTarget(fPath);	// Possible Symlink or Alias
 		if (fPath)
-			temp = [self loadDirectory:fPath  error:nil];
+			temp = [self readDirectory:fPath  error:nil];
 		if (temp == nil)	return;
 	}
 	[array setArray:temp];
@@ -313,7 +288,7 @@ static NSArray *properties = nil;
 				break;
 			}
         }
-		if(!found) { 
+		if(!found) {
 			[itemsToRemove addObject:element];	// add element to itemsToRemove
 		}
 	}
@@ -340,7 +315,7 @@ static NSArray *properties = nil;
 				break;
 			}
 		}
-		if(!found) { 
+		if(!found) {
 			[itemsToRemove addObject:element];	// add element to itemsToRemove
 		}
 	}
@@ -370,9 +345,6 @@ static NSArray *properties = nil;
         _subDirectories = leafNode;	// in case all subdirs removed
     }
 }
-- (void)removeSelf {
-    [self.parent removeDir:self];
-}
 - (void)moveItem:(FileSystemItem *)node {
 	node.parent = self;	// reparent node to this directory
 	if ([node isKindOfClass:[FileItem class]]) {
@@ -387,7 +359,12 @@ static NSArray *properties = nil;
 	}
 }
 - (void)releaseDir {
-	
+    if(!self.isAlias) {
+        for (DirectoryItem *subDir in _subDirectories) {
+			subDir->_subDirectories = NULL;
+			[subDir.files removeAllObjects];
+		}
+	}
 }
 
 #pragma mark - Utility Methods
@@ -490,6 +467,22 @@ static NSArray *properties = nil;
 	[branch sortUsingDescriptors:fileSortDescriptor];
 	return 	branch;
 }
+void loggedSubDirectoriesInBranch (DirectoryItem *source, NSMutableArray **accumulated) {
+	[*accumulated addObjectsFromArray:source.loggedSubDirectories];
+	for (DirectoryItem *dir in source.loggedSubDirectories) {
+		loggedSubDirectoriesInBranch(dir, accumulated);
+	}
+}
+- (NSArray *)directoriesInBranch {
+	NSMutableArray *accumulated = [NSMutableArray new];
+	loggedSubDirectoriesInBranch(self, &accumulated);
+	return 	accumulated;
+}
+- (void)updateBranch {
+	for (DirectoryItem *dir in self.directoriesInBranch) {
+		[dir updateDirectory];
+	}
+}
 
 #pragma mark - Key Value Properties
 // Returns the array of subDirectories
@@ -505,6 +498,13 @@ static NSArray *properties = nil;
 - (NSInteger)numberOfSubDirs {
     NSArray *tmp = [self subDirectories];
     return (tmp == leafNode) ? (0) : [tmp count];
+}
+- (NSUInteger)sizeOfFiles {
+	NSUInteger totalSize = 0;
+	for (FileItem *file in [self files]) {
+		totalSize += [file.fileSize unsignedLongValue];
+	}
+    return  totalSize;
 }
 
 @end

@@ -12,6 +12,6 @@
 @end
 
 @interface MyTextView : NSTextView
-@property (strong) IBOutlet NSObject <MyTextViewDelegate> *delegate;
+@property (assign) IBOutlet NSObject <MyTextViewDelegate> *delegate;
 - (NSRange)visibleRange;
 @end

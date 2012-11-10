@@ -14,6 +14,8 @@
 	NSImage *nodeIcon;
 	NSString *kind;
 @protected
+	BOOL alias;
+	BOOL package;
 	NSDate *cDate;
 	NSDate *wDate;
 }
@@ -22,6 +24,8 @@
 @property (strong) NSImage *nodeIcon;   // bug fix for Xcode 4.4.1
 @property (readonly) NSString *kind;
 @property (copy) NSDate *cDate, *wDate;
+@property (readonly, getter=isAlias) BOOL alias;
+@property (readonly, getter=isPackage) BOOL package;
 
 - (id)parent;
 - (void)setParent:(FileSystemItem *)newParent;

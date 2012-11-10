@@ -36,7 +36,6 @@
     IBOutlet NSDrawer *__unsafe_unretained sidebarDrawer;
 }
 
-//@property (strong) IBOutlet NSView *viewContainer;
 @property (assign) IBOutlet NSView *viewContainer;
 @property (readonly) TreeViewController *currentTvc;
 @property (unsafe_unretained, readonly) SFTabView *tabViewBar;

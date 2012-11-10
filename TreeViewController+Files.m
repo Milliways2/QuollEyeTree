@@ -10,6 +10,8 @@
 #import "MyWindowController.h"
 #import "DirectoryItem.h"
 #import "FileItem.h"
+#import "volume.h"
+#import "alias.h"
 #import "ImageAndTextCell.h"
 #import "OpenWith.h"
 #import "DeletedItems.h"
@@ -34,6 +36,7 @@
 - (void)copyTaggedTo:(NSArray *)objectsToCopy;
 - (void)moveTaggedTo:(NSArray *)objectsToCopy;
 - (void)renameTaggedTo:(NSArray *)objects;
+- (void)symlinkTo:(FileSystemItem *)node;
 @end
 
 @implementation TreeViewController(Files)
@@ -86,7 +89,7 @@
         [self.progress setBezeled:YES];
         NSString *searchString = searchPanel.searchString;
         NSString *searchArguments = searchPanel.searchArguments;
-       
+
 		for (FileItem *node in objectsToSearch) {
             [searchQueue addOperationWithBlock:^{
                 NSTask *task = [[NSTask alloc] init];
@@ -100,18 +103,13 @@
                         node.tag = NO;
                 }
             }];
-            
+
         }
         [searchQueue addObserver:self
                       forKeyPath:@"operationCount"
                          options:NSKeyValueObservingOptionNew
                          context:(__bridge void *)([NSNumber numberWithInteger:noObjects])];
 	}
-}
-- (BOOL)isPackage {
-    FileItem *node = [self selectedFile];
-	if (node == nil)    return NO;
-    return (node.fileSize == nil);
 }
 
 #pragma mark Menu Actions
@@ -205,7 +203,7 @@
             fileAttributes = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:0] forKey:NSFileImmutable];
             [fileManager setAttributes:fileAttributes ofItemAtPath:target error:nil];
             return YES;
-        } 
+        }
         return NO;
     }
     return YES;
@@ -250,8 +248,8 @@
     currentFileToView = 0;
 	if ([filesToView count] == 0)   return;
 
-    textViewer = [[TextViewerController alloc] 
-                initWithNibName:@"TextView" 
+    textViewer = [[TextViewerController alloc]
+                initWithNibName:@"TextView"
                 bundle:nil];
     [[self view] addSubview:[textViewer view]];	// embed new TextView in our host view
     [[textViewer view] setFrame:[[self view] bounds]];	// resize the controller's view to the host size
@@ -329,11 +327,21 @@
 - (void)validateTableContextMenu:(NSMenu *)menu {
     FileItem *node = [self selectedFile];
     if (node == nil)    return;
-    openWithClass = [[OpenWith alloc] initMenu:node.url];
+	if(node.isAlias) {
+		NSString *target = getTarget(node.fullPath);
+		if(target)
+			openWithClass = [[OpenWith alloc] initMenu:[NSURL fileURLWithPath:target isDirectory:NO]];
+	}
+	else
+		openWithClass = [[OpenWith alloc] initMenu:node.url];
 	NSMenuItem *openWith = [menu itemWithTitle:@"Open With"];
 	[openWith setSubmenu:[openWithClass openWithMenu]];
-    NSMenuItem *packageContentsMenu = [menu itemWithTitle:@"Show Package Contents"];
-    [packageContentsMenu setHidden:![self isPackage]];
+    NSMenuItem *mi = [menu itemWithTitle:@"Show Package Contents"];
+    if(mi) [mi setHidden:!node.isPackage];
+	mi = [menu itemWithTitle:@"Show Target"];
+    if(mi) [mi setHidden:!node.isAlias];
+	mi = [menu itemWithTitle:@"Create Symlink"];
+	if(mi) [mi setHidden:node.isAlias];
 }
 
 #pragma mark Context Menu Actions
@@ -376,7 +384,7 @@
                    "activate information window\n"
                    "end tell", node.fullPath];
     NSAppleScript *as = [[NSAppleScript alloc] initWithSource: s];
-    [as executeAndReturnError:nil];		
+    [as executeAndReturnError:nil];
 }
 
 - (IBAction)showPackageContents:(id)sender {
@@ -386,7 +394,31 @@
     if ([fParent convertPackageToDirectory:node]) {
         [self.filesInDir removeObject:node];
         [self reloadData];
-	}    
+	}
+}
+- (IBAction)showTarget:(id)sender {
+    FileItem *node = [self selectedFile];
+	if(node.isAlias) {
+		NSString *target = getTarget(node.fullPath);
+		DirectoryItem *targetDir = findPathInVolumes([target stringByDeletingLastPathComponent]);
+		if(targetDir) {
+			TreeViewController *newTreeViewController = [self.delegate treeViewController:self addNewTabAtDir:targetDir];
+			[newTreeViewController enterFileView];
+			NSString *fileName = [target lastPathComponent];
+			for (FileItem *element in targetDir.files) {
+				if ([fileName compare:[element relativePath] options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+					[newTreeViewController selectObject:element];
+					break;
+				}
+			}
+		}
+		return;
+	}
+}
+- (IBAction)symlinkToFile:(id)sender {
+    FileItem *node = [self selectedFile];
+	if (node == nil)    return;
+    [self symlinkTo:node];
 }
 // FileView Double Click Target binding
 - (IBAction)dClickFile:(id)sender {

@@ -34,7 +34,7 @@
 		CFURLRef preferredApp;
 		CFStringRef outDisplayName;
 		OSStatus isPref = LSGetApplicationForURL((__bridge CFURLRef)url, kLSRolesAll, NULL, &preferredApp);
-		if(isPref == kLSApplicationNotFoundErr) {
+		if(isPref < 0) {
 			[_openWithMenu addItemWithTitle:@"<None>" action:nil keyEquivalent:@""];
 		}
 		else {

@@ -12,6 +12,7 @@
 }
 @property IBOutlet NSTextField *source;
 @property IBOutlet NSComboBox *destComboBox;
+@property IBOutlet NSMatrix *compareMode;
 @property IBOutlet NSButton *compareIdentical;
 @property IBOutlet NSButton *compareUnique;
 @property IBOutlet NSButton *dateNewer;
@@ -20,8 +21,11 @@
 @property IBOutlet NSButton *sizeSmaller;
 @property IBOutlet NSButton *sizeEqual;
 @property IBOutlet NSButton *sizeLarger;
+@property IBOutlet NSButton *sameContent;
+@property IBOutlet NSButton *diffContent;
 - (IBAction)cancelCompare:(id)sender;
 - (IBAction)performCompare:(id)sender;
+- (IBAction)contentCompare:(id)sender;
 
 + (ComparePanelController *)singleton;
 - (NSInteger)runModal;

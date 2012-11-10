@@ -14,3 +14,4 @@ extern void removeVolume(VolumeItem *volume);
 extern VolumeItem *locateVolume(NSString *volumePath);
 extern VolumeItem *locateOrAddVolume(NSString *volumePath);
 DirectoryItem *findPathInVolumes(NSString *path);
+DirectoryItem *locateOrAddDirectoryInVolumes(NSString *directory);

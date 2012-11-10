@@ -11,6 +11,7 @@
 #import "DirectoryItem.h"
 #import "FileItem.h"
 #import "volume.h"
+#import "alias.h"
 #import "ImageAndTextCell.h"
 #import "FolderPanelController.h"
 #import "ComparePanelController.h"
@@ -33,6 +34,7 @@
 - (void)moveTo:(FileSystemItem *)node;
 - (void)renameTo:(FileSystemItem *)node;
 - (void)pasteTo:(DirectoryItem *)node;
+- (void)symlinkTo:(FileSystemItem *)node;
 @end
 
 @implementation TreeViewController(Dirs)
@@ -71,6 +73,32 @@
 - (void)pasteURL {
     [self pasteTo:self.selectedDir];
 }
+- (void)unhideBranch {
+	DirectoryItem *node = self.selectedDir;
+	for (DirectoryItem *dir in node.directoriesInBranch) {
+		[dir cloneHidden:node];
+	}
+	[node updateBranch];
+    [self reloadData];
+}
+
+void getAllMatching (DirectoryItem *source, DirectoryItem *target, NSMutableArray **accumulated) {
+	NSArray *targetDir = target.loggedSubDirectories;
+	for (DirectoryItem *dir in source.loggedSubDirectories) {
+		NSString *fileName = dir.relativePath;
+		NSUInteger i = [targetDir indexOfObjectPassingTest:^(id obj, NSUInteger idx, BOOL *stop) {
+			if ([[obj relativePath] compare:fileName options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+				*stop = YES;
+				return YES;
+			}
+			return NO;
+        }];
+		if (i != NSNotFound ) {
+			[*accumulated addObject:[NSDictionary dictionaryWithObjectsAndKeys:dir, @"source", [targetDir objectAtIndex:i], @"target", nil]];
+			getAllMatching(dir, [targetDir objectAtIndex:i], accumulated);
+		}
+	}
+}
 - (void)compareDir {
 	DirectoryItem *node = self.selectedDir;
     ComparePanelController *comparePanel = [ComparePanelController singleton];
@@ -80,7 +108,6 @@
 	NSInteger n = [self.delegate currentTab] + 1;
 	[comparePanel setSelectedDir:n];
 	if ([comparePanel runModal] == NSOKButton) {
-		NSArray *currentContents = [[self.selectedDir files] filteredArrayUsingPredicate:fileFilterPredicate];
 		DirectoryItem *targetDir = findPathInVolumes(comparePanel.targetDirectory);
 		if (targetDir) {
 			if (![targetDir isPathLoaded]) {
@@ -88,29 +115,59 @@
 				return;
 			}
 		}
-		NSArray *targetFiles = 	[targetDir files];
-		
-		for (FileItem *node in currentContents) {
-			NSString *fileName = node.relativePath;
-			BOOL itemFound = NO;
-			for (FileItem *element in targetFiles) {
-				if ([[element relativePath] compare:fileName options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-					itemFound = YES;
-					NSTimeInterval timeDiff = [node.wDate timeIntervalSinceDate:element.wDate];
-					NSInteger sizeDiff = [node.fileSize integerValue] - [element.fileSize integerValue];
-					if (timeDiff < 0)		{ if ([comparePanel.dateOlder state])	node.tag = YES;}
-					else if (timeDiff > 0)	{ if ([comparePanel.dateNewer state])	node.tag = YES;}
-					else {
-						if ([comparePanel.dateSame state])	node.tag = YES;
-						else if ((sizeDiff == 0) && [comparePanel.compareIdentical state])	node.tag = YES;
+		NSMutableArray *accumulated = [NSMutableArray arrayWithCapacity:50];
+		[accumulated addObject:[NSDictionary dictionaryWithObjectsAndKeys:node, @"source", targetDir, @"target", nil]];
+		if ([comparePanel.compareMode selectedRow])
+			getAllMatching (node, targetDir, &accumulated);
+		for (NSDictionary *dict in accumulated) {
+			NSArray *currentContents = [[[dict objectForKey:@"source"] files] filteredArrayUsingPredicate:fileFilterPredicate];
+			NSArray *targetFiles = 	[[dict objectForKey:@"target"] files];
+
+			BOOL dateOlder = [comparePanel.dateOlder state];
+			BOOL dateNewer = [comparePanel.dateNewer state];
+			BOOL dateSame = [comparePanel.dateSame state];
+			BOOL compareIdentical = [comparePanel.compareIdentical state];
+			BOOL sizeSmaller = [comparePanel.sizeSmaller state];
+			BOOL sizeLarger = [comparePanel.sizeLarger state];
+			BOOL sizeEqual = [comparePanel.sizeEqual state];
+			BOOL compareUnique = [comparePanel.compareUnique state];
+			BOOL sameContent = [comparePanel.sameContent state];
+			BOOL diffContent = [comparePanel.diffContent state];
+			BOOL compareContent = sameContent || diffContent;
+			NSString *fileName;
+			for (FileItem *node in currentContents) {
+				if (node.tag)	continue;	// already tagged
+				fileName = node.relativePath;
+				BOOL itemFound = NO;
+				BOOL tag = NO;
+				for (FileItem *element in targetFiles) {
+					if ([[element relativePath] compare:fileName options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+						itemFound = YES;
+						NSTimeInterval timeDiff = [node.wDate timeIntervalSinceDate:element.wDate];
+						NSInteger sizeDiff = [node.fileSize integerValue] - [element.fileSize integerValue];
+
+						if (timeDiff < 0)		{ if (dateOlder)	tag = YES;}
+						else if (timeDiff > 0)	{ if (dateNewer)	tag = YES;}
+						else {
+							if (dateSame)	tag = YES;
+							else if ((sizeDiff == 0) && compareIdentical)	tag = YES;
+						}
+
+						if (sizeDiff < 0)		{ if (sizeSmaller)	tag = YES;}
+						else if (sizeDiff > 0)	{ if (sizeLarger)	tag = YES;}
+						else if (sizeEqual)	tag = YES;
+
+						if (tag && compareContent) {
+							if (sizeDiff == 0) {
+								tag = (sameContent == [[NSFileManager defaultManager] contentsEqualAtPath:[node fullPath] andPath:[element fullPath]]);	// i.e exclusive OR
+							} else	tag = NO;
+						}
+						node.tag = tag;
+						break;
 					}
-					if (sizeDiff < 0)		{ if ([comparePanel.sizeSmaller state])	node.tag = YES;}
-					else if (sizeDiff > 0)	{ if ([comparePanel.sizeLarger state])	node.tag = YES;}
-					else if ([comparePanel.sizeEqual state])	node.tag = YES;
-					break;
 				}
+				if(!itemFound) { if (compareUnique)	node.tag = YES;}
 			}
-			if(!itemFound) { if ([comparePanel.compareUnique state])	node.tag = YES;}
 		}
 	}
     comparePanel = nil;
@@ -119,7 +176,7 @@
 	FolderPanelController *folderPanel = [FolderPanelController new];
 	[folderPanel setFrom:self.selectedDir.relativePath];
 	[folderPanel setFilename:@"New Folder"];
-	
+
 	if ([folderPanel runModal] == NSOKButton) {
 		[self.delegate treeViewController:self pauseRefresh:YES];
 		NSError *error = nil;
@@ -158,15 +215,17 @@
 }
 - (void)moveDirToTrash {
 	[self.delegate treeViewController:self pauseRefresh:YES];
-	NSString *dirToRemove = [self.selectedDir fullPath];	// item to delete
-	NSArray *dirsToDelete = [NSArray arrayWithObject:self.selectedDir.url];
+	DirectoryItem *dir = self.selectedDir;
+	NSString *dirToRemove = [dir fullPath];	// item to delete
+	NSArray *dirsToDelete = [NSArray arrayWithObject:dir.url];
 	[[NSWorkspace sharedWorkspace] recycleURLs:dirsToDelete
 							 completionHandler:^(NSDictionary *newURLs, NSError *error) {
 								 if (error == nil) {
-                                     [[DeletedItems sharedDeletedItems] addWithPath:dirToRemove trashLocation:[[newURLs objectForKey:self.selectedDir.url] path]];
-									 [self.selectedDir removeSelf];
+									 self.selectedDir = NULL;
+                                     [[DeletedItems sharedDeletedItems] addWithPath:dirToRemove trashLocation:[[newURLs objectForKey:dir.url] path]];
+									 [dir.parent removeDir:dir];
 									 [self.dirTree reloadData];
-                                     [self updateSelectedDir];
+//                                     [self updateSelectedDir];
 									 [self.delegate treeViewController:self didRemoveDirectory:dirToRemove];
 								 }
 								 else {
@@ -178,7 +237,12 @@
 }
 
 #pragma mark Delegate Actions
-- (BOOL)keyPressedInOutlineView:(unichar)character {
+- (BOOL)keyPressedInOutlineView:(unichar)character shifted:(BOOL)shifted {
+	if (shifted && character == NSF3FunctionKey) {
+		[self.selectedDir updateBranch];
+		[self reloadData];
+		return YES;
+	}
 	if (character == NSF3FunctionKey) {
 		[self.selectedDir updateDirectory];
 		[self reloadData];
@@ -198,6 +262,7 @@
 	}
 	if (character == '-') {
         [self.dirTree collapseItem:self.selectedDir collapseChildren:YES];
+		[self.selectedDir releaseDir];
 	}
 	if (character == NSF6FunctionKey) {
 		if ([self.dirTree isItemExpanded:self.selectedDir])
@@ -253,58 +318,94 @@
 		[self setDirMenu];
 	}
 }
+- (void)validateContextMenu:(NSMenu *)menu {
+    DirectoryItem *item = (DirectoryItem *)[self.dirTree focusedItem];
+	NSMenuItem *mi = [menu itemWithTitle:@"Show Target"];
+	if(mi) [mi setHidden:!item.isAlias];
+	mi = [menu itemWithTitle:@"Create Symlink"];
+	if(mi) [mi setHidden:item.isAlias];
+}
 
 #pragma mark Context Menu Actions
-- (IBAction)copyDir:(id)sender {
-	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
-	[self copyToPasteboard:self.selectedDir.url];
+- (IBAction)copyDir:(id)sender {	// context & menu
+    DirectoryItem *item;
+    if ([sender isKindOfClass:[MyWindowController class]])
+		item = [self.dirTree itemAtRow:[self.dirTree selectedRow]];
+	else
+		item = (DirectoryItem *)[self.dirTree focusedItem];
+	[self copyToPasteboard:item.url];
 }
-- (IBAction)copyDirToClipboard:(id)sender {
-	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
-	[self copyToPasteboard:self.selectedDir.fullPath];
+- (IBAction)copyDirToClipboard:(id)sender {	// context only
+    DirectoryItem *item = (DirectoryItem *)[self.dirTree focusedItem];
+	[self copyToPasteboard:item.fullPath];
 }
-- (IBAction)openDirectory:(id)sender {
-	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
-	LSOpenCFURLRef((__bridge CFURLRef)self.selectedDir.url, nil);
+- (IBAction)openDirectory:(id)sender {	// context & menu
+    DirectoryItem *item;
+    if ([sender isKindOfClass:[MyWindowController class]])
+		item = [self.dirTree itemAtRow:[self.dirTree selectedRow]];
+	else
+		item = (DirectoryItem *)[self.dirTree focusedItem];
+	LSOpenCFURLRef((__bridge CFURLRef)item.url, nil);
 }
-- (IBAction)revealDirInFinder:(id)sender {
-	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
-	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:[NSArray arrayWithObject:self.selectedDir.url]];
+- (IBAction)revealDirInFinder:(id)sender {	// context & menu
+    DirectoryItem *item;
+    if ([sender isKindOfClass:[MyWindowController class]])
+		item = [self.dirTree itemAtRow:[self.dirTree selectedRow]];
+	else
+		item = (DirectoryItem *)[self.dirTree focusedItem];
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:[NSArray arrayWithObject:item.url]];
 }
-- (IBAction)openDirInNewTab:(id)sender {
-	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
-	[self.delegate treeViewController:self addNewTabAtDir:self.selectedDir];
+- (IBAction)openDirInNewTab:(id)sender {	// context only
+    DirectoryItem *item = (DirectoryItem *)[self.dirTree focusedItem];
+	[self.delegate treeViewController:self addNewTabAtDir:item];
 }
-- (IBAction)addDirToSidebar:(id)sender {
-	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
-	[self.delegate treeViewController:self addToSidebar:self.selectedDir.fullPath];
-}
-- (IBAction)openDirInTerminal:(id)sender {
-	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
+- (IBAction)openDirInTerminal:(id)sender {	// context only
+    DirectoryItem *item = (DirectoryItem *)[self.dirTree focusedItem];
 	NSString *s = [NSString stringWithFormat:
-				   @"tell application \"Terminal\" to do script \"cd \'%@\'\"", self.selectedDir.fullPath];
+				   @"tell application \"Terminal\" to do script \"cd \'%@\'\"", item.fullPath];
 	NSAppleScript *as = [[NSAppleScript alloc] initWithSource: s];
-	[as executeAndReturnError:nil];		
+	[as executeAndReturnError:nil];
 }
-- (IBAction)getDirInfo:(id)sender {
-	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
+- (IBAction)getDirInfo:(id)sender {	// context & menu
+    DirectoryItem *item;
+    if ([sender isKindOfClass:[MyWindowController class]])
+		item = [self.dirTree itemAtRow:[self.dirTree selectedRow]];
+	else
+		item = (DirectoryItem *)[self.dirTree focusedItem];
 	NSString *s = [NSString stringWithFormat:
 				   @"tell application \"Finder\"\n"
                    "open information window of %@  POSIX file \"%@\"\n"
                    "activate information window\n"
-                   "end tell", (self.selectedDir.isAlias || self.selectedDir.isPackage) ? @"file" : @"folder", self.selectedDir.fullPath];
+                   "end tell",  item.isAlias ? @"alias file" : (item.isPackage ? @"package" : @"folder"), item.fullPath];
 	NSAppleScript *as = [[NSAppleScript alloc] initWithSource: s];
-//	[as executeAndReturnError:nil];		
     NSDictionary *errorInfo;
-	if(![as executeAndReturnError:&errorInfo])	
+	if(![as executeAndReturnError:&errorInfo])
         NSLog(@"errorInfo %@", errorInfo);
+}
+- (IBAction)addDirToSidebar:(id)sender {	// context only
+    DirectoryItem *item = (DirectoryItem *)[self.dirTree focusedItem];
+	[self.delegate treeViewController:self addToSidebar:item.fullPath];
+}
+- (IBAction)showTargetDir:(id)sender {	// context only
+    DirectoryItem *item = (DirectoryItem *)[self.dirTree focusedItem];
+	if(item.isAlias) {
+		NSString *target = getTarget(item.fullPath);
+		DirectoryItem *targetDir = findPathInVolumes(target);
+		if(targetDir)	[self.delegate treeViewController:self addNewTabAtDir:targetDir];
+		return;
+	}
+}
+- (IBAction)symlinkToDir:(id)sender {
+    DirectoryItem *item = (DirectoryItem *)[self.dirTree focusedItem];
+	if (item == nil)    return;
+    [self symlinkTo:item];
 }
 
 #pragma mark - NSOutlineViewDelegate Protocol methods
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
     [self updateSelectedDir];
 }
-- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(NSCell*)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item {	 
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(NSCell*)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item {
 	if ([[tableColumn identifier] isEqualToString:COLUMNID_NAME]) {
 		if ([cell isKindOfClass:[ImageAndTextCell class]]) {
 			if(![item nodeIcon]) {

@@ -17,8 +17,8 @@
     BOOL _caseSensitive;
 }
 
-@property (strong) IBOutlet NSTextField *fileName;
-@property (strong) id delegate;
+@property (assign) IBOutlet NSTextField *fileName;
+@property (assign) id delegate;
 - (void)initWithPath:(NSString *)path;
 - (void)searchFirst:(NSString *)searchString regexSearch:(BOOL)regexSearch caseSensitive:(BOOL)caseSensitive;
 @end

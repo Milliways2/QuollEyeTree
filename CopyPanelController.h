@@ -11,10 +11,10 @@
 
 @interface CopyPanelController: NSWindowController {
 }
-@property (strong) IBOutlet NSTextField *source, *name;
-@property (strong) IBOutlet NSComboBox *destComboBox;
-@property (strong) IBOutlet NSButton *replaceExisting;
-@property (strong) IBOutlet NSButton *createDirectories;
+@property (assign) IBOutlet NSTextField *source, *name;
+@property (assign) IBOutlet NSComboBox *destComboBox;
+@property (assign) IBOutlet NSButton *replaceExisting;
+@property (assign) IBOutlet NSButton *createDirectories;
 - (IBAction)cancelCopy:(id)sender;
 - (IBAction)performCopy:(id)sender;
 

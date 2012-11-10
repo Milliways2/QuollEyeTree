@@ -54,13 +54,13 @@ static DirectoryItem *getDefaultDirectory() {
 }
 - (void)removeTabWithDirectory:(NSString *)directory  {
 	NSArray *arrangedTabs = [tabViewBar arrangedTabs];
-	
+
 	NSIndexSet *tabs = [arrangedTabs indexesOfObjectsPassingTest:^(id tab, NSUInteger index, BOOL *stop) {
 		TreeViewController *tvcInTab = [viewMap objectForKey:tab];
 		if ([[[tvcInTab treeRootNode] fullPath] isEqualToString:directory]) return YES;	// directory is in tab
-		return NO;	
+		return NO;
 	}];
-	
+
 	// Need to ensure that we don't remove last tab
 	NSMutableIndexSet *tabsToRemove = [NSMutableIndexSet new];
 	[tabsToRemove addIndexes:tabs];
@@ -70,7 +70,7 @@ static DirectoryItem *getDefaultDirectory() {
 		TreeViewController *tvcInTab = [viewMap objectForKey:[arrangedTabs objectAtIndex:tabToKeep]];
 		[tvcInTab setTreeRootNode:getDefaultDirectory()];	// replace with default Directory
 	}
-	
+
 	if([tabsToRemove count]) {
 		NSUInteger index = [tabsToRemove lastIndex];
 		while(index != NSNotFound) {
@@ -113,14 +113,14 @@ static DirectoryItem *getDefaultDirectory() {
         [item setTarget:self];
         iconImage = [pathHelper iconForName:place];
         [iconImage setSize:NSMakeSize(16, 16)];
-        [item setImage:iconImage];        
+        [item setImage:iconImage];
         index++;
     }
     [mainMenu setSubmenu:goMenu forItem:[mainMenu itemAtIndex:3]];	// Initialise 'Go' Menu
 }
 - (TreeViewController *)newTreeViewControllerAtDir:(DirectoryItem *)userDir {
 	TreeViewController *tvcNew = [[TreeViewController alloc]
-								  initWithNibName:@"TreeView" 
+								  initWithNibName:@"TreeView"
 								  bundle:nil];
 	tvcNew.delegate = self;
 	[tvcNew setTreeRootNode:userDir];
@@ -140,19 +140,19 @@ static DirectoryItem *getDefaultDirectory() {
 	[tabViewBar addTabWithRepresentedObject:[NSDictionary dictionaryWithObject:[tvcNew rootDirName] forKey:@"name"]];
 }
 
-// Initialise the 1st TreeViewController and display in main window  
+// Initialise the 1st TreeViewController and display in main window
 - (void)setupView {
 	currentTvc = [self newTreeViewControllerAtDir:getDefaultDirectory()];
 	[self.viewContainer addSubview:[currentTvc view]];	// embed the TreeView in our host view
 	[[currentTvc view] setFrame:[self.viewContainer bounds]];	// resize the controller's view to the host size
-	
+
 	[currentTvc activateTreeView];
 	[tabViewBar addTabWithRepresentedObject:[NSDictionary dictionaryWithObject:[currentTvc rootDirName] forKey:@"name"]];
 }
 - (id)initWithWindowNibName:(NSString *)windowNibName {
 	if( self = [super initWithWindowNibName:windowNibName]) {
-		// viewMap maintains a relationsship between View and Tab (cannot use NSDictionary)
-		viewMap = [NSMapTable mapTableWithKeyOptions:NSMapTableStrongMemory | NSMapTableObjectPointerPersonality 
+		// viewMap maintains a relationship between View and Tab (cannot use NSDictionary)
+		viewMap = [NSMapTable mapTableWithKeyOptions:NSMapTableStrongMemory | NSMapTableObjectPointerPersonality
 										valueOptions:NSMapTableStrongMemory | NSMapTableObjectPointerPersonality];
  		[self showWindow:self];
 		tabViewBar.delegate = self;
@@ -167,7 +167,7 @@ static DirectoryItem *getDefaultDirectory() {
                                                      showCreateTime:[[NSUserDefaults standardUserDefaults]boolForKey:PREF_DATE_SHOW_CREATE]
                                                     useRelativeDate:[[NSUserDefaults standardUserDefaults]boolForKey:PREF_DATE_RELATIVE]];
     }
-	return self;				
+	return self;
 }
 
 - (void)doAutomatorAction:(NSNotification *)notification {
@@ -177,8 +177,8 @@ static DirectoryItem *getDefaultDirectory() {
 }
 
 - (void)awakeFromNib {
-	sidebarController = [[SidebarViewController alloc] 
-						 initWithNibName:@"SidebarView" 
+	sidebarController = [[SidebarViewController alloc]
+						 initWithNibName:@"SidebarView"
 						 bundle:nil];
 	sidebarController.delegate = self;
 	sidebarDrawer.contentView = sidebarController.view;
@@ -217,21 +217,21 @@ static DirectoryItem *getDefaultDirectory() {
         } else {
 			return NO;
 		}
-	}	
+	}
 	if (action == @selector(toggleHidden:)) {
         DirectoryItem *currentDir = [currentTvc selectedDir];
         if([currentDir showHidden] && [currentDir showDotted])
             return NO;
         [menuItem setState:[currentDir showHidden] && ![currentDir showDotted] ? NSOnState : NSOffState];
         return YES;
-	}	
+	}
 	if (action == @selector(toggleAllHidden:)) {
         DirectoryItem *currentDir = [currentTvc selectedDir];
         if([currentDir showHidden] && [currentDir showDotted])
             return NO;
         [menuItem setState:[currentDir showDotted] ? NSOnState : NSOffState];
         return YES;
-	}	
+	}
     return YES;
 }
 
@@ -317,9 +317,10 @@ static DirectoryItem *getDefaultDirectory() {
 		}
 	}
 }
-- (void)treeViewController:(TreeViewController *)tvc addNewTabAtDir:(DirectoryItem *)dir {
+- (TreeViewController *)treeViewController:(TreeViewController *)tvc addNewTabAtDir:(DirectoryItem *)dir {
 	[self addNewTab:self];
 	[currentTvc setTreeRootNode:dir];
+	return currentTvc;
 }
 - (void)treeViewController:(TreeViewController *)tvc addToSidebar:(NSString *)directory {
 	[sidebarController addPlace:directory];
@@ -340,30 +341,13 @@ static DirectoryItem *getDefaultDirectory() {
 	for (int j=0; j<numberOfTabs; ++j) {
 		[tvcArray addObject:[viewMap objectForKey:[arrangedTabs objectAtIndex:j]]];
 	}
-	return tvcArray;	
+	return tvcArray;
 }
 - (NSInteger)currentTab {
 	return [tabViewBar indexOfTab:[tabViewBar selectedTab]];
 }
 - (void)selectDirectory:(NSString *)directory inTab:(BOOL)inTab {
-	NSURL *url = [NSURL fileURLWithPath:directory isDirectory:YES];
-	VolumeItem *volume;
-	id value = nil;
-	[url getResourceValue:&value forKey:NSURLIsVolumeKey error:nil];
-	if ([value boolValue]) {    // if selected Directory is a Volume select or add
-        volume = locateOrAddVolume(directory);
-		if (inTab)
-			[self newTabWithDir:volume.volumeRoot];
-		else
-			[currentTvc setTreeRootNode:volume.volumeRoot];
-		return;
-	}
-    
-	NSURL *vol;
-	[url getResourceValue:&vol forKey:NSURLVolumeURLKey error:nil];
-    volume = locateOrAddVolume([vol path]);
-    
-	DirectoryItem *userDir = [[volume volumeRoot] loadPath:[volume localPath:directory] expandHidden:YES];
+	DirectoryItem *userDir = locateOrAddDirectoryInVolumes(directory);
     if (userDir) {
 		if (inTab)  [self newTabWithDir:userDir];
 		else    [currentTvc setTreeRootNode:userDir];
@@ -377,7 +361,7 @@ static DirectoryItem *getDefaultDirectory() {
     VolumeItem *volume = locateVolume(directory);
     if (volume) {
         NSArray *arrangedTabs = [tabViewBar arrangedTabs];	// Volume is loaded so check tabs
-        
+
         NSIndexSet *tabsWithVolume = [arrangedTabs indexesOfObjectsPassingTest:^(id tab, NSUInteger index, BOOL *stop) {
             TreeViewController *tvcInTab = [viewMap objectForKey:tab];
             id rootDir = [[tvcInTab selectedDir] rootDir];
@@ -388,7 +372,7 @@ static DirectoryItem *getDefaultDirectory() {
             }
             return NO;
         }];
-        
+
         // Need to ensure that we don't remove last tab
         NSMutableIndexSet *tabsToRemove = [NSMutableIndexSet new];
         [tabsToRemove addIndexes:tabsWithVolume];
@@ -398,7 +382,7 @@ static DirectoryItem *getDefaultDirectory() {
             TreeViewController *tvcInTab = [viewMap objectForKey:[arrangedTabs objectAtIndex:tabToKeep]];
             [tvcInTab setTreeRootNode:getDefaultDirectory()];	// replace with default Directory
         }
-        
+
         if([tabsToRemove count]) {
             NSUInteger index = [tabsToRemove lastIndex];
             while(index != NSNotFound) {
@@ -410,12 +394,12 @@ static DirectoryItem *getDefaultDirectory() {
     }
 }
 - (IBAction)privateTest:(id)sender {
-	NSLog(@"privateTest");	
+	NSLog(@"privateTest");
 //	[self sidebarViewController:sidebarController shouldRemoveVolume:@"/Volumes/TSB USB DRV"];
 }
 - (IBAction)toggleMark:(id)sender {
     NSInteger noSearches = [[filterString recentSearches] count];
-    NSMutableArray *searches = [NSMutableArray arrayWithCapacity:noSearches];	
+    NSMutableArray *searches = [NSMutableArray arrayWithCapacity:noSearches];
     [searches setArray:[filterString recentSearches]];
     NSString *topSearch = [searches objectAtIndex:0];
     NSString *newTopSearch;
@@ -443,7 +427,7 @@ static DirectoryItem *getDefaultDirectory() {
     NSSearchField *object = [notification object];
 	NSString *searchString = [object stringValue];
     NSInteger noSearches = [[object recentSearches] count];
-    NSMutableArray *searches = [NSMutableArray arrayWithCapacity:noSearches];	
+    NSMutableArray *searches = [NSMutableArray arrayWithCapacity:noSearches];
     [searches setArray:[object recentSearches]];
     NSRange markedRange = [searchString rangeOfString:marked options:NSAnchoredSearch];
     if (markedRange.length == 0) {
@@ -461,7 +445,7 @@ static DirectoryItem *getDefaultDirectory() {
     if (noSearches >= maximumRecents) {
         for (NSInteger i=noSearches-1; i; i--) {
             if ([[searches objectAtIndex:i] characterAtIndex:0] != diamond) {
-                [searches removeObjectAtIndex:i];      
+                [searches removeObjectAtIndex:i];
                 [filterString setRecentSearches:searches];
                 break;
             }
@@ -472,7 +456,7 @@ static DirectoryItem *getDefaultDirectory() {
 
 #pragma mark - SFTabView Delegate Methods
 - (void)tabView:(SFTabView *)tabView didAddTab:(CALayer *)tab {
-	[tabView selectTab:tab];	
+	[tabView selectTab:tab];
 	[viewMap setObject:currentTvc forKey:tab];
 }
 - (void)tabView:(SFTabView *)tabView didRemoveTab:(CALayer *)tab {
@@ -493,9 +477,6 @@ static DirectoryItem *getDefaultDirectory() {
 - (IBAction)segControlClicked:(id)sender {
 	[currentTvc segControlClicked:sender];
 }
-//- (IBAction)taggedFiles:(id)sender {
-//	[currentTvc applyTagged:[(NSButton *)sender state]];
-//}
 - (IBAction)togglePreviewPanel:(id)sender {
 	[currentTvc togglePreviewPanel];
 }
@@ -514,9 +495,6 @@ static DirectoryItem *getDefaultDirectory() {
 - (IBAction)addNewTab:(id)sender {
 	[self newTabWithDir:getDefaultDirectory()];
 }
-//- (IBAction)toggleToolbarShown:(id)sender {
-//	[self.window.toolbar setVisible:!self.window.toolbar.isVisible];
-//}
 - (IBAction)addNewTabAt:(id)sender {
 	[self newTabWithDir:[currentTvc selectedDir]];
 }

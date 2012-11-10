@@ -36,7 +36,7 @@
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
     initializeVolumes();
-    
+
     // create and register ArrayCountTransformer value transformer
     ArrayCountTransformer *countTransformer = [[ArrayCountTransformer alloc] init];
     [NSValueTransformer setValueTransformer:countTransformer forName:@"ArrayCountTransformer"];
@@ -53,6 +53,12 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	// load the app's main window for display
 	myWindowController = [[MyWindowController alloc] initWithWindowNibName:@"MainWindow"];
+	NSDictionary *bundleInfo = [[NSBundle mainBundle] infoDictionary];
+	NSString *body = [NSString stringWithFormat:@"%@ %@ (build %@)",
+					  [bundleInfo objectForKey:@"CFBundleExecutable"],
+					  [bundleInfo objectForKey:@"CFBundleShortVersionString"],
+					  [bundleInfo objectForKey:@"CFBundleVersion"]];
+	[myWindowController.window setTitle:body];
 }
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     SEL action = [menuItem action];
@@ -99,20 +105,17 @@
 
 // Create a mail message in the user's preferred mail client by opening a mailto URL.
 - (IBAction)sendMailCocoa:(id)sender {
+	NSString *version = [[NSProcessInfo processInfo] operatingSystemVersionString];
 	NSDictionary *bundleInfo = [[NSBundle mainBundle] infoDictionary];
 	NSString *subject = [NSString stringWithFormat:@"?subject=%@%%20Support%%20Request",
 						 [bundleInfo objectForKey:@"CFBundleExecutable"]];
-    SInt32 major, minor, bugfix;
-    Gestalt(gestaltSystemVersionMajor, &major);
-    Gestalt(gestaltSystemVersionMinor, &minor);
-    Gestalt(gestaltSystemVersionBugFix, &bugfix);
-	NSString *body = [NSString stringWithFormat:@"&body=%@%%20%@%%20build%%20%@%%20%d.%d.%d",
+	NSString *body = [NSString stringWithFormat:@"&body=%@ %@ (build %@) %@",
 					  [bundleInfo objectForKey:@"CFBundleExecutable"],
 					  [bundleInfo objectForKey:@"CFBundleShortVersionString"],
 					  [bundleInfo objectForKey:@"CFBundleVersion"],
-                      major, minor, bugfix];
-
-	NSString *mail = [NSString stringWithFormat:@"mailto:support@binnie.id.au%@%@", subject, body];
+					  version];
+	
+	NSString *mail = [NSString stringWithFormat:@"mailto:support@binnie.id.au%@%@", subject, [body stringByReplacingOccurrencesOfString:@" " withString:@"%20" ]];
     NSURL *url = [NSURL URLWithString:mail];
     [[NSWorkspace sharedWorkspace] openURL:url];
 }

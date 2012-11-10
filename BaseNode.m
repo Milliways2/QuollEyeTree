@@ -8,7 +8,10 @@
 #import "BaseNode.h"
 
 @implementation BaseNode
-
+static NSArray *leafNode = nil;
++ (void)initialize {
+	leafNode = [NSArray array];
+}
 - (id)init {
 	if (self = [super init]) {
 		[self setNodeTitle:@"BaseNode Untitled"];
@@ -28,7 +31,8 @@
 - (void)setLeaf:(BOOL)flag {
 	isLeaf = flag;
 	if (isLeaf)
-		[self setChildren:[NSArray arrayWithObject:self]];
+//		[self setChildren:[NSArray arrayWithObject:self]];
+		[self setChildren:[NSArray arrayWithObject:leafNode]];
 	else
 		[self setChildren:[NSArray array]];
 }

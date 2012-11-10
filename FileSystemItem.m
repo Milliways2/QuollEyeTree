@@ -10,7 +10,7 @@
 
 @implementation FileSystemItem
 @synthesize relativePath, kind;
-@synthesize nodeIcon, cDate, wDate;
+@synthesize nodeIcon, alias, package, cDate, wDate;
 
 - (id)initWithPath:(NSURL *)path parent:(id)parentItem {
 	if(self = [super init]) {
@@ -25,6 +25,11 @@
         NSString *tempKind;
 		[path getResourceValue:&tempKind forKey:NSURLLocalizedTypeDescriptionKey error:nil];
         kind = tempKind;
+		id value = nil;
+		[path getResourceValue:&value forKey:NSURLIsAliasFileKey error:nil];
+		alias = [value boolValue];
+		[path getResourceValue:&value forKey:NSURLIsPackageKey error:nil];
+		package = [value boolValue];
 	}
     return self;
 }
@@ -32,7 +37,7 @@
     if (parent == nil) {
         return self;	// If no parent, return self
     }
-	return parent;	
+	return parent;
 }
 - (void)setParent:(FileSystemItem *)newParent {
 	parent = newParent;

@@ -94,6 +94,9 @@
 - (IBAction)toggleAllHidden:(id)sender {
 	[currentTvc toggleDir:YES];
 }
+- (IBAction)unhideBranch:(id)sender {
+	[currentTvc unhideBranch];
+}
 - (IBAction)pasteURL:(id)sender {
 	[currentTvc pasteURL];
 }

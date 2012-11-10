@@ -18,7 +18,7 @@
 - (void)treeviewDidEnterDirWindow:(TreeViewController *)tvc;
 - (void)treeViewController:(TreeViewController *)tvc rootChangedInTreeView:(NSString *)rootDirName;
 - (void)treeViewController:(TreeViewController *)tvc pauseRefresh:(BOOL)pause;
-- (void)treeViewController:(TreeViewController *)tvc addNewTabAtDir:(DirectoryItem *)dir;
+- (TreeViewController *)treeViewController:(TreeViewController *)tvc addNewTabAtDir:(DirectoryItem *)dir;
 - (void)treeViewController:(TreeViewController *)tvc addToSidebar:(NSString *)directory;
 - (void)treeViewController:(TreeViewController *)tvc didRemoveDirectory:(NSString *)directory;
 

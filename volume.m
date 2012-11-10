@@ -20,7 +20,7 @@ VolumeItem *systemRootVolume() {
     return [volumes objectAtIndex:0];
 }
 VolumeItem *addVolume(NSString *volumePath) {
-	VolumeItem * newVolume = [VolumeItem new];	// Add new Volume
+	VolumeItem *newVolume = [VolumeItem new];	// Add new Volume
 	newVolume.relativePath = [volumePath stringByDeletingLastPathComponent];
 	newVolume.volumeRoot = [[DirectoryItem alloc] initWithPath:[NSURL fileURLWithPath:volumePath] parent:newVolume];
 	[volumes addObject:newVolume];
@@ -49,4 +49,21 @@ DirectoryItem *findPathInVolumes(NSString *path) {
 		if (dir)    return dir;
 	}
 	return nil;	// Path not fond
+}
+// locate directory in logged volumes, loading if necessary
+DirectoryItem *locateOrAddDirectoryInVolumes(NSString *directory) {
+	NSURL *url = [NSURL fileURLWithPath:directory isDirectory:YES];
+	VolumeItem *volume;
+	id value = nil;
+	[url getResourceValue:&value forKey:NSURLIsVolumeKey error:nil];
+	if ([value boolValue]) {    // if directory is a Volume locate or add
+        volume = locateOrAddVolume(directory);
+		return volume.volumeRoot;
+	}
+
+	NSURL *vol;
+	[url getResourceValue:&vol forKey:NSURLVolumeURLKey error:nil];
+    volume = locateOrAddVolume([vol path]);
+	DirectoryItem *userDir = [volume.volumeRoot loadPath:[volume localPath:directory] expandHidden:YES];
+	return userDir;
 }

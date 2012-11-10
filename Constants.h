@@ -30,6 +30,8 @@ extern NSString *const PREF_DATE_WIDTH;
 extern NSString *const PREF_DATE_RELATIVE;
 extern NSString *const PREF_DATE_FORMAT;
 extern NSString *const PREF_DATE_SHOW_CREATE;
+extern NSString *const PREF_SIZE_MODE;
+extern NSString *const PREF_TOTAL_MODE;
 
 extern NSString *const PreferencesControllerDateWidthsDidChangeNotification;
 extern NSString *const DirectoryItemDidRemoveDirectoriesNotification;

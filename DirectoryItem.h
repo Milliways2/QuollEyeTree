@@ -12,16 +12,12 @@
 @interface DirectoryItem: FileSystemItem {
     NSMutableArray *_subDirectories;
     NSMutableArray *_files;
-	BOOL alias;
-	BOOL package;
 	BOOL unHideDir;
 	BOOL unHideAllDir;
 }
 
 @property (strong, readonly) NSMutableArray *files;
 @property (strong, readonly) NSArray *loggedSubDirectories;
-@property (assign, readonly, getter=isAlias) BOOL alias;
-@property (assign, readonly, getter=isPackage) BOOL package;
 
 - (DirectoryItem *)rootDir;
 - (id)initRootWithPath:(NSURL *)path;
@@ -30,18 +26,21 @@
 - (DirectoryItem *)directoryAtIndex:(NSUInteger)n; // Invalid to call on leaf nodes
 - (NSMutableArray *)subDirectories;
 - (NSMutableArray *)filesInBranch;
+- (NSArray *)directoriesInBranch;
+- (NSUInteger)sizeOfFiles;
 - (BOOL)isPathLoaded;
 
 - (DirectoryItem *)findPathInDir:(NSString *)path;
 - (DirectoryItem *)loadPath:(NSString *)path;
 - (DirectoryItem *)loadPath:(NSString *)path expandHidden:(BOOL)expandHidden;
 - (void)updateDirectory;
-- (void)removeSelf;
+- (void)updateBranch;
 - (void)releaseDir;
 - (void)removeDir:(DirectoryItem *)node;
 - (void)moveItem:(FileSystemItem *)node;
 - (BOOL)convertPackageToDirectory:(FileSystemItem *)fNode;
 - (void)toggleHidden:(BOOL)all;
+- (void)cloneHidden:(DirectoryItem *)dir;
 - (BOOL)showHidden;
 - (BOOL)showDotted;
 

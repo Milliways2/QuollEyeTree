@@ -28,9 +28,9 @@
 @synthesize delegate;
 
 - (void)savePlaces {
-	NSArray	*children = [[[[treeController arrangedObjects]descendantNodeAtIndexPath:places] representedObject] children];
-	NSMutableArray *userPlaces = [NSMutableArray arrayWithCapacity:[children count]];
-	for (BaseNode *place in children) {
+	NSArray	*placesChildren = [[[[treeController arrangedObjects]descendantNodeAtIndexPath:places] representedObject] children];
+	NSMutableArray *userPlaces = [NSMutableArray arrayWithCapacity:[placesChildren count]];
+	for (BaseNode *place in placesChildren) {
 		[userPlaces addObject:[place path]];
 	}
 	[[NSUserDefaults standardUserDefaults] setObject:userPlaces forKey:@"userPlaces"];

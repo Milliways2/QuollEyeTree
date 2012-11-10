@@ -10,6 +10,7 @@
 
 
 @implementation ComparePanelController
+@synthesize compareMode;
 
 - (id)init {
 	if (self = [super initWithWindowNibName: @"ComparePanel"]) {
@@ -35,6 +36,22 @@
 - (IBAction)performCompare:(id)sender {
 	[self close];
 	[NSApp stopModalWithCode:NSOKButton];
+}
+- (IBAction)contentCompare:(id)sender {
+	NSInteger selectedCell = [[sender selectedCell] tag];
+	if (selectedCell == 21 || selectedCell == 41 ||selectedCell == 43) {
+		[self.diffContent setState:0];
+		[self.sameContent setState:0];
+		return;
+	}
+	if ([[sender selectedCell] tag] == 51)
+		[self.diffContent setState:0];
+	else
+		[self.sameContent setState:0];
+	[self.compareUnique setState:0];
+	[self.sizeSmaller setState:0];
+	[self.sizeLarger setState:0];
+	[self.sizeEqual setState:1];
 }
 - (NSInteger)runModal {
 	[self.destComboBox setObjectValue:[self.destComboBox objectValueOfSelectedItem]];

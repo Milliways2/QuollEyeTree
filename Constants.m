@@ -27,6 +27,8 @@ NSString *const PREF_DATE_WIDTH = @"DateWidth";
 NSString *const PREF_DATE_RELATIVE = @"relativeDate";
 NSString *const PREF_DATE_FORMAT = @"dateFormat";
 NSString *const PREF_DATE_SHOW_CREATE = @"createTime";
+NSString *const PREF_SIZE_MODE = @"sizeMode";
+NSString *const PREF_TOTAL_MODE = @"totalMode";
 
 NSString *const PreferencesControllerDateWidthsDidChangeNotification = @"DateChanged";
 NSString *const DirectoryItemDidRemoveDirectoriesNotification = @"DirectoriesRemoved";

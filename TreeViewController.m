@@ -216,7 +216,7 @@
 				[self.fileList moveColumn:colIndex toColumn:indx];
 			indx++;
         }
-	}
+        }
     [self.fileList sizeToFit];
 
     tables = [self.dirTree tableColumns];
@@ -248,6 +248,16 @@
 			indx++;
         }
 	}
+	if ([NSByteCountFormatter class]) {
+		NSByteCountFormatter *newForm = [NSByteCountFormatter new];
+		newForm.allowsNonnumericFormatting = NO;
+		if([[NSUserDefaults standardUserDefaults] boolForKey:PREF_TOTAL_MODE]) {
+			[[[self.dirTree tableColumnWithIdentifier:@"sizeOfFiles"] dataCell] setFormatter:newForm];
+		}
+		if([[NSUserDefaults standardUserDefaults] boolForKey:PREF_SIZE_MODE]) {
+			[[[self.fileList tableColumnWithIdentifier:@"fileSize"] dataCell] setFormatter:newForm];
+		}
+	}
     [self.dirTree sizeToFit];
 }
 - (void)awakeFromNib {
@@ -268,7 +278,7 @@
 		NSTableColumn *tableColumn = [self.fileList tableColumnWithIdentifier:COLUMNID_NAME];
 		ImageAndTextCell *imageAndTextCell = [[ImageAndTextCell alloc] init];
 		[imageAndTextCell setEditable:YES];
-		[tableColumn setDataCell:imageAndTextCell];	
+		[tableColumn setDataCell:imageAndTextCell];
 	}
 	[[[self.fileList tableColumnWithIdentifier:COLUMNID_DATE] dataCell] setFormatter:[IBDateFormatter sharedDateFormatter].writeDateFormatter];
 	[[[self.dirTree tableColumnWithIdentifier:COLUMNID_DATE] dataCell] setFormatter:[IBDateFormatter sharedDateFormatter].writeDateFormatter];
@@ -281,7 +291,7 @@
 	fileFilterPredicate = [NSPredicate predicateWithValue:YES];
 	tagPredicate = [NSPredicate predicateWithFormat:@"SELF.tag == YES"];
     notEmptyPredicate = [NSPredicate predicateWithFormat:@"SELF.fileSize > 0"];
-	inFileView = NO;	
+	inFileView = NO;
 	inBranch = NO;
     [self initViewHeaderMenu:self.fileList];
     [self initViewHeaderMenu:self.dirTree];
@@ -314,9 +324,9 @@
             [self exitFileViewer];
             return NO;  // exit textViewer but do not quit
         }
-    return YES;    
+    return YES;
 }
-    
+
 - (void)reloadData {
 	[self.dirTree reloadData];
 	[self.arrayController rearrangeObjects];
@@ -349,19 +359,19 @@
 	if (inFileView) {
 		[self.delegate treeviewDidEnterDirWindow:self];
 	}
-	inFileView = NO;	
+	inFileView = NO;
 	if (inBranch) {
         [self updateSelectedDir];
 		self.filesInDir = self.selectedDir.files;
         [self.fileList setBackgroundColor:[NSColor controlBackgroundColor]];
-	}	
+	}
 	inBranch = NO;
 }
 - (void)setFileMenu {
 	if (!inFileView) {
 		[self.delegate treeviewDidEnterFileWindow:self];
 	}
-	inFileView = YES;	
+	inFileView = YES;
 }
 - (void)enterDirView {
 	[self.dirTree.window makeFirstResponder:self.dirTree];
@@ -390,7 +400,7 @@
 	[self.dirTree reloadData];
 	self.selectedDir = node;
 	[self.dirTree expandItem:node];
-	self.filesInDir = node.files;	
+	self.filesInDir = node.files;
     self.currDir = node.url;
 	[self.delegate treeViewController:self rootChangedInTreeView:[self rootDirName]];
 }

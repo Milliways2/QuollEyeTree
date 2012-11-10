@@ -79,7 +79,7 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 		NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:target error:&error];
 		NSComparisonResult dateDiff = [sourceDate compare:[fileAttributes fileModificationDate]];
 		NSString *prompt = [NSString stringWithFormat:@"An %@item \"%@\" already exists.", (dateDiff == NSOrderedSame) ? @"" : (dateDiff == NSOrderedDescending) ? @"Older " : @"Newer ", [target lastPathComponent]];
-		
+
 		NSAlert *exists = [NSAlert new];
 		[exists setMessageText:prompt];
 		[exists setInformativeText:@"Do you want to replace it?"];
@@ -181,6 +181,33 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
     [self.delegate treeViewController:self pauseRefresh:NO];
     [self stopSpinner];
 }
+- (void)symlinkTo:(FileSystemItem *)node {
+	[self initCopyPanel:node];
+	[copyPanel setTitle:@"Create Symlink"];
+	if ([copyPanel runModal] == NSOKButton) {
+		NSFileManager *fileManager = [NSFileManager new];
+		NSString *target = [copyPanel.targetDirectory stringByAppendingPathComponent:[node.relativePath stringByRenamingingLastPathComponent:copyPanel.filename]];
+		if([self checkExistingTarget:target fileManager:fileManager sourceDate:[node wDate] replace:[copyPanel.replaceExisting state] createDirectories:[copyPanel.createDirectories state]]) {
+			NSError *error = nil;
+            [self startSpinner];
+			[self.delegate treeViewController:self pauseRefresh:YES];
+            if([fileManager createSymbolicLinkAtPath:target
+								 withDestinationPath:node.fullPath
+											   error:&error]) {
+				//                [self stopSpinner];
+				[self refreshTargetDirectory:copyPanel.targetDirectory];    // refresh target after completion of copy
+            } else {
+				[self.delegate treeViewController:self pauseRefresh:NO];
+                [self stopSpinner];
+                if (error) {
+					NSAlert *alert = [NSAlert alertWithError:error];
+					[alert runModal];
+                }
+            }
+		}
+	}
+    copyPanel = nil;
+}
 #pragma mark -
 - (void)copySingle:(FileSystemItem *)node {
 	NSFileManager *fileManager = [NSFileManager new];
@@ -195,7 +222,7 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
             NSError *error = nil;
             [self startSpinner];
             if([fileManager copyItemAtPath:node.fullPath
-                                    toPath:target 
+                                    toPath:target
                                      error:&error]) {
                 [self stopSpinner];
             }
@@ -265,7 +292,7 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
                 }
             }
         }];
-        
+
 	}
 }
 
@@ -331,7 +358,7 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 							 [NSNumber numberWithBool:YES] forKey:NSPasteboardURLReadingFileURLsOnlyKey];
 	NSArray *fileURLs = [pasteboard readObjectsForClasses:classes options:options];
 	NSURL *toUrl = [targetDir url];
-	
+
 	[self.delegate treeViewController:self pauseRefresh:YES];
 	NSFileManager *fileManager = [NSFileManager new];
 	NSDate *tempDate;
@@ -362,7 +389,7 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
                         }];
                     }
                 }
-            }];  
+            }];
 
 		}
         if(cancelAll)   break;
@@ -376,7 +403,7 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 	NSString *target = [[node.fullPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:[node.relativePath stringByRenamingingLastPathComponent:renamePanel.filename]];
 	NSString *newName = [target lastPathComponent];
 	if([fileManager moveItemAtPath:node.fullPath
-							toPath:target 
+							toPath:target
 							 error:&error]) {
 		node.relativePath = newName;
 		[self reloadData];
@@ -400,7 +427,7 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
     renamePanel = [RenamePanelController new];
 	[renamePanel setTitle:@"Rename Tagged Files"];
 	[renamePanel setFrom:[NSString stringWithFormat:@"%ld tagged Files", [objects count]]];
-	[renamePanel setFilename:@"*.*"];		
+	[renamePanel setFilename:@"*.*"];
 	if ([renamePanel runModal] == NSOKButton) {
 		[self.delegate treeViewController:self pauseRefresh:YES];
 		for (FileItem *node in objects) {

@@ -34,6 +34,8 @@
 - (IBAction)copyTaggedFiles:(id)sender;
 - (IBAction)revealFileInFinder:(id)sender;
 - (IBAction)showPackageContents:(id)sender;
+- (IBAction)showTarget:(id)sender;
+- (IBAction)symlinkToFile:(id)sender;
 - (IBAction)getFileInfo:(id)sender;
 @end
 

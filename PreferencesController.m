@@ -14,6 +14,8 @@
 #import "IBPathPopUpButton.h"
 
 @implementation PreferencesController
+@synthesize sizeMode;
+@synthesize sizeTotalMode;
 
 NSArray *sortColumns;
 
@@ -113,6 +115,14 @@ NSArray *sortColumns;
      initialiseFormatters:selectedTag showCreateTime:[self.createTime state] useRelativeDate:[self.relativeDate state]];
     [self showDate];
 }
+- (IBAction)sizeFormat:(id)sender {
+	[[NSUserDefaults standardUserDefaults]
+	 setBool:[self.sizeMode state]
+	 forKey:PREF_SIZE_MODE];
+	[[NSUserDefaults standardUserDefaults]
+	 setBool:[self.sizeTotalMode state]
+	 forKey:PREF_TOTAL_MODE];
+}
 #pragma mark -
 - (void)awakeFromNib {
 	sortColumns = [NSArray arrayWithObjects:COLUMNID_NAME, COLUMNID_SIZE, COLUMNID_DATE, nil];
@@ -135,6 +145,7 @@ NSArray *sortColumns;
     [self.relativeDate setState:[[NSUserDefaults standardUserDefaults]boolForKey:PREF_DATE_RELATIVE]];
 	[self.createTime setState:[[NSUserDefaults standardUserDefaults]boolForKey:PREF_DATE_SHOW_CREATE]];
     [self showDate];
+
 }
 
 @end

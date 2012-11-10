@@ -66,6 +66,8 @@
 		3CCC303A143DCC8F00789F65 /* SFDefaultTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC3039143DCC8F00789F65 /* SFDefaultTab.m */; };
 		3CCC303F143DCCBB00789F65 /* SFTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC303E143DCCBB00789F65 /* SFTabView.m */; };
 		3CCC38B91441163A00789F65 /* MyWindowController+FileMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC38B81441163A00789F65 /* MyWindowController+FileMenu.m */; };
+		3CD0B6741648BDC600F7515D /* alias.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD0B6731648BDC600F7515D /* alias.m */; };
+		3CD0B683164B33CF00F7515D /* folderSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD0B682164B33CF00F7515D /* folderSize.m */; };
 		3CD3019A1447A44700DD3A71 /* CopyMovePanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CD301991447A44700DD3A71 /* CopyMovePanel.xib */; };
 		3CD3019F1447B05500DD3A71 /* CopyPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD3019E1447B05500DD3A71 /* CopyPanelController.m */; };
 		3CD4AFA513C17A870062E1C0 /* MyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD4AFA413C17A870062E1C0 /* MyWindowController.m */; };
@@ -191,6 +193,10 @@
 		3CCC303E143DCCBB00789F65 /* SFTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFTabView.m; sourceTree = "<group>"; };
 		3CCC38B71441163A00789F65 /* MyWindowController+FileMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MyWindowController+FileMenu.h"; sourceTree = "<group>"; };
 		3CCC38B81441163A00789F65 /* MyWindowController+FileMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MyWindowController+FileMenu.m"; sourceTree = "<group>"; };
+		3CD0B6721648BDC500F7515D /* alias.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = alias.h; sourceTree = "<group>"; };
+		3CD0B6731648BDC600F7515D /* alias.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = alias.m; sourceTree = "<group>"; };
+		3CD0B681164B33CF00F7515D /* folderSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = folderSize.h; sourceTree = "<group>"; };
+		3CD0B682164B33CF00F7515D /* folderSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = folderSize.m; sourceTree = "<group>"; };
 		3CD301991447A44700DD3A71 /* CopyMovePanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CopyMovePanel.xib; sourceTree = "<group>"; };
 		3CD3019D1447B05500DD3A71 /* CopyPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CopyPanelController.h; sourceTree = "<group>"; };
 		3CD3019E1447B05500DD3A71 /* CopyPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CopyPanelController.m; sourceTree = "<group>"; };
@@ -416,6 +422,10 @@
 				3C68F6CE145CBD9C009C8762 /* VolumeItem.m */,
 				3CB0A4FD1643F062007369C9 /* volume.h */,
 				3C7554AB15DB74B6006A795F /* volume.m */,
+				3CD0B6721648BDC500F7515D /* alias.h */,
+				3CD0B6731648BDC600F7515D /* alias.m */,
+				3CD0B681164B33CF00F7515D /* folderSize.h */,
+				3CD0B682164B33CF00F7515D /* folderSize.m */,
 			);
 			name = "File System";
 			sourceTree = "<group>";
@@ -663,6 +673,8 @@
 				3CC3732515C8E6E700B1BDA3 /* Constants.m in Sources */,
 				3C5684BD15D399D5008F98FD /* TextViewerView.m in Sources */,
 				3C7554AC15DB74B6006A795F /* volume.m in Sources */,
+				3CD0B6741648BDC600F7515D /* alias.m in Sources */,
+				3CD0B683164B33CF00F7515D /* folderSize.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -701,8 +713,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = QuollEyeTree_Prefix.pch;
 				INFOPLIST_FILE = "QuollEyeTree-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = QuollEyeTree;
 				SDKROOT = macosx;
 			};
@@ -719,8 +729,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = QuollEyeTree_Prefix.pch;
 				INFOPLIST_FILE = "QuollEyeTree-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = QuollEyeTree;
 				SDKROOT = macosx;
 			};

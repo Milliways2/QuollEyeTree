@@ -1,115 +1,16 @@
-Version 1.0 2012-09-27
-- changed "Open With" only shows apps on main volume
+What's new since 1.0
 
-Version 0.20 beta 2012-09-14
-- fixed inconsistent update after Directory move, delete, rename
-- fixed Branch did not follow empty Dirs
-
-Version 0.19 beta 2012-08-27
-- changed show name in File Viewer
-- added cancel to tagged file Copy, Move, Paste
-
-Version 0.18 beta 2012-08-17
-- fixed inconsistent update after move
-- fixed occasional crash after move
-- added Sidebar Eject removable volume
-
-Version 0.17 beta 2012-08-11
-- added progress bar to Search Files
-- changed Branch mode background colour
-- added delete Locked file
-- changed Go To will log hidden files if necessary.
-- added OpenInQuollEyeTree Action
-
-Version 0.16 beta 2012-07-21
-- changed Sidebar does not retain selection
-- added File Viewer
-- added Show All
-- added Search Files
-- changed New Tab At
-
-Version 0.15 beta 2012-06-12
-- added F5 F6 * + -
-- added ^Branch
-- added directory size & Path Bar
-
-Version 0.14 beta 2012-06-02
-- changed Branch follows links
-- fixed Status Box missing in 0.13
-- added mark File Filter
-- added size & date filter
-
-Version 0.13 beta 2012-05-14
-- added Date configuration
-- added Column configuration
-- changed Hide missing Creation Dates (1970)
-
-Version 0.12 beta 2012-05-01
-- added Get Info
-- changed Copy, Move & Paste operate asynchronously
-
-Version 0.11 beta 2012-04-16
-- added Go To
-- added Go Menu
-- added "Toggle Hidden"
-
-Version 0.10 beta 2012-04-06
-- added "Put Back"
-- added "Show Package Contents"
-- fixed (obscure) missing symlink target caused duplicate directories
-- fixed ⌘V
-
-Version 0.9 beta 2012-01-26
-- added "Open With" Contextural Menu
-- added ⌘R Reveal in Finder
-- added Application Category "Productivity"
-- added Compare Directories
-- fixed Lion did not show files in root directory
-- fixed New Dir created in parent
-- fixed Toolbar display only tagged files button did not work
-
-Version 0.8 beta 2011-12-23
-- added Help
-- added Rename Files, Dirs
-- added ⇧⌘N New Dir
-- added spinner
-- added tagged file Copy, Move, Rename
-
-Version 0.7 alpha 2011-11-10
-- added support for Mounted Volumes
-- added Sidebar
-- fixed	Automatic Refresh caused occasional crash
-- changed Open New Tab etc now expand 1st level Directories
-- changed rename to QuollEyeTree
-
-Version 0.6 alpha 2011-10-22
-- changed Directory/File split default in Preferences
-- added open Dir in new Tab
-- added ⌘P Paste from clipboard for Files & Diectory
-- added Move Files, Dirs
-- added Copy Files, Dirs
-- added Delete (Move to Trash) Files, Dirs, tagged Files
-
-Version 0.5 alpha 2011-10-09
-- added Tabbed interface
-
-Version 0.4 alpha 2011-10-04
-- fixed Preference setting broken in 0.3
-- added Automatic Refresh
-- added ⌘C copy to clipboard for File & Diectory
-- added Copy tagged files to clipboard
-
-Version 0.3 alpha 2011-09-29
-- added Email Support link
-- added Documentation
-- added Quick Look
-
-Version 0.2 alpha 2011-09-24
-- fixed F3 Refresh did not work if directories added/removed
-- added Compound file specs e.g. *.m *.h
-- added Filtering to show only tagged files
-- added Option to tag/untag/invert all files
-- added Branch mode
-
-Version 0.1 2011-09-14
-- initial alpha
+Version 1.01 beta 2012-11-09
+- changed Convert project to ARC
+- added Unlog Directories
+- added Compare Branch
+- added Compare Contents
+- fixed Open With did not correctly resolve symlinks
+- added Show Target Context Menu for alias or symlink
+- added Create Symlink
+- changed Directory Context Menu without selection
+- added show Package size
+- added show hidden in Branch
+- changed F3 refresh Branch
+- added Directory Size
+- changed Size as bytes, KB, MB

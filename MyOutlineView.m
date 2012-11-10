@@ -10,8 +10,7 @@
 
 @implementation MyOutlineView
 
-- (void)keyDown:(NSEvent *)theEvent
-{
+- (void)keyDown:(NSEvent *)theEvent {
 	unichar keyChar = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
 	if ([theEvent modifierFlags] & NSCommandKeyMask) {
 		if([self.keyDelegate respondsToSelector:@selector(keyCmdPressedInOutlineView:)])
@@ -23,8 +22,8 @@
 			if([self.keyDelegate keyCtlPressedInOutlineView:keyChar])
 				return;
 	}
-	if([self.keyDelegate respondsToSelector:@selector(keyPressedInOutlineView:)])
-		if([self.keyDelegate keyPressedInOutlineView:keyChar])
+	if([self.keyDelegate respondsToSelector:@selector(keyPressedInOutlineView:shifted:)])
+		if([self.keyDelegate keyPressedInOutlineView:keyChar shifted:([theEvent modifierFlags] & NSShiftKeyMask)==NSShiftKeyMask])
 			return;
 	[super keyDown:theEvent];
 }

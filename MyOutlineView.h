@@ -10,7 +10,7 @@
 
 @protocol MyOutlineViewDelegate
 @optional
-- (BOOL)keyPressedInOutlineView:(unichar)character;
+- (BOOL)keyPressedInOutlineView:(unichar)character shifted:(BOOL)shifted;
 - (BOOL)keyCmdPressedInOutlineView:(unichar)character;
 - (BOOL)keyCtlPressedInOutlineView:(unichar)character;
 - (void)mouseDownInOutlineView;
@@ -20,7 +20,7 @@
 @interface MyOutlineView: NSOutlineView {
 }
 
-@property (strong) IBOutlet NSObject <MyOutlineViewDelegate> *keyDelegate;
+@property (assign) IBOutlet NSObject <MyOutlineViewDelegate> *keyDelegate;
 @property (strong) id focusedItem;
 
 @end

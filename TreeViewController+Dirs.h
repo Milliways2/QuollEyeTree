@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TreeViewController.h"
-	
+
 @interface TreeViewController(Dirs)
 
 // Menu Actions
@@ -21,14 +21,17 @@
 - (void)renameDir;
 - (void)compareDir;
 - (void)toggleDir:(BOOL)all;
+- (void)unhideBranch;
 // Context Menu Actions
-- (IBAction)openDirectory:(id)sender;
-- (IBAction)copyDirToClipboard:(id)sender;
-- (IBAction)openDirInTerminal:(id)sender;	
 - (IBAction)copyDir:(id)sender;
-- (IBAction)openDirInNewTab:(id)sender;
-- (IBAction)addDirToSidebar:(id)sender;
+- (IBAction)copyDirToClipboard:(id)sender;
+- (IBAction)openDirectory:(id)sender;
 - (IBAction)revealDirInFinder:(id)sender;
+- (IBAction)openDirInNewTab:(id)sender;
+- (IBAction)openDirInTerminal:(id)sender;
 - (IBAction)getDirInfo:(id)sender;
+- (IBAction)addDirToSidebar:(id)sender;
+- (IBAction)showTargetDir:(id)sender;
+- (IBAction)symlinkToDir:(id)sender;
 
 @end

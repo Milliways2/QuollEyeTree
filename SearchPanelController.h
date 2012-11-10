@@ -11,9 +11,9 @@
 @interface SearchPanelController : NSWindowController {
     BOOL regexPermitted;
 }
-@property (strong) IBOutlet NSTextField *searchFor;
-@property (strong) IBOutlet NSMatrix *regex;
-@property (strong, readonly) IBOutlet NSButton *caseSensitive;
+@property (assign) IBOutlet NSTextField *searchFor;
+@property (assign) IBOutlet NSMatrix *regex;
+@property (assign, readonly) IBOutlet NSButton *caseSensitive;
 
 - (IBAction)cancelSearch:(id)sender;
 - (IBAction)performSearch:(id)sender;
