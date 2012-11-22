@@ -17,11 +17,11 @@
 #import "DeletedItems.h"
 #import "SearchPanelController.h"
 #import "TextViewerController.h"
+extern NSPredicate *tagPredicate;
+extern NSPredicate *notEmptyPredicate;
 
 @interface TreeViewController()
 //  TreeViewController
-- (BOOL)areFilesTagged;
-- (void)applyFileAndTagFilter:(NSPredicate *)filePredicate;
 - (void)setFileMenu;
 - (void)enterFileView;
 - (void)enterDirView;
@@ -306,7 +306,6 @@
 	return NO;
 }
 - (BOOL)keyCmdPressedInTableView:(unichar)character {
-//    NSLog(@"Cmd Key Press %x", character);
 	return NO;
 }
 - (BOOL)keyCtlPressedInTableView:(unichar)character {

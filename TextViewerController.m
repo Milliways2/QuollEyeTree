@@ -31,7 +31,6 @@
     if(_searchString == NULL)    return;
     NSString *dataString = [[myTextView textStorage] string];
 	NSRange textCharRange = {0, [dataString length]};	// Original string
-    //    [[myDataView layoutManager] removeTemporaryAttribute:NSBackgroundColorAttributeName forCharacterRange:textCharRange];    
     [[myTextView layoutManager] removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:textCharRange];  
     foundRanges = [NSMutableArray new];
     NSStringCompareOptions opt = (_regexSearch ? NSRegularExpressionSearch : 0) | (_caseSensitive ? 0 : NSCaseInsensitiveSearch);
@@ -90,10 +89,11 @@ static NSStringEncoding encodingForData(NSData *data) {
     return 0;
 }
 
-- (void)initWithPath:(NSString *)path {
+- (id)initWithPath:(NSString *)path {
     NSString *dataString;
     NSStringEncoding enc = 0;
     NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
+	if (fileHandle == nil) return nil;
 //    NSError *error;
 //    if (!fileHandle) error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileReadUnknownError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:path, NSURLErrorKey, nil]];
     NSData *data = [fileHandle readDataOfLength:MAX_TEXT_FILE];
@@ -132,9 +132,7 @@ static NSStringEncoding encodingForData(NSData *data) {
 //    [[myTextView textContainer] setContainerSize:NSMakeSize(FLT_MAX, FLT_MAX)];
 //    [[myTextView textContainer] setWidthTracksTextView:NO];
 //    [myTextView setHorizontallyResizable:YES];
-
-//    sizableContainer = [[myDataView textContainer] retain];
-        
+	return self;
 }
 
 - (void)findAfter:(NSUInteger)location {

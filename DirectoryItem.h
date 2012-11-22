@@ -25,16 +25,14 @@
 - (NSInteger)numberOfSubDirs;	// Returns 0 for leaf nodes
 - (DirectoryItem *)directoryAtIndex:(NSUInteger)n; // Invalid to call on leaf nodes
 - (NSMutableArray *)subDirectories;
-- (NSMutableArray *)filesInBranch;
-- (NSArray *)directoriesInBranch;
 - (NSUInteger)sizeOfFiles;
 - (BOOL)isPathLoaded;
 
 - (DirectoryItem *)findPathInDir:(NSString *)path;
 - (DirectoryItem *)loadPath:(NSString *)path;
 - (DirectoryItem *)loadPath:(NSString *)path expandHidden:(BOOL)expandHidden;
+- (void)logDirPlus1;
 - (void)updateDirectory;
-- (void)updateBranch;
 - (void)releaseDir;
 - (void)removeDir:(DirectoryItem *)node;
 - (void)moveItem:(FileSystemItem *)node;

@@ -53,12 +53,14 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	// load the app's main window for display
 	myWindowController = [[MyWindowController alloc] initWithWindowNibName:@"MainWindow"];
+#ifdef BETA
 	NSDictionary *bundleInfo = [[NSBundle mainBundle] infoDictionary];
 	NSString *body = [NSString stringWithFormat:@"%@ %@ (build %@)",
 					  [bundleInfo objectForKey:@"CFBundleExecutable"],
 					  [bundleInfo objectForKey:@"CFBundleShortVersionString"],
 					  [bundleInfo objectForKey:@"CFBundleVersion"]];
 	[myWindowController.window setTitle:body];
+#endif
 }
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
     SEL action = [menuItem action];

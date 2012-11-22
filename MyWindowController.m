@@ -459,6 +459,10 @@ static DirectoryItem *getDefaultDirectory() {
 	[tabView selectTab:tab];
 	[viewMap setObject:currentTvc forKey:tab];
 }
+- (BOOL)tabView:(SFTabView *)tabView shouldRemoveTab:(CALayer *)tab {
+	if([tabViewBar numberOfTabs] == 1)  return NO; // Need to ensure that we don't remove last tab
+    return YES;
+}
 - (void)tabView:(SFTabView *)tabView didRemoveTab:(CALayer *)tab {
 	[viewMap removeObjectForKey:tab];	// remove Tab from list
 }

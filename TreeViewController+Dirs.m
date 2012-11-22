@@ -8,6 +8,7 @@
 
 #import "TreeViewController+Dirs.h"
 #import "MyWindowController.h"
+#import "DirectoryItem+Branch.h"
 #import "DirectoryItem.h"
 #import "FileItem.h"
 #import "volume.h"
@@ -23,7 +24,6 @@
 - (void)enterFileView;
 - (FileItem *)fileSelected;
 - (BOOL)areFilesVisible;
-- (void)applyFileAndTagFilter:(NSPredicate *)filePredicate;
 - (void)copyToPasteboard:(id)object;
 - (void)toggleTopSubView:(id)sender;
 //  TreeViewController+Copy
@@ -35,6 +35,9 @@
 - (void)renameTo:(FileSystemItem *)node;
 - (void)pasteTo:(DirectoryItem *)node;
 - (void)symlinkTo:(FileSystemItem *)node;
+@end
+@interface TreeViewController(Filter)
+- (void) checkFilter;
 @end
 
 @implementation TreeViewController(Dirs)
@@ -50,18 +53,38 @@
         self.currDir = self.selectedDir.url;    // refresh NSPathControl *currentPath
 		inBranch = NO;  // can't be inBranch if selection change
 	}
+	[self checkFilter];
+}
+- (void) updateBranchInQueue:(DirectoryItem *)branch  {
+	if(queue == NULL) {
+		queue = [NSOperationQueue new];
+		[queue setMaxConcurrentOperationCount:10];
+	}
+	[self.delegate treeViewController:self pauseRefresh:YES];
+	[queue addOperationWithBlock:^{
+		[self startSpinner];
+		[branch updateBranch];
+		[self stopSpinner];
+		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+			[self reloadData];
+		}];
+		[self.delegate treeViewController:self pauseRefresh:NO];
+	}];
 }
 
 #pragma mark - Dir Menu Actions
 - (void)showAllFiles:(BOOL)inRoot tagged:(BOOL)tagged {
     if(tagged && !showOnlyTagged)   [self toggleShowTagged];
-    inBranch = YES;
     [self startSpinner];
 	self.filesInDir = [inRoot ? [self.selectedDir rootDir] : self.selectedDir filesInBranch];
     [self stopSpinner];
-    [self.fileList setBackgroundColor:[NSColor selectedControlColor]];
-	[self toggleTopSubView:self];
-    [self enterFileView];
+	if ([self areFilesVisible]) {
+		inBranch = YES;
+		[self.fileList setUsesAlternatingRowBackgroundColors:NO];
+		[self.fileList setBackgroundColor:[NSColor selectedControlColor]];
+		[self toggleTopSubView:self];
+		[self enterFileView];
+	}
 }
 - (void)copyDirTo {
 	[self copyTo:self.selectedDir];
@@ -78,11 +101,10 @@
 	for (DirectoryItem *dir in node.directoriesInBranch) {
 		[dir cloneHidden:node];
 	}
-	[node updateBranch];
-    [self reloadData];
+	[self updateBranchInQueue:self.selectedDir];
 }
 
-void getAllMatching (DirectoryItem *source, DirectoryItem *target, NSMutableArray **accumulated) {
+void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray **accumulated) {
 	NSArray *targetDir = target.loggedSubDirectories;
 	for (DirectoryItem *dir in source.loggedSubDirectories) {
 		NSString *fileName = dir.relativePath;
@@ -225,7 +247,6 @@ void getAllMatching (DirectoryItem *source, DirectoryItem *target, NSMutableArra
                                      [[DeletedItems sharedDeletedItems] addWithPath:dirToRemove trashLocation:[[newURLs objectForKey:dir.url] path]];
 									 [dir.parent removeDir:dir];
 									 [self.dirTree reloadData];
-//                                     [self updateSelectedDir];
 									 [self.delegate treeViewController:self didRemoveDirectory:dirToRemove];
 								 }
 								 else {
@@ -235,17 +256,15 @@ void getAllMatching (DirectoryItem *source, DirectoryItem *target, NSMutableArra
 								 [self.delegate treeViewController:self pauseRefresh:NO];
 							 } ];
 }
-
 #pragma mark Delegate Actions
 - (BOOL)keyPressedInOutlineView:(unichar)character shifted:(BOOL)shifted {
 	if (shifted && character == NSF3FunctionKey) {
-		[self.selectedDir updateBranch];
+		[self.selectedDir updateDirectory];
 		[self reloadData];
 		return YES;
 	}
 	if (character == NSF3FunctionKey) {
-		[self.selectedDir updateDirectory];
-		[self reloadData];
+	[self updateBranchInQueue:self.selectedDir];
 		return YES;
 	}
 	if (character == 0x0d) {
@@ -253,11 +272,41 @@ void getAllMatching (DirectoryItem *source, DirectoryItem *target, NSMutableArra
 		return YES;
 	}
 	if (character == '*') {
-		[self.dirTree expandItem:self.selectedDir expandChildren:YES];
+        if(queue == NULL) {
+            queue = [NSOperationQueue new];
+            [queue setMaxConcurrentOperationCount:10];
+        }
+		[self.delegate treeViewController:self pauseRefresh:YES];
+        [queue addOperationWithBlock:^{
+			[self startSpinner];
+			[self.selectedDir logDirPlus1];
+			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+				[self.dirTree expandItem:self.selectedDir];
+			}];
+			[self.selectedDir logBranch];
+			[self stopSpinner];
+			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+				[self.dirTree expandItem:self.selectedDir expandChildren:YES];
+			}];
+			[self.delegate treeViewController:self pauseRefresh:NO];
+		}];
 		return YES;
 	}
 	if (character == '+' || character == '=') {
-		[self.dirTree expandItem:self.selectedDir];
+        if(queue == NULL) {
+            queue = [NSOperationQueue new];
+            [queue setMaxConcurrentOperationCount:10];
+        }
+		[self.delegate treeViewController:self pauseRefresh:YES];
+        [queue addOperationWithBlock:^{
+			[self startSpinner];
+			[self.selectedDir logDirPlus1];
+			[self stopSpinner];
+			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+				[self.dirTree expandItem:self.selectedDir];
+			}];
+			[self.delegate treeViewController:self pauseRefresh:NO];
+		}];
 		return YES;
 	}
 	if (character == '-') {
@@ -401,6 +450,49 @@ void getAllMatching (DirectoryItem *source, DirectoryItem *target, NSMutableArra
     [self symlinkTo:item];
 }
 
+#pragma mark NSPathControl Menu Actions
+- (IBAction)copyPath:(id)sender {	// context & menu
+	NSURL *url = [[self.currentPath clickedPathComponentCell] URL];
+	[self copyToPasteboard:url];
+}
+- (IBAction)copyPathToClipboard:(id)sender {	// context only
+	NSURL *url = [[self.currentPath clickedPathComponentCell] URL];
+	[self copyToPasteboard:url.path];
+}
+- (IBAction)openPath:(id)sender {	// context & menu
+	NSURL *url = [[self.currentPath clickedPathComponentCell] URL];
+	LSOpenCFURLRef((__bridge CFURLRef)url, nil);
+}
+- (IBAction)revealPathInFinder:(id)sender {	// context & menu
+	NSURL *url = [[self.currentPath clickedPathComponentCell] URL];
+	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:[NSArray arrayWithObject:url]];
+}
+- (IBAction)openPathInNewTab:(id)sender {	// context only
+	NSURL *url = [[self.currentPath clickedPathComponentCell] URL];
+	[self.delegate treeViewController:self addNewTabAtDir:findPathInVolumes(url.path)];
+}
+- (IBAction)openPathInTerminal:(id)sender {	// context only
+	NSURL *url = [[self.currentPath clickedPathComponentCell] URL];
+	NSString *s = [NSString stringWithFormat:
+				   @"tell application \"Terminal\" to do script \"cd \'%@\'\"", url.path];
+	NSAppleScript *as = [[NSAppleScript alloc] initWithSource: s];
+	[as executeAndReturnError:nil];
+}
+- (IBAction)getPathInfo:(id)sender {	// context & menu
+	NSURL *url = [[self.currentPath clickedPathComponentCell] URL];
+	NSString *s = [NSString stringWithFormat:
+				   @"tell application \"Finder\"\n"
+                   "open information window of %@  POSIX file \"%@\"\n"
+                   "activate information window\n"
+                   "end tell",  @"folder", url.path];
+	NSAppleScript *as = [[NSAppleScript alloc] initWithSource: s];
+    NSDictionary *errorInfo;
+	if(![as executeAndReturnError:&errorInfo])
+        NSLog(@"errorInfo %@", errorInfo);
+}
+//# - (IBAction)addPathToSidebar:(id)sender {	// context only
+//# 	[self.delegate treeViewController:self addToSidebar:item.fullPath];
+//# }
 #pragma mark - NSOutlineViewDelegate Protocol methods
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
     [self updateSelectedDir];

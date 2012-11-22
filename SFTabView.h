@@ -1,3 +1,4 @@
+;
 //
 //  SFTabView.h
 //  tabtest
@@ -28,13 +29,14 @@
 
     CALayer *currentClickedTab;
     CALayer *currentSelectedTab;
-
+	CALayer *buttonLayer;
+	
     CALayer *tabsLayer;
     CAScrollLayer *scrollLayer;
     
     NSMutableArray *arrangedTabs;
     NSPoint mouseDownPoint, mouseDownStartingPoint;
-    
+	NSTrackingArea *trackingArea;
     NSString *defaultTabClassName;
     
     BOOL canDragTab;
@@ -302,8 +304,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
-#pragma mark -
-#pragma mark Scrolling
+#pragma mark - Scrolling
 
 
 /** 
@@ -329,8 +330,7 @@
 
 @end
 
-#pragma mark -
-#pragma mark Private Methods
+#pragma mark - Private Methods
 
 @interface SFTabView (Private)
 
@@ -407,7 +407,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
-/** 
+/**
  @brief Sent after a new tab is added to the Tab View.
  @param tabView The Tab View that sent the message.
  @param tab The new tab added to the the Tab View.
@@ -415,6 +415,21 @@
  @see tabView:didRemoveTab:
  */
 - (void)tabView:(SFTabView *)tabView didAddTab:(CALayer *)tab;
+
+/**
+ @brief Sent to the delegate to allow or prohibit the specified tab to be deleted.
+ @param tabView The Tab View that sent the message.
+ @param tab A tab contained in the Tab View.
+ 
+ When a the close button in a tab is clicked by the user, this method will be called on the delegate.
+ Returning NO will disallow that tab from being deleted. Returning YES allows it to be deleted.
+ 
+ @return YES if the tab deleted should be allowed, otherwise NO.
+ 
+ @see tabView:didSelectTab:
+ @see tabView:willSelectTab:
+ */
+- (BOOL)tabView:(SFTabView *)tabView shouldRemoveTab:(CALayer *)tab;
 
 
 /** 

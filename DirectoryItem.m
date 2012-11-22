@@ -17,7 +17,8 @@
 @synthesize files=_files, loggedSubDirectories=_subDirectories;
 
 static NSMutableArray *leafNode = nil;
-static NSArray *fileSortDescriptor = nil;
+//static NSArray *fileSortDescriptor = nil;
+NSArray *fileSortDescriptor = nil;
 static NSArray *dirSortDescriptor = nil;
 static BOOL showHiddenFiles = NO;
 static NSArray *properties = nil;
@@ -44,8 +45,8 @@ NSOperationQueue *loggingQueue = nil;
                              [[NSSortDescriptor alloc] initWithKey:COLUMNID_NAME
                                                          ascending:YES
                                                           selector:@selector(localizedStandardCompare:)]];
-		loggingQueue = [NSOperationQueue new];
-		[loggingQueue setMaxConcurrentOperationCount:10];
+//		loggingQueue = [NSOperationQueue new];
+//		[loggingQueue setMaxConcurrentOperationCount:10];
     }
 }
 
@@ -68,6 +69,9 @@ NSOperationQueue *loggingQueue = nil;
 
 - (NSURL *)url {
     return [NSURL fileURLWithPath:[self fullPath] isDirectory:YES];
+}
+- (BOOL) isLeafNode {
+	return _subDirectories == leafNode;
 }
 
 // This is the main routine to read the contents of a directory (into array of URL)
@@ -189,9 +193,14 @@ NSOperationQueue *loggingQueue = nil;
                 newFile.fileSize = size;
                 [_files addObject:newFile];
 			if (newFile.isPackage) {
-				[loggingQueue addOperationWithBlock:^{
-				newFile.fileSize = folderSize(element);
-				}];
+//				[loggingQueue addOperationWithBlock:^{
+//				[aQueue addOperationWithBlock:^{
+//				newFile.fileSize = folderSize(element);
+//				}];
+				dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
+				dispatch_async(aQueue, ^{
+					newFile.fileSize = folderSize(element);
+				});
 
 			}
         }
@@ -204,7 +213,6 @@ NSOperationQueue *loggingQueue = nil;
 // If not found loads target
 - (void)copyDirContent:(NSString *)linkPath {
 	if (linkPath) {
-//		alias = YES;
 		DirectoryItem *loadedPath = [self loadPath:linkPath];
 		if (loadedPath == nil) {
 			loadedPath = locateOrAddDirectoryInVolumes(linkPath);
@@ -251,6 +259,14 @@ NSOperationQueue *loggingQueue = nil;
 	// We should never reach this point (error excepted)
     NSLog(@"Empty? %@ ", fPath);
 }
+- (void)logDirPlus1 {
+//    if(_subDirectories == nil)
+//		[self loadSubDirectories];
+	NSArray *tempArray = [NSArray arrayWithArray:self.subDirectories];
+	for (DirectoryItem *dir in tempArray) {
+		[dir loadSubDirectories];
+	}
+}
 
 // Read directory contents and add/delete/update files and subDirs
 - (void)updateDirectory {
@@ -279,10 +295,17 @@ NSOperationQueue *loggingQueue = nil;
 				[url getResourceValue:&tempDate forKey:NSURLContentModificationDateKey error:nil];
 				if([element.wDate isEqualToDate:tempDate]) {}
 				else {
-					NSNumber *size;
-					[url getResourceValue:&size forKey:NSURLFileSizeKey error:nil];
-					element.fileSize = size;
 					element.wDate = tempDate;
+					if (element.isPackage) {
+						dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
+						dispatch_async(aQueue, ^{
+							element.fileSize = folderSize(element.url);
+						});
+					} else {
+						NSNumber *size;
+						[url getResourceValue:&size forKey:NSURLFileSizeKey error:nil];
+						element.fileSize = size;
+					}
 				}
 				[array removeObject:url];
 				break;
@@ -443,45 +466,6 @@ NSOperationQueue *loggingQueue = nil;
 // path is a partial path e.g. VOLUME/subdir or /Users to match DirectoryItem
 - (DirectoryItem *)loadPath:(NSString *)path {
 	return [self loadPath:path expandHidden:NO];
-}
-- (void)subBranch:(NSArray *)directories accumulatedDirs:(NSMutableArray **)fileArrayInBranch {
-    NSMutableArray *accumulatedFiles = *fileArrayInBranch;
-    for (DirectoryItem *node in directories) {
-        NSArray *filesInNode = [node files];
-        if (filesInNode) {
-            if (![accumulatedFiles containsObject:filesInNode])   // if not already in branch
-                [accumulatedFiles addObject:filesInNode];
-        }
-        if([node loggedSubDirectories])
-            [self subBranch:[node subDirectories] accumulatedDirs:fileArrayInBranch];
-    }
-}
-- (NSMutableArray *)filesInBranch {
-	NSMutableArray *fileArrayInBranch = [NSMutableArray new];
-    if ([self files])    [fileArrayInBranch addObject:[self files]];
-    [self subBranch:_subDirectories accumulatedDirs:&fileArrayInBranch];
-	NSMutableArray *branch = [NSMutableArray new];
-    for (NSArray *filesInNode in fileArrayInBranch) {
-        [branch addObjectsFromArray:filesInNode];
-    }
-	[branch sortUsingDescriptors:fileSortDescriptor];
-	return 	branch;
-}
-void loggedSubDirectoriesInBranch (DirectoryItem *source, NSMutableArray **accumulated) {
-	[*accumulated addObjectsFromArray:source.loggedSubDirectories];
-	for (DirectoryItem *dir in source.loggedSubDirectories) {
-		loggedSubDirectoriesInBranch(dir, accumulated);
-	}
-}
-- (NSArray *)directoriesInBranch {
-	NSMutableArray *accumulated = [NSMutableArray new];
-	loggedSubDirectoriesInBranch(self, &accumulated);
-	return 	accumulated;
-}
-- (void)updateBranch {
-	for (DirectoryItem *dir in self.directoriesInBranch) {
-		[dir updateDirectory];
-	}
 }
 
 #pragma mark - Key Value Properties

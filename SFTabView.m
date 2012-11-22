@@ -11,10 +11,9 @@
 
 @synthesize delegate, defaultTabClassName;
 @synthesize startingOffset, tabOffset, tabMagneticForce;
+static NSImage *closeImage, *closeSelected;
 
-#pragma mark -
-#pragma mark Constructors
-
+#pragma mark - Constructors
 - (void)awakeFromNib {
 	[self setDefaults];
 }
@@ -27,9 +26,7 @@
     return self;
 }
 
-#pragma mark -
-#pragma mark Defaults
-
+#pragma mark - Defaults
 - (void)setDefaults {
     CALayer *bgLayer = [CALayer layer];
     bgLayer.frame = NSRectToCGRect([self bounds]);
@@ -47,11 +44,26 @@
     defaultTabClassName = @"SFDefaultTab";
 	
     [self setupObservers];
+
+	closeImage = [[NSImage alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"close" withExtension:@"png"]];
+	closeSelected = [[NSImage alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"close-selected" withExtension:@"png"]];
+	buttonLayer = [CALayer layer];
+	buttonLayer.bounds = CGRectMake(0.0f,0.0f,14.0f,14.0f);
+	CAConstraint *constraint;
+	constraint = [CAConstraint constraintWithAttribute:kCAConstraintMaxX
+											relativeTo:@"superlayer"
+											 attribute:kCAConstraintMaxX
+												offset:-8.0];
+	[buttonLayer addConstraint:constraint];
+	constraint = [CAConstraint constraintWithAttribute:kCAConstraintMidY
+											relativeTo:@"superlayer"
+											 attribute:kCAConstraintMidY
+												offset:-3.0];
+	[buttonLayer addConstraint:constraint];
+	[buttonLayer setContents:closeImage];
 }
 
-#pragma mark -
-#pragma mark Obververs
-
+#pragma mark - Obververs
 - (void)setupObservers {
     [[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(frameDidChange:) 
@@ -90,9 +102,7 @@
 	
 }
 
-#pragma mark -
-#pragma mark Base Layers
-
+#pragma mark - Base Layers
 - (CALayer *) tabsLayer {
     tabsLayer = [CALayer layer];
     tabsLayer.name = @"tabsLayer";
@@ -142,23 +152,29 @@
     return scrollLayer;
 }
 
-#pragma mark -
-#pragma mark Mouse Handling
-
+#pragma mark - Mouse Handling
 - (void)mouseDown: (NSEvent *) theEvent {
     // Getting clicked point.
     NSPoint mousePointInView = [self convertPoint:theEvent.locationInWindow fromView:nil];
-    
     mousePointInView = [self.layer convertPoint:mousePointInView toLayer:tabsLayer];
     mouseDownPoint = mousePointInView;
     
     // Checking if a tab was clicked.
     CALayer *clickedLayer = [tabsLayer hitTest:mousePointInView];
-	
+    if (clickedLayer &&  clickedLayer == buttonLayer) {
+        BOOL shouldRemoveTab = YES;
+        // Asking delegate if the tab can be deleted.
+        if ([delegate respondsToSelector:@selector(tabView:shouldRemoveTab:)]) {
+            shouldRemoveTab = [delegate tabView:self shouldRemoveTab:currentSelectedTab];
+        }
+        if (shouldRemoveTab) {
+            [self removeTab:currentSelectedTab];
+        }
+		return;
+	}
     if (clickedLayer &&  clickedLayer != tabsLayer ) {
         canDragTab = NO;
         BOOL shouldSelectTab = YES;
-        
         // Asking delegate if the tab can be selected.
         if ([delegate respondsToSelector:@selector(tabView:shouldSelectTab:)]) {
             shouldSelectTab = [delegate tabView:self shouldSelectTab:clickedLayer];
@@ -170,7 +186,12 @@
         }
     }
 }
-
+- (void)mouseEntered:(NSEvent *)theEvent {
+	[buttonLayer setContents:closeSelected];
+}
+- (void)mouseExited:(NSEvent *)theEvent {
+	[buttonLayer setContents:closeImage];
+}
 - (void)mouseDragged: (NSEvent *) theEvent {
     // convert to local coordinate system
     NSPoint mousePointInView = [self convertPoint:theEvent.locationInWindow fromView:nil];
@@ -215,11 +236,8 @@
         }
         
         // If the tab is different than the tab view layer and than the selected one we'll rearrange tabs.
-        if(la && la != currentClickedTab && la != tabsLayer) {
-            
-			
+        if(la && la != currentClickedTab && la != tabsLayer) {			
             [self rearrangeInitialTab:currentClickedTab toLandingTab:la withCurrentPoint:proximityLayerPoint direction:rightShift];
-			
         }         
         
         // Moving the dragged tab according.
@@ -227,9 +245,7 @@
         if (newFrame.origin.x < startingOffset) 
             newFrame.origin.x = startingOffset;
         else if(newFrame.origin.x + newFrame.size.width > tabsLayer.frame.size.width)
-            newFrame.origin.x = tabsLayer.frame.size.width - newFrame.size.width;
-        
-		
+            newFrame.origin.x = tabsLayer.frame.size.width - newFrame.size.width;		
 		
         if(CGRectContainsRect(/*NSRectToCGRect([self bounds])*/tabsLayer.frame, newFrame)){
             [CATransaction begin]; 
@@ -239,13 +255,10 @@
             mouseDownPoint = mousePointInView;
         }
     }
-	
-    
 }
 
 - (void)mouseUp: (NSEvent *) theEvent {
     if (currentClickedTab) {
-		
         // On mouse up we let the dragged tab slide to the starting or changed position.
         CGRect newFrame = currentClickedTab.frame;
         newFrame.origin.x = mouseDownStartingPoint.x;
@@ -253,14 +266,10 @@
         currentClickedTab.frame = newFrame;
         currentClickedTab = nil;
     }
-    
     [self scrollToTab:currentSelectedTab];
-	
 }
 
-#pragma mark -
-#pragma mark Adding and Removing Tabs
-
+#pragma mark - Adding and Removing Tabs
 - (void)addTabWithRepresentedObject: (id) representedObject {
 	[self addTabAtIndex:[self numberOfTabs] withRepresentedObject:representedObject];
 }
@@ -334,14 +343,11 @@
 }
 
 - (void)removeTabAtIndex: (int) index {
-	
     // Grabbing the tab.
     int indexOfInitialTab = index;
     CALayer *tab = [arrangedTabs objectAtIndex:indexOfInitialTab];
     CGPoint startingOrigin = tab.frame.origin;
-    int indexOfLandingTab = [arrangedTabs count] -1;
-    
-	
+    int indexOfLandingTab = [arrangedTabs count] -1;	
     int newIndex = indexOfInitialTab; //- 1;
 	
 	if ([tab isEqualTo:[self lastTab]] && ![tab isEqualTo:[self firstTab]]) {
@@ -380,7 +386,6 @@
     [tab removeFromSuperlayer];
     [CATransaction commit];
 	
-	
 	int offset = tabOffset;
     if ([self numberOfTabs] == 1) {
         offset = startingOffset;
@@ -399,8 +404,7 @@
 	[self adjustTabLayerScrollAnimated:YES];
 }
 
-#pragma mark -
-#pragma mark Accessing Tabs
+#pragma mark - Accessing Tabs
 
 - (int) indexOfTab: (CALayer *) tab {
     return [arrangedTabs indexOfObject:tab];
@@ -426,11 +430,8 @@
     return [arrangedTabs lastObject];
 }
 
-#pragma mark -
-#pragma mark Selecting a Tab
-
-- (void)selectTab: (CALayer *) tab {
-	
+#pragma mark - Selecting a Tab
+- (void)selectTab: (CALayer *) tab {	
 	if (![arrangedTabs containsObject:tab]) {
 		return;
 	}
@@ -440,16 +441,25 @@
     }
     
     if(currentSelectedTab){
-		
-        currentSelectedTab.zPosition = ([self indexOfTab:currentSelectedTab] * -1.0);            
+        currentSelectedTab.zPosition = ([self indexOfTab:currentSelectedTab] * -1.0);
         if ([currentSelectedTab respondsToSelector:@selector(setSelected:)]) {
             [(id)currentSelectedTab setSelected: NO];
         }
         currentSelectedTab = nil;
+		[buttonLayer removeFromSuperlayer];
     }
 	
     currentSelectedTab = tab;
-    
+	[currentSelectedTab addSublayer:buttonLayer];
+
+	[self removeTrackingArea:trackingArea];
+	trackingArea = [[NSTrackingArea alloc] initWithRect:[self.layer convertRect:[buttonLayer frame] fromLayer:[buttonLayer superlayer]]
+//													  options:NSTrackingMouseEnteredAndExited|NSTrackingActiveWhenFirstResponder
+//													  options:NSTrackingMouseEnteredAndExited|NSTrackingActiveAlways
+//												options:NSTrackingMouseEnteredAndExited|NSTrackingActiveInKeyWindow
+												options:NSTrackingMouseEnteredAndExited|NSTrackingActiveInActiveApp
+														owner:self userInfo:nil];
+	[self addTrackingArea:trackingArea];
     currentSelectedTab.zPosition = 1000;
 	
     if ([currentSelectedTab respondsToSelector:@selector(setSelected:)]) {
@@ -461,7 +471,6 @@
     }   
     
     [self scrollToTab:currentSelectedTab];
-	
 }
 
 - (void)selectTabAtIndex: (unsigned int) index {
@@ -498,13 +507,10 @@
     return currentSelectedTab;
 }
 
-#pragma mark -
-#pragma mark Scrolling
-
+#pragma mark - Scrolling
 - (void)scrollToTab: (CALayer *) tab {
     [self scrollToTab:tab animated:YES];
 }
-
 
 - (void)scrollToTab: (CALayer *) tab animated: (BOOL)animated{
 	NSMutableDictionary *actions=[NSMutableDictionary dictionaryWithDictionary:[scrollLayer actions]];
@@ -519,10 +525,8 @@
 	[ CATransaction begin ];
 	[ CATransaction setValue: [ NSNumber numberWithFloat:duration] forKey:@"animationDuration" ];
 	
-	
 	[scrollLayer setActions:actions];
-	
-	
+		
 	CGRect newFrame = tab.frame;
 	if ([tab isNotEqualTo:[self firstTab]] /*&& [tab isNotEqualTo:[self lastTab]]*/) {
 		newFrame.origin.x -= newFrame.size.width / 2.0;
@@ -538,7 +542,6 @@
 	[actions setObject:[NSNull null] forKey:@"position"];
 	[actions setObject:[NSNull null] forKey:@"bounds"];
 	[scrollLayer setActions:actions];
-	
 }
 
 - (void)scrollToPoint: (CGPoint) point animated: (BOOL)animated{
@@ -564,19 +567,12 @@
 	[actions setObject:[NSNull null] forKey:@"position"];
 	[actions setObject:[NSNull null] forKey:@"bounds"];
 	[scrollLayer setActions:actions];
-	
 }
 
-
-#pragma mark -
-#pragma mark Tab Handling
-
-
-
+#pragma mark - Tab Handling
 - (void)rearrangeInitialTab: (CALayer *) initialTab toLandingTab:(CALayer *) landingTab withCurrentPoint: (CGPoint) currentPoint direction: (BOOL)direction{
     int indexOfInitialTab = [self indexOfTab:initialTab];
     int indexOfLandingTab = [self indexOfTab:landingTab];
-    
     
     // Getting the right tag sequence (left-to-right or right-to-left)
     NSArray *tabsSequence = [self tabSequenceForStartingTabIndex:indexOfInitialTab endingTabIndex:indexOfLandingTab direction:direction];
@@ -602,9 +598,7 @@
 			
             initialOriginOffset = landingTab.frame.size.width - initialTab.frame.size.width;
             [self scrollToTab:currentSelectedTab];
-			
-        }
-        else {
+        } else {
             continue;
         }
 		
@@ -616,7 +610,6 @@
 		
         indexOfInitialTab = newIndex;
 		
-		
         // If the tab are of different size we need to adjust the new origin point.
         CGPoint landingOrigin = landingTab.frame.origin;
         landingOrigin.x += landingOriginOffset;
@@ -625,14 +618,10 @@
 		
         landingTab.frame = newFrame;
         mouseDownStartingPoint = landingOrigin;
-        
     }
-	
 }
 
-#pragma mark -
-#pragma mark Utility methods
-
+#pragma mark - Utility methods
 /* Return a correctly ordered (depepending on direction) tab indexes array */
 - (NSArray *) tabSequenceForStartingTabIndex: (int) startingIndex endingTabIndex: (int) endingIndex direction: (BOOL)direction {
     NSMutableArray *tagsSequence = [NSMutableArray array];
@@ -645,10 +634,8 @@
         else
             [tagsSequence insertObject:[NSNumber numberWithInt:i] atIndex:0];
     }
-	
     return tagsSequence;
 }
-
 
 /* Return the initial x coordinate for a new tab */
 - (int) startingXOriginForTabAtIndex: (int) index {

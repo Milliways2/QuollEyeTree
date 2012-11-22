@@ -51,7 +51,6 @@ static CGImageRef  inactiveTab;
 		activeTab = CGImageSourceCreateImageAtIndex(imageSource, 0, nil);
 		CFRelease(imageURL); CFRelease(imageSource);
 
-
 		path = (__bridge CFStringRef)[[NSBundle mainBundle] pathForResource:@"inactiveTab" ofType:@"png"];
 		imageURL = CFURLCreateWithFileSystemPath(nil, path, kCFURLPOSIXPathStyle, NO);
 		imageSource = CGImageSourceCreateWithURL(imageURL, nil);

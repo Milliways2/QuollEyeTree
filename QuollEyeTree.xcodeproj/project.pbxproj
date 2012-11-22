@@ -17,6 +17,8 @@
 		3C2A438F145A1D790013D85B /* SidebarPrefs.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3C2A438E145A1D790013D85B /* SidebarPrefs.icns */; };
 		3C3664BA1536BFBA005BAE4A /* GoToPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C3664B91536BFBA005BAE4A /* GoToPanel.xib */; };
 		3C3664BD1536C531005BAE4A /* GoToPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3664BC1536C530005BAE4A /* GoToPanelController.m */; };
+		3C379027165343E100883589 /* close-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C379025165343E100883589 /* close-selected.png */; };
+		3C379028165343E100883589 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C379026165343E100883589 /* close.png */; };
 		3C4A961C1432E2AB009E488C /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4A961B1432E2AB009E488C /* Quartz.framework */; };
 		3C4A961E1432E2BD009E488C /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4A961D1432E2BD009E488C /* QuickLook.framework */; };
 		3C4A999014340084009E488C /* WhatsNew.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C4A998F14340084009E488C /* WhatsNew.txt */; };
@@ -59,6 +61,7 @@
 		3CA8392514385A0F00FD4B86 /* MyWindowController+Refresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA8392414385A0F00FD4B86 /* MyWindowController+Refresh.m */; };
 		3CB745BC14CD3FBD00DD66E7 /* OpenWith.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CB745BB14CD3FBD00DD66E7 /* OpenWith.m */; };
 		3CBCAB0C15A69CB600988ADF /* MyTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBCAB0B15A69CB600988ADF /* MyTextView.m */; };
+		3CC1C71D16547A7A005D4F4D /* DirectoryItem+Branch.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC1C71C16547A7A005D4F4D /* DirectoryItem+Branch.m */; };
 		3CC3732515C8E6E700B1BDA3 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC3732415C8E6E700B1BDA3 /* Constants.m */; };
 		3CCC2D86143D648E00789F65 /* tabBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC2D85143D648E00789F65 /* tabBg.png */; };
 		3CCC2FC0143D99C600789F65 /* activeTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC2FBF143D99C600789F65 /* activeTab.png */; };
@@ -108,6 +111,8 @@
 		3C3664B91536BFBA005BAE4A /* GoToPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GoToPanel.xib; sourceTree = "<group>"; };
 		3C3664BB1536C530005BAE4A /* GoToPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoToPanelController.h; sourceTree = "<group>"; };
 		3C3664BC1536C530005BAE4A /* GoToPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoToPanelController.m; sourceTree = "<group>"; };
+		3C379025165343E100883589 /* close-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-selected.png"; sourceTree = "<group>"; };
+		3C379026165343E100883589 /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		3C4A952414329A0B009E488C /* QuollEyeTreeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuollEyeTreeAppDelegate.h; sourceTree = "<group>"; };
 		3C4A961B1432E2AB009E488C /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		3C4A961D1432E2BD009E488C /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
@@ -181,6 +186,8 @@
 		3CB745BB14CD3FBD00DD66E7 /* OpenWith.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenWith.m; sourceTree = "<group>"; };
 		3CBCAB0A15A69CB500988ADF /* MyTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTextView.h; sourceTree = "<group>"; };
 		3CBCAB0B15A69CB600988ADF /* MyTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTextView.m; sourceTree = "<group>"; };
+		3CC1C71B16547A7A005D4F4D /* DirectoryItem+Branch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DirectoryItem+Branch.h"; sourceTree = "<group>"; };
+		3CC1C71C16547A7A005D4F4D /* DirectoryItem+Branch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DirectoryItem+Branch.m"; sourceTree = "<group>"; };
 		3CC3732415C8E6E700B1BDA3 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Constants.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		3CC6D6C815FDD25800CE5BDF /* QuollEyeTree.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuollEyeTree.entitlements; sourceTree = "<group>"; };
 		3CCC2A2A143C261D00789F65 /* TreeViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreeViewControllerDelegate.h; sourceTree = "<group>"; };
@@ -357,6 +364,8 @@
 		3C2A4394145A6E150013D85B /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				3C379025165343E100883589 /* close-selected.png */,
+				3C379026165343E100883589 /* close.png */,
 				3CE391861578450300B85577 /* Filter.png */,
 				3C62EB44149C33F900E8D057 /* ghostgum.icns */,
 				3C2A438E145A1D790013D85B /* SidebarPrefs.icns */,
@@ -418,6 +427,8 @@
 				3C6C91EC13C7E40C00B553EF /* FileItem.m */,
 				3C25E96213A1B85C008BB53E /* DirectoryItem.h */,
 				3C25E96113A1B85C008BB53E /* DirectoryItem.m */,
+				3CC1C71B16547A7A005D4F4D /* DirectoryItem+Branch.h */,
+				3CC1C71C16547A7A005D4F4D /* DirectoryItem+Branch.m */,
 				3C68F6CD145CBD9C009C8762 /* VolumeItem.h */,
 				3C68F6CE145CBD9C009C8762 /* VolumeItem.m */,
 				3CB0A4FD1643F062007369C9 /* volume.h */,
@@ -601,6 +612,8 @@
 				3CE391871578450300B85577 /* Filter.png in Resources */,
 				3CF72BC115886BF000E63E73 /* SearchPanel.xib in Resources */,
 				3C8524F4159ACC6A00FFCED9 /* TextView.xib in Resources */,
+				3C379027165343E100883589 /* close-selected.png in Resources */,
+				3C379028165343E100883589 /* close.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,6 +688,7 @@
 				3C7554AC15DB74B6006A795F /* volume.m in Sources */,
 				3CD0B6741648BDC600F7515D /* alias.m in Sources */,
 				3CD0B683164B33CF00F7515D /* folderSize.m in Sources */,
+				3CC1C71D16547A7A005D4F4D /* DirectoryItem+Branch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -742,6 +756,7 @@
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_MODEL_TUNING = "";
 				GCC_OPTIMIZATION_LEVEL = 0;
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = BETA;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -757,6 +772,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_MODEL_TUNING = "";
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = BETA;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;

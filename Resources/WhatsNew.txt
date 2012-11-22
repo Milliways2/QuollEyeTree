@@ -1,5 +1,13 @@
 What's new since 1.0
 
+Version 1.02 beta 2012-11-21
+- changed remember target for Copy/Move/Symlink
+- added PathBar context menu
+- added Close button on tabs
+- added alternating row colours for background when filter active
+- changed improved branch logging/updating
+- added notification if no files match filter
+
 Version 1.01 beta 2012-11-09
 - changed Convert project to ARC
 - added Unlog Directories

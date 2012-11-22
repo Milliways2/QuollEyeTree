@@ -10,7 +10,6 @@
 #import "TreeViewControllerDelegate.h"
 #import "MyOutlineView.h"
 
-//@class MyOutlineView;
 @class DirectoryItem;
 @class CopyPanelController;
 @class RenamePanelController;
@@ -22,8 +21,6 @@
 	CGFloat previousSplitViewHeight;
 	NSString *savedSearchString;
 	NSPredicate *fileFilterPredicate;
-	NSPredicate *tagPredicate;
-    NSPredicate *notEmptyPredicate;
 	BOOL showOnlyTagged;
 	BOOL inFileView;
 	BOOL inBranch;
@@ -37,8 +34,9 @@
     NSUInteger currentFileToView;
     NSInteger spinCount;
     NSOperationQueue *queue;
+	NSString *targetDirectory;	// target Dir of Copy/Move/Symlink
 }
-
+@property (unsafe_unretained) IBOutlet NSTextView *noFiles;
 @property (assign) IBOutlet NSSplitView *split;
 @property (assign) IBOutlet NSScrollView *splitViewTop;
 @property (assign) IBOutlet NSArrayController *arrayController;

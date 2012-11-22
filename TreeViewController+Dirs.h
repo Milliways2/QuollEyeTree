@@ -34,4 +34,11 @@
 - (IBAction)showTargetDir:(id)sender;
 - (IBAction)symlinkToDir:(id)sender;
 
+- (IBAction)copyPath:(id)sender;
+- (IBAction)copyPathToClipboard:(id)sender;
+- (IBAction)openPath:(id)sender;
+- (IBAction)revealPathInFinder:(id)sender;
+- (IBAction)openPathInNewTab:(id)sender;
+- (IBAction)openPathInTerminal:(id)sender;
+- (IBAction)getPathInfo:(id)sender;
 @end

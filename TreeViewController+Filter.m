@@ -10,9 +10,11 @@
 #import "NSString+Parse.h"
 #import "NSDate+Today.h"
 #import "IBDateFormatter.h"
+extern NSPredicate *yesPredicate;
 
 @interface TreeViewController()
 - (BOOL)areFilesTagged;
+- (BOOL)areFilesVisible;
 - (void)applyFileAndTagFilter:(NSPredicate *)filePredicate;
 @end
 
@@ -21,24 +23,30 @@ NSMutableIndexSet *size = [[NSMutableIndexSet alloc] initWithIndexSet:type]; \
 [type removeIndexes:notDate]; \
 [size removeIndexes:type];
 
-@implementation TreeViewController(Filter)
-- (void)resetFileFilter {
-	fileFilterPredicate = [NSPredicate predicateWithValue:YES];
-	if(showOnlyTagged) {
-		if([self areFilesTagged]) {
-			[self.arrayController setFilterPredicate:tagPredicate];
-			return;
-		}
-	}
-	[self.arrayController setFilterPredicate:nil];
-}
-NSDate *dateFromString(NSString *dateString) {
+static NSDate *dateFromString(NSString *dateString) {
     NSDate *date = [[IBDateFormatter sharedDateFormatter] dateFromString:dateString];
     if (date)         return date;
     NSRange today = [dateString rangeOfString:@"TODAY" options:NSCaseInsensitiveSearch|NSAnchoredSearch];
     if (today.length)
         return [[NSDate today] dateByAddingTimeInterval:SECONDSPERDAY*[[dateString substringFromIndex:today.length] integerValue]];
     return [NSDate dateWithTimeIntervalSince1970:0];
+}
+
+@implementation TreeViewController(Filter)
+- (void) checkFilter {
+    [self.noFiles removeFromSuperview];
+	if ([self.arrayController filterPredicate]) {
+		if ([self.filesInDir count]) {	// don't indicate unless there are files
+			if(![self areFilesVisible]) {
+				[self.noFiles setFrame:[self.fileList bounds]];
+				[self.fileList addSubview:self.noFiles];
+			}
+		}
+	}
+}
+- (void)resetFileFilter {
+	fileFilterPredicate = yesPredicate;
+	[self applyFileAndTagFilter:nil];
 }
 - (void)applyFileFilter:(NSString *)searchString {
 	savedSearchString = [searchString copy];

@@ -15,6 +15,9 @@
 #import "NSString+Parse.h"
 #import "IBDateFormatter.h"
 #import "TextViewerController.h"
+NSPredicate *yesPredicate;
+NSPredicate *tagPredicate;
+NSPredicate *notEmptyPredicate;
 
 @interface TreeViewController()
 - (void)setTreeRootNode:(DirectoryItem *)node;
@@ -30,6 +33,9 @@
 - (void)setPanel;
 - (void)applyFileAndTagFilter:(NSPredicate *)filePredicate;
 @end
+@interface TreeViewController(Filter)
+- (void) checkFilter;
+@end
 @interface TreeViewController(Files)
 - (void)exitFileViewer;
 @end
@@ -38,7 +44,11 @@
 @end
 
 @implementation TreeViewController
-
++ (void)initialize {
+	yesPredicate = [NSPredicate predicateWithValue:YES];
+	tagPredicate = [NSPredicate predicateWithFormat:@"SELF.tag == YES"];
+    notEmptyPredicate = [NSPredicate predicateWithFormat:@"(SELF.fileSize > 0) AND (SELF.isPackage == NO)"];
+}
 - (void)setRoot {
 	[self setTreeRootNode:[self.selectedDir rootDir]];
 }
@@ -91,12 +101,15 @@
 }
 // Make compound Predicate from file Predicate depending on state of showOnlyTagged
 - (void)applyFileAndTagFilter:(NSPredicate *)filePredicate {
-	if(showOnlyTagged) {
-        NSPredicate *filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filePredicate, tagPredicate, nil]];
-        [self.arrayController setFilterPredicate:filterPredicate];
-        return;
-	}
-	[self.arrayController setFilterPredicate:filePredicate];
+	if (filePredicate == yesPredicate)	filePredicate = nil;
+	[self.fileList setUsesAlternatingRowBackgroundColors:filePredicate && !inBranch];
+	if(showOnlyTagged && filePredicate) {
+        [self.arrayController setFilterPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filePredicate, tagPredicate, nil]]];
+	} else	if(showOnlyTagged) {
+        [self.arrayController setFilterPredicate:tagPredicate];
+	} else
+		[self.arrayController setFilterPredicate:filePredicate];
+	[self checkFilter];
 }
 #pragma mark  Selectors
 - (void)dClickPath:(id)sender {
@@ -288,9 +301,7 @@
 
 	savedSearchString =	[NSString string];
 	showOnlyTagged = NO;
-	fileFilterPredicate = [NSPredicate predicateWithValue:YES];
-	tagPredicate = [NSPredicate predicateWithFormat:@"SELF.tag == YES"];
-    notEmptyPredicate = [NSPredicate predicateWithFormat:@"SELF.fileSize > 0"];
+	fileFilterPredicate = yesPredicate;
 	inFileView = NO;
 	inBranch = NO;
     [self initViewHeaderMenu:self.fileList];
@@ -364,6 +375,7 @@
         [self updateSelectedDir];
 		self.filesInDir = self.selectedDir.files;
         [self.fileList setBackgroundColor:[NSColor controlBackgroundColor]];
+		if([self.arrayController filterPredicate] != tagPredicate)	[self.fileList setUsesAlternatingRowBackgroundColors:YES];
 	}
 	inBranch = NO;
 }

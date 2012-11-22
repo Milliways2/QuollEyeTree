@@ -15,22 +15,7 @@
 #import "RenamePanelController.h"
 #import "NSString+Rename.h"
 
-@implementation TreeViewController(Copy)
-
-- (void)startSpinner {
-    if (spinCount++ == 0) {
-        [self.progress startAnimation:self];
-    }
-}
-- (void)stopSpinner {
-    if (spinCount) {
-        if (--spinCount == 0) {
-            [self.progress stopAnimation:self];
-        }
-    }
-}
-
-void removeItemForPath(NSString *path) {
+static void removeItemForPath(NSString *path) {
     NSString *parentDir = [path stringByDeletingLastPathComponent];
     DirectoryItem *targetDir = findPathInVolumes(parentDir);
     if(targetDir) {
@@ -49,7 +34,7 @@ void removeItemForPath(NSString *path) {
         }
     }
 }
-BOOL removeTarget(NSString *target, NSFileManager *fileManager) {
+static BOOL removeTarget(NSString *target, NSFileManager *fileManager) {
 	NSError *error = nil;
     if([fileManager removeItemAtPath:target error:&error]) {
         removeItemForPath(target);
@@ -59,7 +44,7 @@ BOOL removeTarget(NSString *target, NSFileManager *fileManager) {
     [alert runModal];
     return NO;
 }
-BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
+static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 	NSError *error = nil;
     if([fileManager createDirectoryAtPath:targetDir withIntermediateDirectories:YES attributes:nil error:&error]) {
         return YES;
@@ -67,6 +52,21 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
     NSAlert *alert = [NSAlert alertWithError:error];
     [alert runModal];
     return NO;
+}
+
+@implementation TreeViewController(Copy)
+
+- (void)startSpinner {
+    if (spinCount++ == 0) {
+        [self.progress startAnimation:self];
+    }
+}
+- (void)stopSpinner {
+    if (spinCount) {
+        if (--spinCount == 0) {
+            [self.progress stopAnimation:self];
+        }
+    }
 }
 
 - (BOOL)checkExistingTarget:(NSString *)target fileManager:(NSFileManager *)fileManager sourceDate:(NSDate *)sourceDate replace:(BOOL)replace createDirectories:(BOOL)create {
@@ -125,11 +125,14 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 	return dest;
 }
 - (void)initCopyDest {
-	NSArray * dest = [self dirsInTabs];
+	NSArray *dest = [self dirsInTabs];
 	NSInteger n = [self.delegate currentTab];
 	if (n < [dest count] -1 )
 		n++;
 	else if (n) n--;
+	NSUInteger destItem = [dest indexOfObject:targetDirectory];
+	if (destItem != NSNotFound)	// previous target
+		n = destItem;	
 	[copyPanel setTargetDirs:dest];
 	[copyPanel setSelectedDir:n];
 }
@@ -147,24 +150,22 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 }
 
 #pragma mark - Operations to execute after completion of queue
-- (void)refreshTargetDirectory:(NSString *)targetDir {  // completion of copy
-    DirectoryItem *dir = findPathInVolumes(targetDir);
+- (void)refreshTargetDir:(DirectoryItem *)dir { // completion of paste
     if (dir) {
         if ([dir isPathLoaded]) {
             [dir updateDirectory];	// Update target directory if loaded.
         }
     }
     [self.delegate treeViewController:self pauseRefresh:NO];
-    [self stopSpinner];
+//    [self stopSpinner];
 }
-- (void)refreshTargetDir:(DirectoryItem *)dir { // completion of paste
-    [dir updateDirectory];	// Update target directory.
-    [self.delegate treeViewController:self pauseRefresh:NO];
-    [self stopSpinner];
+- (void)refreshTargetDirectory:(NSString *)targetDir {  // completion of copy
+    DirectoryItem *dir = findPathInVolumes(targetDir);
+//    DirectoryItem *dir = findPathInVolumes(targetDirectory);
+	[self refreshTargetDir:dir];
 }
 - (void)restoreRefresh:(id)arg {    // completion of move
     [self.delegate treeViewController:self pauseRefresh:NO];
-    [self stopSpinner];
 }
 // add operation to execute after completion as last operation in queue
 - (void)refreshAfter:(SEL)completionOperation object:(id)arg {
@@ -179,17 +180,16 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
         return;
     }
     [self.delegate treeViewController:self pauseRefresh:NO];
-    [self stopSpinner];
 }
 - (void)symlinkTo:(FileSystemItem *)node {
 	[self initCopyPanel:node];
 	[copyPanel setTitle:@"Create Symlink"];
 	if ([copyPanel runModal] == NSOKButton) {
 		NSFileManager *fileManager = [NSFileManager new];
-		NSString *target = [copyPanel.targetDirectory stringByAppendingPathComponent:[node.relativePath stringByRenamingingLastPathComponent:copyPanel.filename]];
+		targetDirectory = copyPanel.targetDirectory;
+		NSString *target = [targetDirectory stringByAppendingPathComponent:[node.relativePath stringByRenamingingLastPathComponent:copyPanel.filename]];
 		if([self checkExistingTarget:target fileManager:fileManager sourceDate:[node wDate] replace:[copyPanel.replaceExisting state] createDirectories:[copyPanel.createDirectories state]]) {
 			NSError *error = nil;
-            [self startSpinner];
 			[self.delegate treeViewController:self pauseRefresh:YES];
             if([fileManager createSymbolicLinkAtPath:target
 								 withDestinationPath:node.fullPath
@@ -198,7 +198,6 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 				[self refreshTargetDirectory:copyPanel.targetDirectory];    // refresh target after completion of copy
             } else {
 				[self.delegate treeViewController:self pauseRefresh:NO];
-                [self stopSpinner];
                 if (error) {
 					NSAlert *alert = [NSAlert alertWithError:error];
 					[alert runModal];
@@ -211,7 +210,8 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 #pragma mark -
 - (void)copySingle:(FileSystemItem *)node {
 	NSFileManager *fileManager = [NSFileManager new];
-	NSString *target = [copyPanel.targetDirectory stringByAppendingPathComponent:[node.relativePath stringByRenamingingLastPathComponent:copyPanel.filename]];
+	targetDirectory = copyPanel.targetDirectory;
+	NSString *target = [targetDirectory stringByAppendingPathComponent:[node.relativePath stringByRenamingingLastPathComponent:copyPanel.filename]];
 	if([self checkExistingTarget:target fileManager:fileManager sourceDate:[node wDate] replace:[copyPanel.replaceExisting state] createDirectories:[copyPanel.createDirectories state]]) {
         if(queue == NULL) {
             queue = [NSOperationQueue new];
@@ -241,7 +241,7 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 }
 - (void)moveSingle:(FileSystemItem *)node  {
 	NSFileManager *fileManager = [NSFileManager new];
-	NSString *targetDirectory = copyPanel.targetDirectory;    // save for update after move
+	targetDirectory = copyPanel.targetDirectory;    // save for update after move
 	NSString *target = [targetDirectory stringByAppendingPathComponent:[node.relativePath stringByRenamingingLastPathComponent:copyPanel.filename]];
 	NSString *itemToRemove = [node fullPath];	// item to delete
 	NSString *newName = [target lastPathComponent];
@@ -340,9 +340,8 @@ BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 	[self initCopyPanel:node];
 	if ([node isKindOfClass:[FileItem class]])
 		[copyPanel setTitle:@"Move File"];
-	else {
+	else
 		[copyPanel setTitle:@"Move Directory"];
-	}
 	if ([copyPanel runModal] == NSOKButton) {
 		[self.delegate treeViewController:self pauseRefresh:YES];
 		[self moveSingle:node];
