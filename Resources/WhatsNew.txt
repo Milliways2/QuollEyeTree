@@ -1,5 +1,10 @@
 What's new since 1.0
 
+Version 1.03 beta 2012-12-08
+- fixed Show Target Context Menu for file only showed if already logged
+- added Compare File
+- Spell Search
+
 Version 1.02 beta 2012-11-21
 - changed remember target for Copy/Move/Symlink
 - added PathBar context menu

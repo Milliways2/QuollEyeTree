@@ -17,6 +17,8 @@
 #import "DeletedItems.h"
 #import "SearchPanelController.h"
 #import "TextViewerController.h"
+#import "CompareFileController.h"
+
 extern NSPredicate *tagPredicate;
 extern NSPredicate *notEmptyPredicate;
 
@@ -29,7 +31,10 @@ extern NSPredicate *notEmptyPredicate;
 - (void)copyToPasteboard: (id)object;
 - (void)toggleTopSubView:(id)sender;
 - (void)setPanel;
-//  TreeViewController+Copy
+@end
+@interface TreeViewController(Copy)
+- (void)initPanelDest:(id)panel;
+- (void)runBlockOnQueue:(void (^)(void))block;
 - (void)copyTo:(FileSystemItem *)node;
 - (void)moveTo:(FileSystemItem *)node;
 - (void)renameTo:(FileSystemItem *)node;
@@ -236,6 +241,102 @@ extern NSPredicate *notEmptyPredicate;
 								 } ];
 	}
 }
+- (void)updateTargetNames:(id)sender target:(id)panel {
+	NSArray *items = [[self.arrayController arrangedObjects] sortedArrayUsingComparator: ^(id obj1, id obj2) {
+		return [((FileItem *)obj1).relativePath caseInsensitiveCompare:((FileItem *)obj2).relativePath];
+	}];
+	NSUInteger noItems = [items count];
+	NSMutableArray *objects = [NSMutableArray arrayWithCapacity:noItems];
+	for (FileItem *node in items) {
+		[objects addObject:[node relativePath]];
+	}
+	[panel setTargetNames:objects];
+	if (noItems == 0) return;
+	NSUInteger destItem = [items indexOfObject:[self selectedFile]];
+	if (sender == self) {
+		NSArray *taggedItems = [items filteredArrayUsingPredicate:tagPredicate];
+		if([taggedItems count] == 1)
+			destItem = [items indexOfObject:[taggedItems objectAtIndex:0]];
+	}
+	[panel setTargetNames:objects];
+	[panel setSelectedName:destItem];
+}
+- (void)pipeReadCompletionNotification:(NSNotification *)aNotification {
+	NSData *data = [aNotification.userInfo objectForKey:NSFileHandleNotificationDataItem];
+	if([data length] > 0) {
+		textViewer = [[TextViewerController alloc]
+					  initWithNibName:@"TextView"
+					  bundle:nil];
+		[[self view] addSubview:[textViewer view]];	// embed new TextView in our host view
+		[[textViewer view] setFrame:[[self view] bounds]];	// resize the controller's view to the host size
+		textViewer.delegate = self;
+		[self.fileList.window makeFirstResponder:textViewer.view];
+		[textViewer initWithData:data encoding:0];
+	}
+}
+- (void)resetStatusMessage {
+	[[self statusMessage] setHidden:YES];
+}
+- (void)postStatusMessage:(NSString *)message {
+	[[self statusMessage] setStringValue:message];
+	[[self statusMessage] setHidden:NO];
+	[self performSelector:@selector(resetStatusMessage) withObject:nil afterDelay:5.0];
+}
+- (void)compareTo:(FileSystemItem *)node {
+    CompareFileController *comparePanel = [CompareFileController new];
+	comparePanel.delegate = self;
+	[comparePanel setFrom:node.fullPath];
+	[self initPanelDest:comparePanel];	// set target to directories in tabs
+	[comparePanel setFilename:node.relativePath];
+//	NSLog(@"%@ - %@", 	[node.fullPath stringByDeletingLastPathComponent], comparePanel.targetDirectory);
+	if ([[node.fullPath stringByDeletingLastPathComponent] isEqualToString:comparePanel.targetDirectory]) {	// i.e. target is self
+		[self updateTargetNames:self target:comparePanel];	// set names of files for self  directory
+	}
+	if ([comparePanel runModal] == NSOKButton) {
+		targetDirectory = comparePanel.targetDirectory;
+		NSString *source = [[self selectedFile] fullPath];
+		NSString *target = [targetDirectory stringByAppendingPathComponent:comparePanel.filename];
+		NSFileManager *fileManager = [NSFileManager new];
+		if(![fileManager fileExistsAtPath:target]) {
+			[self postStatusMessage:@"file does not exist"];
+			return;
+		}
+		if([fileManager contentsEqualAtPath:source andPath:target]) {
+			[self postStatusMessage:@"files are identical"];
+			return;
+		}
+		NSTask *task = [[NSTask alloc] init];
+		NSPipe *pipe = [NSPipe pipe];
+		[task setStandardOutput: pipe];
+		[task setStandardInput:[NSPipe pipe]];		//The magic line that keeps your log where it belongs
+		NSFileHandle *file = [pipe fileHandleForReading];
+		[task setLaunchPath: @"/bin/sh"];
+		NSArray *arguments = [NSArray arrayWithObjects:
+							  @"-c" ,
+							  [[NSUserDefaults standardUserDefaults] stringForKey:PREF_COMPARE_COMMAND],
+							  @"Compare",	// $0 place holder
+							  source,
+							  target,
+//							  [NSString stringWithFormat:@"%@", source],
+//							  [NSString stringWithFormat:@"%@", target],
+							  nil];
+		[task setArguments:arguments];
+		[task setEnvironment:[NSDictionary dictionaryWithObject:@"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin" forKey:@"PATH"]];
+
+//		NSLog(@"%@", [task arguments]);
+//		NSLog(@"%@", [task environment]);
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(pipeReadCompletionNotification:)
+													 name:NSFileHandleReadCompletionNotification
+												   object:file];
+		[file readInBackgroundAndNotify];
+		[task launch];
+	}
+    copyPanel = nil;
+}
+- (void)compareFile {
+	[self compareTo:[self selectedFile]];
+}
 
 #pragma mark - Text Viewer
 - (void)showFileInViewer {
@@ -263,7 +364,13 @@ extern NSPredicate *notEmptyPredicate;
     [self.fileList.window makeFirstResponder:self.fileList];
 }
 
-#pragma mark - TextViewControllerDelegate
+#pragma mark - CompareFileControllerDelegate
+- (void)compareFileController:(CompareFileController *)cfc didSelectTabAtIndex:(NSInteger)index {
+	TreeViewController *tvc = [self.delegate tvcAtIndex:index];
+	[tvc updateTargetNames:self target:cfc];	// tell tvc to set names of files for selected target directory
+}
+
+#pragma mark TextViewControllerDelegate
 - (void)nextFile:(TextViewerController *)tvc {
     if ([filesToView count] <= currentFileToView + 1) return;
     currentFileToView++;
@@ -276,71 +383,6 @@ extern NSPredicate *notEmptyPredicate;
 }
 - (void)exitTextView:(TextViewerController *)tvc {
     [self exitFileViewer];
-}
-
-#pragma mark Delegate Actions
-- (void)mouseDownInTableView {
-	if(!inFileView) {
-		[self setFileMenu];
-	}
-}
-- (BOOL)keyPressedInTableView:(unichar)character {
-	if (character == 0x1b) {
-		[self restoreSplitView];
-		[self enterDirView];
-		return YES;
-	}
-	if (character == 0x0d) {
-		if ([self.splitViewTop isHidden]) {	// already in Full View
-			[self restoreSplitView];
-			[self enterDirView];
-		}
-		else	// go to Full View (must already be in File)
-			[self toggleTopSubView:self];
-		return YES;
-	}
-	if (character == 'v') {
-        [self viewFiles:[self.arrayController selectedObjects]];
-		return YES;
-	}
-	return NO;
-}
-- (BOOL)keyCmdPressedInTableView:(unichar)character {
-	return NO;
-}
-- (BOOL)keyCtlPressedInTableView:(unichar)character {
-	if (character == 0x0d) {
-        [self toggleShowTagged];
-		return YES;
-	}
-	if (character == 's') {
-        [self searchTagged];
-		return YES;
-	}
-	if (character == 'v') {
-        [self viewFiles:[[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate]];
-		return YES;
-	}
-	return NO;
-}
-- (void)validateTableContextMenu:(NSMenu *)menu {
-    FileItem *node = [self selectedFile];
-    if (node == nil)    return;
-	if(node.isAlias) {
-		NSString *target = getTarget(node.fullPath);
-		if(target)
-			openWithClass = [[OpenWith alloc] initMenu:[NSURL fileURLWithPath:target isDirectory:NO]];
-	}
-	else
-		openWithClass = [[OpenWith alloc] initMenu:node.url];
-	NSMenuItem *openWith = [menu itemWithTitle:@"Open With"];
-	[openWith setSubmenu:[openWithClass openWithMenu]];
-    NSMenuItem *mi = [menu itemWithTitle:@"Show Package Contents"];
-    if(mi) [mi setHidden:!node.isPackage];
-	mi = [menu itemWithTitle:@"Show Target"];
-    if(mi) [mi setHidden:!node.isAlias];
-	mi = [menu itemWithTitle:@"Create Symlink"];
-	if(mi) [mi setHidden:node.isAlias];
 }
 
 #pragma mark Context Menu Actions
@@ -399,19 +441,24 @@ extern NSPredicate *notEmptyPredicate;
     FileItem *node = [self selectedFile];
 	if(node.isAlias) {
 		NSString *target = getTarget(node.fullPath);
-		DirectoryItem *targetDir = findPathInVolumes([target stringByDeletingLastPathComponent]);
-		if(targetDir) {
-			TreeViewController *newTreeViewController = [self.delegate treeViewController:self addNewTabAtDir:targetDir];
-			[newTreeViewController enterFileView];
-			NSString *fileName = [target lastPathComponent];
-			for (FileItem *element in targetDir.files) {
-				if ([fileName compare:[element relativePath] options:NSCaseInsensitiveSearch] == NSOrderedSame) {
-					[newTreeViewController selectObject:element];
-					break;
-				}
+		if(![[NSFileManager defaultManager] fileExistsAtPath:target])	return;
+
+		[self runBlockOnQueue:^{
+			DirectoryItem *targetDir = locateOrAddDirectoryInVolumes([target stringByDeletingLastPathComponent]);
+			if(targetDir) {
+				[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+					TreeViewController *newTreeViewController = [self.delegate treeViewController:self addNewTabAtDir:targetDir];
+					[newTreeViewController enterFileView];
+					NSString *fileName = [target lastPathComponent];
+					for (FileItem *element in targetDir.files) {
+						if ([fileName compare:[element relativePath] options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+							[newTreeViewController selectObject:element];
+							break;
+						}
+					}
+				}];
 			}
-		}
-		return;
+		}];
 	}
 }
 - (IBAction)symlinkToFile:(id)sender {
@@ -423,6 +470,76 @@ extern NSPredicate *notEmptyPredicate;
 - (IBAction)dClickFile:(id)sender {
 	[self openFile:self];
 }
+#pragma mark Delegate Actions
+- (void)mouseDownInTableView {
+	if(!inFileView) {
+		[self setFileMenu];
+	}
+}
+- (BOOL)keyPressedInTableView:(unichar)character {
+//	NSLog(@"keyPressedInTableView %hu", character);
+	if (character == 0x1b) {
+		[self restoreSplitView];
+		[self enterDirView];
+		return YES;
+	}
+	if (character == 0x0d) {
+		if ([self.splitViewTop isHidden]) {	// already in Full View
+			[self restoreSplitView];
+			[self enterDirView];
+		}
+		else	// go to Full View (must already be in File)
+			[self toggleTopSubView:self];
+		return YES;
+	}
+	if (character == 'v') {
+        [self viewFiles:[self.arrayController selectedObjects]];
+		return YES;
+	}
+	if (character == 'j') {
+        [self compareTo:[self selectedFile]];
+		return YES;
+	}
+	return NO;
+}
+- (BOOL)keyCmdPressedInTableView:(unichar)character {
+	return NO;
+}
+- (BOOL)keyCtlPressedInTableView:(unichar)character {
+	if (character == 0x0d) {
+        [self toggleShowTagged];
+		return YES;
+	}
+	if (character == 's') {
+        [self searchTagged];
+		return YES;
+	}
+	if (character == 'v') {
+        [self viewFiles:[[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate]];
+		return YES;
+	}
+	return NO;
+}
+- (void)validateTableContextMenu:(NSMenu *)menu {
+    FileItem *node = [self selectedFile];
+    if (node == nil)    return;
+	if(node.isAlias) {
+		NSString *target = getTarget(node.fullPath);
+		if(target)
+			openWithClass = [[OpenWith alloc] initMenu:[NSURL fileURLWithPath:target isDirectory:NO]];
+	}
+	else
+		openWithClass = [[OpenWith alloc] initMenu:node.url];
+	NSMenuItem *openWith = [menu itemWithTitle:@"Open With"];
+	[openWith setSubmenu:[openWithClass openWithMenu]];
+    NSMenuItem *mi = [menu itemWithTitle:@"Show Package Contents"];
+    if(mi) [mi setHidden:!node.isPackage];
+	mi = [menu itemWithTitle:@"Show Target"];
+    if(mi) [mi setHidden:!node.isAlias];
+	mi = [menu itemWithTitle:@"Create Symlink"];
+	if(mi) [mi setHidden:node.isAlias];
+}
+
 #pragma mark - NSTableViewDelegate Protocol methods
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification {
 	if (inBranch) {
@@ -439,7 +556,6 @@ extern NSPredicate *notEmptyPredicate;
 		}
 	}
 }
-
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex {
 	if ([[tableColumn identifier] isEqualToString:COLUMNID_NAME]) {
 		if ([cell isKindOfClass:[ImageAndTextCell class]]) {
@@ -458,5 +574,16 @@ extern NSPredicate *notEmptyPredicate;
     if (newColumnIndex == 0)    return NO;
     if (newColumnIndex == 1)    return NO;
     return YES;
+}
+- (BOOL)tableView:(NSTableView *)tableView shouldTypeSelectForEvent:(NSEvent *)event withCurrentSearchString:(NSString *)searchString {
+	unichar keyChar = [[event charactersIgnoringModifiers] characterAtIndex:0];
+	if(([event modifierFlags] & NSShiftKeyMask) == NSShiftKeyMask && [[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:keyChar])
+		return YES;
+	if([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:keyChar])
+		return YES;
+	return NO;
+}
+- (NSString *)tableView:(NSTableView *)tableView typeSelectStringForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+	return ([[tableColumn identifier] isEqualToString:COLUMNID_NAME]) ? [[tableView preparedCellAtColumn:1 row:row] stringValue] : nil;	// note COLUMNID_NAME is always 1
 }
 @end

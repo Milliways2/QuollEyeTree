@@ -37,22 +37,25 @@
 	NSString *targetDirectory;	// target Dir of Copy/Move/Symlink
 }
 @property (unsafe_unretained) IBOutlet NSTextView *noFiles;
-@property (assign) IBOutlet NSSplitView *split;
-@property (assign) IBOutlet NSScrollView *splitViewTop;
-@property (assign) IBOutlet NSArrayController *arrayController;
-@property (assign) IBOutlet MyOutlineView *dirTree;
-@property (assign) IBOutlet NSTableView *fileList;
-@property (assign) IBOutlet NSPathControl *currentPath;
-@property (assign) IBOutlet NSProgressIndicator *progress;
+@property (unsafe_unretained) IBOutlet NSSplitView *split;
+@property (unsafe_unretained) IBOutlet NSScrollView *splitViewTop;
+@property (unsafe_unretained) IBOutlet NSArrayController *arrayController;
+@property (unsafe_unretained) IBOutlet MyOutlineView *dirTree;
+@property (unsafe_unretained) IBOutlet NSTableView *fileList;
+@property (unsafe_unretained) IBOutlet NSPathControl *currentPath;
+@property (unsafe_unretained) IBOutlet NSProgressIndicator *progress;
+@property (unsafe_unretained) IBOutlet NSTextField *statusMessage;
 
-@property (assign) id delegate;
-@property (assign) NSMutableArray *filesInDir;
-@property (assign) DirectoryItem *selectedDir;    // item to display
+@property (unsafe_unretained) id delegate;
+@property (unsafe_unretained) NSMutableArray *filesInDir;
+@property (unsafe_unretained) DirectoryItem *selectedDir;    // item to display
 @property (copy) NSURL *currDir;    // binding to NSPathControl *currentPath
 
+- (NSString *)getTargetFile;
 - (NSString *)rootDirName;
 - (void)activateTreeView;
 - (void)reloadData;
+- (void)initWithDir:(DirectoryItem *)node;
 - (void)setTreeRootNode:(DirectoryItem *)node;
 - (DirectoryItem *)treeRootNode;
 - (BOOL)shouldTerminate;
@@ -61,8 +64,6 @@
 - (void)segControlClicked:(id)sender;
 - (void)togglePreviewPanel;
 - (void)toggleShowTagged;
-// Dir Context Menu Actions
-- (IBAction)setNewRoot:(id)sender;
 // PreferencesController Actions
 - (void)saveTableColumns;
 @end

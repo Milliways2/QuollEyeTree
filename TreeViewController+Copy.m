@@ -68,6 +68,21 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
         }
     }
 }
+// execute block on queue; pauses updates & starts progress before; restore updates & stops progress on completion
+- (void) runBlockOnQueue:(void (^)(void))block {
+	if(queue == NULL) {
+		queue = [NSOperationQueue new];
+		[queue setMaxConcurrentOperationCount:10];
+	}
+	[self.delegate treeViewController:self pauseRefresh:YES];
+	[self startSpinner];
+	NSBlockOperation *op = [NSBlockOperation blockOperationWithBlock:block];
+	[op setCompletionBlock:^{
+		[self stopSpinner];
+		[self.delegate treeViewController:self pauseRefresh:NO];
+	}];
+	[queue addOperation:op];
+}
 
 - (BOOL)checkExistingTarget:(NSString *)target fileManager:(NSFileManager *)fileManager sourceDate:(NSDate *)sourceDate replace:(BOOL)replace createDirectories:(BOOL)create {
     cancelAll = NO;
@@ -124,7 +139,7 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 	}
 	return dest;
 }
-- (void)initCopyDest {
+- (void)initPanelDest:(id)panel {
 	NSArray *dest = [self dirsInTabs];
 	NSInteger n = [self.delegate currentTab];
 	if (n < [dest count] -1 )
@@ -132,21 +147,21 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 	else if (n) n--;
 	NSUInteger destItem = [dest indexOfObject:targetDirectory];
 	if (destItem != NSNotFound)	// previous target
-		n = destItem;	
-	[copyPanel setTargetDirs:dest];
-	[copyPanel setSelectedDir:n];
+		n = destItem;
+	[panel setTargetDirs:dest];
+	[panel setSelectedTarget:n];
 }
 - (void)initCopyPanel:(FileSystemItem *)node {
 	copyPanel = [CopyPanelController new];
 	[copyPanel setFrom:node.fullPath];
 	[copyPanel setFilename:node.relativePath];
-	[self initCopyDest];
+	[self initPanelDest:copyPanel];
 }
 - (void)initTaggedCopyPanel:(NSArray *)objects {
 	copyPanel = [CopyPanelController new];
 	[copyPanel setFrom:[NSString stringWithFormat:@"%ld tagged Files", [objects count]]];
 	[copyPanel setFilename:@"*.*"];
-	[self initCopyDest];
+	[self initPanelDest:copyPanel];
 }
 
 #pragma mark - Operations to execute after completion of queue
@@ -161,7 +176,6 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 }
 - (void)refreshTargetDirectory:(NSString *)targetDir {  // completion of copy
     DirectoryItem *dir = findPathInVolumes(targetDir);
-//    DirectoryItem *dir = findPathInVolumes(targetDirectory);
 	[self refreshTargetDir:dir];
 }
 - (void)restoreRefresh:(id)arg {    // completion of move
@@ -239,7 +253,7 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 
 	}
 }
-- (void)moveSingle:(FileSystemItem *)node  {
+- (void)moveSingle:(FileSystemItem *)node {
 	NSFileManager *fileManager = [NSFileManager new];
 	targetDirectory = copyPanel.targetDirectory;    // save for update after move
 	NSString *target = [targetDirectory stringByAppendingPathComponent:[node.relativePath stringByRenamingingLastPathComponent:copyPanel.filename]];
@@ -262,7 +276,6 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
                 [self stopSpinner];
                 // Update display on Main Queue after physical move
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//                    DirectoryItem *oldParent = [node parent];
                     if (targetDir) {
                         if ([targetDir isPathLoaded]) {
                             node.relativePath = newName;

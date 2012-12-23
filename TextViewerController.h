@@ -20,6 +20,7 @@
 @property (assign) IBOutlet NSTextField *fileName;
 @property (assign) id delegate;
 - (id)initWithPath:(NSString *)path;
+- (id)initWithData:(NSData *)data encoding:(NSStringEncoding)enc;
 - (void)searchFirst:(NSString *)searchString regexSearch:(BOOL)regexSearch caseSensitive:(BOOL)caseSensitive;
 @end
 

@@ -32,7 +32,7 @@
 - (void)setTitle:(NSString *)title;
 - (void)setFrom:(NSString *)filename;
 - (void)setTargetDirs:(NSArray *)target;
-- (void)setSelectedDir:(NSInteger)n;
+- (void)setSelectedTarget:(NSInteger)n;
 - (NSString *)targetDirectory;
 
 @end

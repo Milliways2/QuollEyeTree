@@ -19,6 +19,8 @@
 		3C3664BD1536C531005BAE4A /* GoToPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3664BC1536C530005BAE4A /* GoToPanelController.m */; };
 		3C379027165343E100883589 /* close-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C379025165343E100883589 /* close-selected.png */; };
 		3C379028165343E100883589 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C379026165343E100883589 /* close.png */; };
+		3C3C4B9F166AD8E6002E8C32 /* CompareFileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C4B9E166AD8E6002E8C32 /* CompareFileController.m */; };
+		3C3C4BA1166ADE00002E8C32 /* CompareFilePanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C4BA0166ADE00002E8C32 /* CompareFilePanel.xib */; };
 		3C4A961C1432E2AB009E488C /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4A961B1432E2AB009E488C /* Quartz.framework */; };
 		3C4A961E1432E2BD009E488C /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4A961D1432E2BD009E488C /* QuickLook.framework */; };
 		3C4A999014340084009E488C /* WhatsNew.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C4A998F14340084009E488C /* WhatsNew.txt */; };
@@ -26,6 +28,7 @@
 		3C4E81DD14A02A2A00C07CAE /* TreeViewController+Copy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4E81DC14A02A2A00C07CAE /* TreeViewController+Copy.m */; };
 		3C51E0D0143701BF009A0F02 /* TreeViewController+Files.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C51E0CF143701BF009A0F02 /* TreeViewController+Files.m */; };
 		3C5684BD15D399D5008F98FD /* TextViewerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5684BB15D399D5008F98FD /* TextViewerView.m */; };
+		3C5875FF16775614007E3FC2 /* CompareCmds.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C5875FE16775614007E3FC2 /* CompareCmds.plist */; };
 		3C62EB45149C33F900E8D057 /* ghostgum.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3C62EB44149C33F900E8D057 /* ghostgum.icns */; };
 		3C68F50A145A9637009C8762 /* SidebarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C68F508145A9637009C8762 /* SidebarViewController.m */; };
 		3C68F50D145A9658009C8762 /* BaseNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C68F50B145A9658009C8762 /* BaseNode.m */; };
@@ -113,6 +116,9 @@
 		3C3664BC1536C530005BAE4A /* GoToPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoToPanelController.m; sourceTree = "<group>"; };
 		3C379025165343E100883589 /* close-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-selected.png"; sourceTree = "<group>"; };
 		3C379026165343E100883589 /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
+		3C3C4B9D166AD8E6002E8C32 /* CompareFileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompareFileController.h; sourceTree = "<group>"; };
+		3C3C4B9E166AD8E6002E8C32 /* CompareFileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompareFileController.m; sourceTree = "<group>"; };
+		3C3C4BA0166ADE00002E8C32 /* CompareFilePanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CompareFilePanel.xib; sourceTree = "<group>"; };
 		3C4A952414329A0B009E488C /* QuollEyeTreeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuollEyeTreeAppDelegate.h; sourceTree = "<group>"; };
 		3C4A961B1432E2AB009E488C /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		3C4A961D1432E2BD009E488C /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
@@ -124,6 +130,7 @@
 		3C51E0CF143701BF009A0F02 /* TreeViewController+Files.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TreeViewController+Files.m"; sourceTree = "<group>"; };
 		3C5684BB15D399D5008F98FD /* TextViewerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextViewerView.m; sourceTree = "<group>"; };
 		3C5684BC15D399D5008F98FD /* TextViewerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewerView.h; sourceTree = "<group>"; };
+		3C5875FE16775614007E3FC2 /* CompareCmds.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CompareCmds.plist; sourceTree = "<group>"; };
 		3C62EB44149C33F900E8D057 /* ghostgum.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ghostgum.icns; sourceTree = "<group>"; };
 		3C68F508145A9637009C8762 /* SidebarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidebarViewController.m; sourceTree = "<group>"; };
 		3C68F509145A9637009C8762 /* SidebarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidebarViewController.h; sourceTree = "<group>"; };
@@ -333,6 +340,7 @@
 				3C6C8F4613C2CFEB00B553EF /* ReadMe.txt */,
 				3C6C8F5F13C2D1E600B553EF /* Credits.rtf */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				3C5875FE16775614007E3FC2 /* CompareCmds.plist */,
 				3CBCAB1E15AD487B00988ADF /* XIB */,
 			);
 			name = Resources;
@@ -351,10 +359,10 @@
 		3C05B3A915A54B55006D8507 /* TextView */ = {
 			isa = PBXGroup;
 			children = (
-				3C5684BC15D399D5008F98FD /* TextViewerView.h */,
-				3C5684BB15D399D5008F98FD /* TextViewerView.m */,
 				3CBCAB0A15A69CB500988ADF /* MyTextView.h */,
 				3CBCAB0B15A69CB600988ADF /* MyTextView.m */,
+				3C5684BC15D399D5008F98FD /* TextViewerView.h */,
+				3C5684BB15D399D5008F98FD /* TextViewerView.m */,
 				3C8524F0159ACC5300FFCED9 /* TextViewerController.h */,
 				3C8524F1159ACC5400FFCED9 /* TextViewerController.m */,
 			);
@@ -405,6 +413,8 @@
 				3C3664BC1536C530005BAE4A /* GoToPanelController.m */,
 				3CF72BBD1588679600E63E73 /* SearchPanelController.h */,
 				3CF72BBE1588679600E63E73 /* SearchPanelController.m */,
+				3C3C4B9D166AD8E6002E8C32 /* CompareFileController.h */,
+				3C3C4B9E166AD8E6002E8C32 /* CompareFileController.m */,
 			);
 			name = Panels;
 			sourceTree = "<group>";
@@ -474,6 +484,7 @@
 				3C3664B91536BFBA005BAE4A /* GoToPanel.xib */,
 				3C9AD526149863EF00AFD274 /* RenamePanel.xib */,
 				3C9AD715149C23D300AFD274 /* FolderPanel.xib */,
+				3C3C4BA0166ADE00002E8C32 /* CompareFilePanel.xib */,
 				3C6A139F14AD83C300FEBC50 /* ComparePanel.xib */,
 				3CF72BC015886BF000E63E73 /* SearchPanel.xib */,
 			);
@@ -614,6 +625,8 @@
 				3C8524F4159ACC6A00FFCED9 /* TextView.xib in Resources */,
 				3C379027165343E100883589 /* close-selected.png in Resources */,
 				3C379028165343E100883589 /* close.png in Resources */,
+				3C3C4BA1166ADE00002E8C32 /* CompareFilePanel.xib in Resources */,
+				3C5875FF16775614007E3FC2 /* CompareCmds.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,6 +702,7 @@
 				3CD0B6741648BDC600F7515D /* alias.m in Sources */,
 				3CD0B683164B33CF00F7515D /* folderSize.m in Sources */,
 				3CC1C71D16547A7A005D4F4D /* DirectoryItem+Branch.m in Sources */,
+				3C3C4B9F166AD8E6002E8C32 /* CompareFileController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -756,7 +770,7 @@
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_MODEL_TUNING = "";
 				GCC_OPTIMIZATION_LEVEL = 0;
-				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = BETA;
+				"GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS[arch=*]" = BETA_HEADER;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -772,7 +786,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_PASCAL_STRINGS = NO;
 				GCC_MODEL_TUNING = "";
-				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = BETA;
+				"GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS[arch=*]" = BETA_HEADER;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;

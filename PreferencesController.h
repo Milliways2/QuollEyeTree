@@ -10,19 +10,20 @@
 @class IBPathPopUpButton;
 
 @interface PreferencesController : NSWindowController {
+	NSDictionary *plistContents;
 }
 @property (unsafe_unretained) IBOutlet NSButton *sizeMode;
 @property (unsafe_unretained) IBOutlet NSButton *sizeTotalMode;
 
-@property (assign) IBOutlet NSMatrix *sort;
-@property (assign) IBOutlet NSButton *ascending;
-@property (assign) IBOutlet NSButton *iconDir;
-@property (assign) IBOutlet NSButton *iconFile;
-@property (assign) IBOutlet NSButton *hide;
-@property (assign) IBOutlet NSButton *refreshDirs;
-@property (assign) IBOutlet NSTextField *percentage;
-@property (assign) IBOutlet IBPathPopUpButton *defaultPathButton;
-@property (assign) IBOutlet IBPathPopUpButton *refreshPathButton;
+@property (unsafe_unretained) IBOutlet NSMatrix *sort;
+@property (unsafe_unretained) IBOutlet NSButton *ascending;
+@property (unsafe_unretained) IBOutlet NSButton *iconDir;
+@property (unsafe_unretained) IBOutlet NSButton *iconFile;
+@property (unsafe_unretained) IBOutlet NSButton *hide;
+@property (unsafe_unretained) IBOutlet NSButton *refreshDirs;
+@property (unsafe_unretained) IBOutlet NSTextField *percentage;
+@property (unsafe_unretained) IBOutlet IBPathPopUpButton *defaultPathButton;
+@property (unsafe_unretained) IBOutlet IBPathPopUpButton *refreshPathButton;
 
 - (IBAction)sortField:(id)sender;
 - (IBAction)sortDirection:(id)sender;
@@ -44,5 +45,9 @@
 - (IBAction)toggleRelative:(id)sender;
 - (IBAction)toggleCreateTime:(id)sender;
 - (IBAction)sizeFormat:(id)sender;
+
+@property (unsafe_unretained) IBOutlet NSComboBox *compareProgram;
+- (IBAction)compareCmdSelected:(NSComboBox *)sender;
+
 
 @end

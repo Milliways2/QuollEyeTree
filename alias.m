@@ -8,7 +8,30 @@
 
 #include <sys/stat.h>
 
-// get target of Symlink or Alias
+NSURL *targetOfAlias(NSURL *url) {
+	CFErrorRef *errorRef = NULL;
+	CFDataRef bookmark = CFURLCreateBookmarkDataFromFile (NULL, (__bridge CFURLRef)url, errorRef);
+	if (bookmark == nil) return nil;
+	CFURLRef resolvedUrl = CFURLCreateByResolvingBookmarkData (NULL, bookmark, kCFBookmarkResolutionWithoutUIMask, NULL, NULL, NO, errorRef);
+	return CFBridgingRelease(resolvedUrl);
+}
+
+// Check Alias (including Symbolic Links) to determine if these target Directories
+BOOL isAliasFolder(NSURL *url) {
+	id value = nil;
+	NSURL *target;
+	[url getResourceValue:&value forKey:NSURLIsSymbolicLinkKey error:nil];
+	if ([value boolValue]) {
+		target = [url URLByResolvingSymlinksInPath];
+        [target getResourceValue:&value forKey:NSURLIsPackageKey error:nil];
+        if ([value boolValue])	return NO;	// exclude Packages
+        [target getResourceValue:&value forKey:NSURLIsDirectoryKey error:nil];
+		return [value boolValue];
+	}
+	target = targetOfAlias(url);
+	[target getResourceValue:&value forKey:NSURLIsDirectoryKey error:nil];
+	return [value boolValue];
+}
 NSString *getTarget(NSString *fPath) {
 	NSString *resolvedPath = nil;
 	// Use lstat to determine if the file is a symlink
@@ -30,38 +53,8 @@ NSString *getTarget(NSString *fPath) {
 		else
 			return [[fPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:resolvedPath];
 	}
+	
 	// Resolve alias
-//	CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (__bridge CFStringRef)fPath, kCFURLPOSIXPathStyle, NO);
-	CFURLRef url = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, (CFStringRef)fPath, kCFURLPOSIXPathStyle, NO);
-	FSRef fsRef;
-	if (CFURLGetFSRef((CFURLRef)url, &fsRef)) {
-		Boolean targetIsFolder, wasAliased;
-		OSErr err = FSResolveAliasFile (&fsRef, true, &targetIsFolder, &wasAliased);
-		//		Resolves an alias contained in an alias file. (Deprecated in OS X v10.8. First use CFURLCreateBookmarkDataFromFile, then use CFURLCreateByResolvingBookmarkData.)
-		//		CFDataRef CFURLCreateBookmarkDataFromFile (
-		//												   CFAllocatorRef allocator,
-		//												   CFURLRef       fileURL,
-		//												   CFErrorRef     *errorRef
-		//												   );
-		//		CFURLRef CFURLCreateByResolvingBookmarkData (
-		//													 CFAllocatorRef                 allocator,
-		//													 CFDataRef                      bookmark,
-		//													 CFURLBookmarkResolutionOptions options,
-		//													 CFURLRef                       relativeToURL,
-		//													 CFArrayRef                     resourcePropertiesToInclude,
-		//													 Boolean                        *isStale,
-		//													 CFErrorRef                     *error
-		//													 );
-		if ((err == noErr) && wasAliased) {
-			CFURLRef resolvedUrl = CFURLCreateFromFSRef(kCFAllocatorDefault, &fsRef);
-			if (resolvedUrl != NULL) {
-				resolvedPath = (NSString*)CFBridgingRelease(CFURLCopyFileSystemPath(resolvedUrl, kCFURLPOSIXPathStyle));
-				//				CFBridgingRelease(CFBridgingRetain(resolvedPath));
-				CFRelease(resolvedUrl);
-			}
-		}
-	}
-	CFRelease(url);
-	return resolvedPath;
+	NSURL *resolvedUrl = targetOfAlias([NSURL fileURLWithPath:fPath]);
+	return [resolvedUrl path];
 }
-

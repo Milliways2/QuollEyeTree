@@ -15,6 +15,7 @@
 #import "NSString+Parse.h"
 #import "IBDateFormatter.h"
 #import "TextViewerController.h"
+
 NSPredicate *yesPredicate;
 NSPredicate *tagPredicate;
 NSPredicate *notEmptyPredicate;
@@ -37,13 +38,21 @@ NSPredicate *notEmptyPredicate;
 - (void) checkFilter;
 @end
 @interface TreeViewController(Files)
+- (FileItem *)selectedFile;
 - (void)exitFileViewer;
 @end
 @interface TreeViewController(Dirs)
 - (void)updateSelectedDir;
+-(IBAction)setNewRoot:(id)sender;
+@end
+@interface TreeViewController(Copy)
+- (void) runBlockOnQueue:(void (^)(void))block;
 @end
 
 @implementation TreeViewController
+- (NSString *)getTargetFile {
+	return[[self selectedFile] relativePath];
+}
 + (void)initialize {
 	yesPredicate = [NSPredicate predicateWithValue:YES];
 	tagPredicate = [NSPredicate predicateWithFormat:@"SELF.tag == YES"];
@@ -51,10 +60,6 @@ NSPredicate *notEmptyPredicate;
 }
 - (void)setRoot {
 	[self setTreeRootNode:[self.selectedDir rootDir]];
-}
-- (IBAction)setNewRoot:(id)sender {
-	self.selectedDir = [self.dirTree itemAtRow:[self.dirTree selectedRow]];	// save selected Dir for future actions
-	[self setTreeRootNode:self.selectedDir];
 }
 - (NSString *)rootDirName {
 	return [dataRoot relativePath];
@@ -307,7 +312,12 @@ NSPredicate *notEmptyPredicate;
     [self initViewHeaderMenu:self.fileList];
     [self initViewHeaderMenu:self.dirTree];
     [self restoreColumns];
-	[self.dirTree expandItem:dataRoot];  // setTreeRootNode may be called before NIB finishes loading
+	[self runBlockOnQueue:^{
+		[dataRoot logDir];	// Force logging of root
+		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+			[self expandRoot];
+		}];
+	}];
     [self.currentPath setDoubleAction:@selector(dClickPath:)];
     [self.currentPath setTarget:self];
 }
@@ -401,20 +411,27 @@ NSPredicate *notEmptyPredicate;
 - (DirectoryItem *)treeRootNode {
 	return dataRoot;
 }
+- (void)initWithDir:(DirectoryItem *)node {
+	dataRoot = node;
+}
+- (void)expandRoot {
+	[self enterDirView];
+	[self.dirTree reloadData];
+	self.selectedDir = dataRoot;
+	[self.dirTree expandItem:dataRoot];
+	self.filesInDir = dataRoot.files;
+    self.currDir = dataRoot.url;
+	[self.delegate treeViewController:self rootChangedInTreeView:[self rootDirName]];
+}
 - (void)setTreeRootNode:(DirectoryItem *)node {
 	if (dataRoot == node) {
 		return;
 	}
 	dataRoot = node;
-	if (![dataRoot isPathLoaded])
-		[dataRoot subDirectories];	// Force logging of root
-	[self enterDirView];
-	[self.dirTree reloadData];
-	self.selectedDir = node;
-	[self.dirTree expandItem:node];
-	self.filesInDir = node.files;
-    self.currDir = node.url;
-	[self.delegate treeViewController:self rootChangedInTreeView:[self rootDirName]];
+//	if (![dataRoot isPathLoaded])
+//		[dataRoot subDirectories];	// Force logging of root
+	[dataRoot logDir];	// Force logging of root
+	[self expandRoot];
 }
 // restore Tree in SplitView; return YES if restored
 - (BOOL)restoreSplitView {

@@ -89,20 +89,8 @@ static NSStringEncoding encodingForData(NSData *data) {
     return 0;
 }
 
-- (id)initWithPath:(NSString *)path {
+- (id)initWithData:(NSData *)data encoding:(NSStringEncoding)enc {
     NSString *dataString;
-    NSStringEncoding enc = 0;
-    NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
-	if (fileHandle == nil) return nil;
-//    NSError *error;
-//    if (!fileHandle) error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileReadUnknownError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:path, NSURLErrorKey, nil]];
-    NSData *data = [fileHandle readDataOfLength:MAX_TEXT_FILE];
-    [fileHandle closeFile];
-    fileHandle = nil;
-
-    [self.fileName setStringValue:[path lastPathComponent]];
-
-    enc = encodingForPath(path);
     if (enc == 0)   enc = encodingForData(data);
     if (enc == 0)   enc = NSUTF8StringEncoding;    // try UTF-8
     dataString = [[NSString alloc] initWithData:data encoding:enc];
@@ -117,8 +105,8 @@ static NSStringEncoding encodingForData(NSData *data) {
     // Set up data storage
     NSMutableParagraphStyle *myPara = [[NSMutableParagraphStyle alloc] init];
     [myPara setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-//    [myPara setLineBreakMode:NSLineBreakByTruncatingTail];
-//    [myPara setLineBreakMode:NSLineBreakByClipping];
+	//    [myPara setLineBreakMode:NSLineBreakByTruncatingTail];
+	//    [myPara setLineBreakMode:NSLineBreakByClipping];
     [myPara setDefaultTabInterval:8.0];
     NSDictionary *plainTextAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
 //                                         [NSFont userFixedPitchFontOfSize:12.0], NSFontAttributeName,
@@ -133,6 +121,19 @@ static NSStringEncoding encodingForData(NSData *data) {
 //    [[myTextView textContainer] setWidthTracksTextView:NO];
 //    [myTextView setHorizontallyResizable:YES];
 	return self;
+}
+- (id)initWithPath:(NSString *)path {
+    NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
+	if (fileHandle == nil) return nil;
+//    NSError *error;
+//    if (!fileHandle) error = [NSError errorWithDomain:NSCocoaErrorDomain code:NSFileReadUnknownError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:path, NSURLErrorKey, nil]];
+    NSData *data = [fileHandle readDataOfLength:MAX_TEXT_FILE];
+    [fileHandle closeFile];
+    fileHandle = nil;
+    [self.fileName setStringValue:[path lastPathComponent]];
+    NSStringEncoding enc = 0;
+    enc = encodingForPath(path);
+	return [self initWithData:data encoding:enc];
 }
 
 - (void)findAfter:(NSUInteger)location {

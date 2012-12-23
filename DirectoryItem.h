@@ -32,6 +32,7 @@
 - (DirectoryItem *)loadPath:(NSString *)path;
 - (DirectoryItem *)loadPath:(NSString *)path expandHidden:(BOOL)expandHidden;
 - (void)logDirPlus1;
+- (DirectoryItem *)logDir;
 - (void)updateDirectory;
 - (void)releaseDir;
 - (void)removeDir:(DirectoryItem *)node;

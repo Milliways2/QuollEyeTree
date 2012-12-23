@@ -39,7 +39,7 @@
 - (IBAction)copyTaggedFilesTo:(id)sender;
 - (IBAction)moveTaggedFilesTo:(id)sender;
 - (IBAction)renameTaggedFilesTo:(id)sender;
-
+- (IBAction)compareFile:(id)sender;
 // Dir Context & Menu Actions
 - (IBAction)openDirectory:(id)sender;
 - (IBAction)copyDir:(id)sender;

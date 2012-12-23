@@ -17,12 +17,10 @@
 @synthesize files=_files, loggedSubDirectories=_subDirectories;
 
 static NSMutableArray *leafNode = nil;
-//static NSArray *fileSortDescriptor = nil;
 NSArray *fileSortDescriptor = nil;
 static NSArray *dirSortDescriptor = nil;
 static BOOL showHiddenFiles = NO;
 static NSArray *properties = nil;
-NSOperationQueue *loggingQueue = nil;
 
 + (void)loadPreferences {
 	// Read default sortDescriptor from Preferences
@@ -45,8 +43,6 @@ NSOperationQueue *loggingQueue = nil;
                              [[NSSortDescriptor alloc] initWithKey:COLUMNID_NAME
                                                          ascending:YES
                                                           selector:@selector(localizedStandardCompare:)]];
-//		loggingQueue = [NSOperationQueue new];
-//		[loggingQueue setMaxConcurrentOperationCount:10];
     }
 }
 
@@ -142,16 +138,8 @@ NSOperationQueue *loggingQueue = nil;
         if ([value boolValue])	return YES;
         // Check Alias (including Symbolic Links) to determine if these target Directories
         [obj getResourceValue:&value forKey:NSURLIsAliasFileKey error:nil];
-        if ([value boolValue]) {
-            FSRef fsRef;
-            if (CFURLGetFSRef((CFURLRef)[array objectAtIndex:index], &fsRef)) {
-                Boolean targetIsFolder, wasAliased;
-                OSErr err = FSResolveAliasFileWithMountFlags(&fsRef, FALSE, &targetIsFolder, &wasAliased, kResolveAliasFileNoUI);
-                if (err == noErr) {
-                    if(targetIsFolder) return YES;
-                }
-            }
-        }
+        if ([value boolValue])
+			return isAliasFolder([array objectAtIndex:index]);
         return NO;
 	}];
 
@@ -193,10 +181,6 @@ NSOperationQueue *loggingQueue = nil;
                 newFile.fileSize = size;
                 [_files addObject:newFile];
 			if (newFile.isPackage) {
-//				[loggingQueue addOperationWithBlock:^{
-//				[aQueue addOperationWithBlock:^{
-//				newFile.fileSize = folderSize(element);
-//				}];
 				dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
 				dispatch_async(aQueue, ^{
 					newFile.fileSize = folderSize(element);
@@ -219,7 +203,7 @@ NSOperationQueue *loggingQueue = nil;
 			if (loadedPath == nil) {
 				_subDirectories = leafNode;
 				return;
-        }
+			}
         }
 		_subDirectories = [loadedPath subDirectories];
 		_files = [loadedPath files];
@@ -260,12 +244,15 @@ NSOperationQueue *loggingQueue = nil;
     NSLog(@"Empty? %@ ", fPath);
 }
 - (void)logDirPlus1 {
-//    if(_subDirectories == nil)
-//		[self loadSubDirectories];
 	NSArray *tempArray = [NSArray arrayWithArray:self.subDirectories];
 	for (DirectoryItem *dir in tempArray) {
 		[dir loadSubDirectories];
 	}
+}
+- (DirectoryItem *)logDir {
+	if (![self isPathLoaded])
+		[self subDirectories];
+	return self;
 }
 
 // Read directory contents and add/delete/update files and subDirs

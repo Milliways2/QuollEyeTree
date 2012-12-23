@@ -56,7 +56,9 @@
 - (IBAction)moveTaggedFilesTo:(id)sender {
 	[currentTvc moveTaggedFilesTo];
 }
-
+- (IBAction)compareFile:(id)sender {
+	[currentTvc compareFile];
+}
 
 - (IBAction)showFilesInBranch:(id)sender {	//?
 	[currentTvc showAllFiles:NO tagged:NO];

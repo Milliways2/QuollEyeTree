@@ -27,7 +27,7 @@ NSString *NSStringFromBool (BOOL value) {
 }
 
 static DirectoryItem *getDefaultDirectory() {
-	return [[systemRootVolume() volumeRoot] loadPath:[[[NSUserDefaults standardUserDefaults] stringForKey:PREF_DEFAULT_DIR] stringByResolvingSymlinksInPath]];
+	return [[[systemRootVolume() volumeRoot] loadPath:[[[NSUserDefaults standardUserDefaults] stringForKey:PREF_DEFAULT_DIR] stringByResolvingSymlinksInPath]] logDir];
 }
 
 // FileItem will be used directly in preview panel and needs to implement the QLPreviewItem protocol
@@ -48,6 +48,8 @@ static DirectoryItem *getDefaultDirectory() {
 #pragma mark -
 @implementation MyWindowController
 @synthesize currentTvc, tabViewBar, sidebarDrawer;
+
+NSOperationQueue *loggingQueue = nil;
 
 - (BOOL)windowShouldClose:(id)sender {
     return [currentTvc shouldTerminate];   // Prevent Close Button if inappropriate
@@ -119,11 +121,12 @@ static DirectoryItem *getDefaultDirectory() {
     [mainMenu setSubmenu:goMenu forItem:[mainMenu itemAtIndex:3]];	// Initialise 'Go' Menu
 }
 - (TreeViewController *)newTreeViewControllerAtDir:(DirectoryItem *)userDir {
+	[userDir logDir];	// log directory BEFORE creating controller
 	TreeViewController *tvcNew = [[TreeViewController alloc]
 								  initWithNibName:@"TreeView"
 								  bundle:nil];
 	tvcNew.delegate = self;
-	[tvcNew setTreeRootNode:userDir];
+	[tvcNew initWithDir:userDir];
 	return tvcNew;
 }
 - (void)changeSelection:(TreeViewController *)tvcNew {
@@ -136,10 +139,15 @@ static DirectoryItem *getDefaultDirectory() {
 }
 - (void)newTabWithDir:(DirectoryItem *)userDir {
 	TreeViewController *tvcNew = [self newTreeViewControllerAtDir:userDir];
+//	[tabViewBar addTabWithRepresentedObject:[NSDictionary dictionaryWithObject:[tvcNew rootDirName] forKey:@"name"]];
 	[self changeSelection:tvcNew];
 	[tabViewBar addTabWithRepresentedObject:[NSDictionary dictionaryWithObject:[tvcNew rootDirName] forKey:@"name"]];
 }
 
++ (void)initialize {
+	loggingQueue = [NSOperationQueue new];
+	[loggingQueue setMaxConcurrentOperationCount:10];
+}
 // Initialise the 1st TreeViewController and display in main window
 - (void)setupView {
 	currentTvc = [self newTreeViewControllerAtDir:getDefaultDirectory()];
@@ -343,10 +351,24 @@ static DirectoryItem *getDefaultDirectory() {
 	}
 	return tvcArray;
 }
+- (TreeViewController *)tvcAtIndex:(NSInteger)index {
+	return [viewMap objectForKey:[tabViewBar tabAtIndex:index]];
+}
 - (NSInteger)currentTab {
 	return [tabViewBar indexOfTab:[tabViewBar selectedTab]];
 }
 - (void)selectDirectory:(NSString *)directory inTab:(BOOL)inTab {
+//	[loggingQueue addOperationWithBlock:^{
+//		[self pauseMonitoring:YES];
+//		DirectoryItem *userDir = locateOrAddDirectoryInVolumes(directory);
+//		if (userDir) {
+//			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//				if (inTab)  [self newTabWithDir:userDir];
+//				else    [currentTvc setTreeRootNode:userDir];
+//			}];
+//		}
+//		[self pauseMonitoring:NO];
+//	}];
 	DirectoryItem *userDir = locateOrAddDirectoryInVolumes(directory);
     if (userDir) {
 		if (inTab)  [self newTabWithDir:userDir];
@@ -414,6 +436,9 @@ static DirectoryItem *getDefaultDirectory() {
     [searches replaceObjectAtIndex:0 withObject:newTopSearch];
     [filterString setRecentSearches:searches];
     [filterString setStringValue:newTopSearch];
+}
+- (IBAction)currentFileFilter:(id)sender {
+    [filterString setStringValue:[currentTvc getTargetFile]];
 }
 #pragma mark NSControl Delegate Methods
 //	The text in NSSearchField has changed; clear filter if Cancel pressed

@@ -32,6 +32,7 @@
 							  [NSNumber numberWithInteger:ISO8601ShortStyle], PREF_DATE_FORMAT,
 							  @"NO", PREF_DATE_RELATIVE,
                               @"NO", PREF_DATE_SHOW_CREATE,
+							  DEFAULT_COMPARE_COMMAND, PREF_COMPARE_COMMAND,
 							  nil];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
@@ -53,7 +54,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	// load the app's main window for display
 	myWindowController = [[MyWindowController alloc] initWithWindowNibName:@"MainWindow"];
-#ifdef BETA
+#ifdef BETA_HEADER
 	NSDictionary *bundleInfo = [[NSBundle mainBundle] infoDictionary];
 	NSString *body = [NSString stringWithFormat:@"%@ %@ (build %@)",
 					  [bundleInfo objectForKey:@"CFBundleExecutable"],

@@ -43,6 +43,7 @@
 
 - (NSArray *)tvcInTabs;
 - (NSInteger)currentTab;
+- (TreeViewController *)tvcAtIndex:(NSInteger)index;
 
 // Toolbar Actions
 - (IBAction)segControlClicked:(id)sender;
@@ -53,6 +54,7 @@
 - (IBAction)toggleSidebar:(id)sender;
 - (IBAction)privateTest:(id)sender;
 - (IBAction)toggleMark:(id)sender;
+- (IBAction)currentFileFilter:(id)sender;
 	
 // Menu Actions (called in AppDelegate)
 - (IBAction)addNewTab:(id)sender;

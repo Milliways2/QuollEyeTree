@@ -33,6 +33,7 @@
 - (IBAction)addDirToSidebar:(id)sender;
 - (IBAction)showTargetDir:(id)sender;
 - (IBAction)symlinkToDir:(id)sender;
+- (IBAction)setNewRoot:(id)sender;
 
 - (IBAction)copyPath:(id)sender;
 - (IBAction)copyPathToClipboard:(id)sender;

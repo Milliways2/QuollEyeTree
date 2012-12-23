@@ -18,7 +18,6 @@
 @synthesize sizeTotalMode;
 
 NSArray *sortColumns;
-
 - (IBAction)sortField:(id)sender {
 	[[NSUserDefaults standardUserDefaults]
 	 setObject:[sortColumns objectAtIndex:[[sender selectedCell] tag]]
@@ -123,6 +122,18 @@ NSArray *sortColumns;
 	 setBool:[self.sizeTotalMode state]
 	 forKey:PREF_TOTAL_MODE];
 }
+- (IBAction)compareCmdSelected:(id)sender {
+	NSInteger index = [sender indexOfSelectedItem];
+	if (index >= 0 && index < [plistContents count]) {
+		[[NSUserDefaults standardUserDefaults]
+		 setObject:[plistContents objectForKey:[self.compareProgram stringValue]]
+		 forKey:PREF_COMPARE_COMMAND];
+		return;
+	}
+	[[NSUserDefaults standardUserDefaults]
+	 setObject:[self.compareProgram stringValue]
+	 forKey:PREF_COMPARE_COMMAND];
+}
 #pragma mark -
 - (void)awakeFromNib {
 	sortColumns = [NSArray arrayWithObjects:COLUMNID_NAME, COLUMNID_SIZE, COLUMNID_DATE, nil];
@@ -145,7 +156,20 @@ NSArray *sortColumns;
     [self.relativeDate setState:[[NSUserDefaults standardUserDefaults]boolForKey:PREF_DATE_RELATIVE]];
 	[self.createTime setState:[[NSUserDefaults standardUserDefaults]boolForKey:PREF_DATE_SHOW_CREATE]];
     [self showDate];
-
+	plistContents = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CompareCmds" ofType:@"plist"]];
+	NSString *cmd = [[NSUserDefaults standardUserDefaults] stringForKey:PREF_COMPARE_COMMAND];
+	BOOL cmdFound = FALSE;
+	for (NSString *key in plistContents) {
+		[self.compareProgram addItemWithObjectValue:key];
+		if ([cmd isEqualToString:[plistContents objectForKey:key]]) {
+			[self.compareProgram selectItemWithObjectValue:key];
+			cmdFound = TRUE;
+		}
+	}
+	if (!cmdFound) {
+		[self.compareProgram addItemWithObjectValue:cmd];
+		[self.compareProgram selectItemWithObjectValue:cmd];
+	}
 }
 
 @end

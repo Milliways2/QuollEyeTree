@@ -75,9 +75,10 @@
 							<string key="NSToolbarItemPaletteLabel"/>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSProgressIndicator" key="NSToolbarItemView" id="638805201">
-								<nil key="NSNextResponder"/>
+								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">1324</int>
 								<string key="NSFrame">{{0, 14}, {32, 32}}</string>
+								<reference key="NSSuperview"/>
 								<string key="NSReuseIdentifierKey">_NS:3891</string>
 								<int key="NSpiFlags">28682</int>
 								<double key="NSMaxValue">100</double>
@@ -101,9 +102,10 @@
 							<string key="NSToolbarItemPaletteLabel">Custom View</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSSegmentedControl" key="NSToolbarItemView" id="626704263">
-								<nil key="NSNextResponder"/>
+								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">268</int>
 								<string key="NSFrame">{{0, 14}, {95, 25}}</string>
+								<reference key="NSSuperview"/>
 								<int key="NSTag">-1</int>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSSegmentedCell" key="NSCell" id="1068659163">
@@ -169,9 +171,10 @@
 							<string key="NSToolbarItemPaletteLabel">Tag</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="526905202">
-								<nil key="NSNextResponder"/>
+								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{0, 14}, {46, 25}}</string>
+								<reference key="NSSuperview"/>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSButtonCell" key="NSCell" id="356538253">
 									<int key="NSCellFlags">67108864</int>
@@ -241,9 +244,10 @@
 							<string key="NSToolbarItemPaletteLabel">QuickLook</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSButton" key="NSToolbarItemView" id="755731981">
-								<nil key="NSNextResponder"/>
+								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">301</int>
 								<string key="NSFrame">{{16, 14}, {32, 25}}</string>
+								<reference key="NSSuperview"/>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSButtonCell" key="NSCell" id="627699544">
 									<int key="NSCellFlags">-2080374784</int>
@@ -283,9 +287,10 @@
 							<string key="NSToolbarItemPaletteLabel">FileFilter</string>
 							<nil key="NSToolbarItemToolTip"/>
 							<object class="NSSearchField" key="NSToolbarItemView" id="39565040">
-								<nil key="NSNextResponder"/>
+								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">267</int>
 								<string key="NSFrame">{{0, 14}, {200, 22}}</string>
+								<reference key="NSSuperview"/>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSSearchFieldCell" key="NSCell" id="61830638">
 									<int key="NSCellFlags">342884416</int>
@@ -505,6 +510,25 @@
 			<object class="NSMenu" id="869254192">
 				<string key="NSTitle">Search Menu</string>
 				<array class="NSMutableArray" key="NSMenuItems">
+					<object class="NSMenuItem" id="112365782">
+						<reference key="NSMenu" ref="869254192"/>
+						<string key="NSTitle">Current File</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="446588338"/>
+						<reference key="NSMixedImage" ref="947204231"/>
+					</object>
+					<object class="NSMenuItem" id="495709046">
+						<reference key="NSMenu" ref="869254192"/>
+						<bool key="NSIsDisabled">YES</bool>
+						<bool key="NSIsSeparator">YES</bool>
+						<string key="NSTitle"/>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="446588338"/>
+						<reference key="NSMixedImage" ref="947204231"/>
+						<int key="NSTag">1000</int>
+					</object>
 					<object class="NSMenuItem" id="554033198">
 						<reference key="NSMenu" ref="869254192"/>
 						<string key="NSTitle">Recent</string>
@@ -712,6 +736,15 @@
 						<bool key="NSIsSeparator">YES</bool>
 						<string key="NSTitle"/>
 						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="446588338"/>
+						<reference key="NSMixedImage" ref="947204231"/>
+					</object>
+					<object class="NSMenuItem" id="308229023">
+						<reference key="NSMenu" ref="626729470"/>
+						<string key="NSTitle">Compare File</string>
+						<string key="NSKeyEquiv">c</string>
+						<int key="NSKeyEquivModMask">524288</int>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="446588338"/>
 						<reference key="NSMixedImage" ref="947204231"/>
@@ -1521,6 +1554,22 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
+						<string key="label">compareFile:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="308229023"/>
+					</object>
+					<int key="connectionID">286</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">currentFileFilter:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="112365782"/>
+					</object>
+					<int key="connectionID">291</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
 						<string key="label">copy:</string>
 						<reference key="source" ref="1003"/>
 						<reference key="destination" ref="798589206"/>
@@ -1737,10 +1786,12 @@
 						<int key="objectID">69</int>
 						<reference key="object" ref="869254192"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="554033198"/>
 							<reference ref="555084884"/>
 							<reference ref="770555115"/>
 							<reference ref="708901140"/>
+							<reference ref="554033198"/>
+							<reference ref="112365782"/>
+							<reference ref="495709046"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -1789,6 +1840,7 @@
 							<reference ref="314708364"/>
 							<reference ref="401580252"/>
 							<reference ref="4115663"/>
+							<reference ref="308229023"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -2183,6 +2235,21 @@
 						<reference key="object" ref="595896926"/>
 						<reference key="parent" ref="1024707430"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">284</int>
+						<reference key="object" ref="308229023"/>
+						<reference key="parent" ref="626729470"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">290</int>
+						<reference key="object" ref="112365782"/>
+						<reference key="parent" ref="869254192"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">292</int>
+						<reference key="object" ref="495709046"/>
+						<reference key="parent" ref="869254192"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2250,6 +2317,9 @@
 				<string key="265.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="271.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="281.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="284.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="290.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="292.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="50.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="50.designableToolbarIdentifier">TreeViewToolbar</string>
 				<boolean value="YES" key="50.showNotes"/>
@@ -2305,7 +2375,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">283</int>
+			<int key="maxID">292</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

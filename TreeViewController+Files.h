@@ -10,6 +10,7 @@
 #import "TreeViewController.h"
 
 @interface TreeViewController(Files) 
+- (void)updateTargetNames:(id)sender target:(id)cfc;
 
 // Menu Actions
 - (void)tagOneFile;
@@ -26,6 +27,7 @@
 - (void)moveTaggedFilesTo;
 - (void)renameTaggedFilesTo;
 - (void)renameFile;
+- (void)compareFile;
 
 // Context Menu Actions
 - (IBAction)openFile:(id)sender;

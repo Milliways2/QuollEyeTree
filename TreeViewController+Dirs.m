@@ -19,16 +19,17 @@
 #import "DeletedItems.h"
 
 @interface TreeViewController()
-//  TreeViewController
 - (void)setDirMenu;
 - (void)enterFileView;
 - (FileItem *)fileSelected;
 - (BOOL)areFilesVisible;
 - (void)copyToPasteboard:(id)object;
 - (void)toggleTopSubView:(id)sender;
-//  TreeViewController+Copy
+@end
+@interface TreeViewController(Copy)
 - (void)startSpinner;
 - (void)stopSpinner;
+- (void)runBlockOnQueue:(void (^)(void))block;
 - (NSArray *)dirsInTabs;
 - (void)copyTo:(FileSystemItem *)node;
 - (void)moveTo:(FileSystemItem *)node;
@@ -55,20 +56,12 @@
 	}
 	[self checkFilter];
 }
-- (void) updateBranchInQueue:(DirectoryItem *)branch  {
-	if(queue == NULL) {
-		queue = [NSOperationQueue new];
-		[queue setMaxConcurrentOperationCount:10];
-	}
-	[self.delegate treeViewController:self pauseRefresh:YES];
-	[queue addOperationWithBlock:^{
-		[self startSpinner];
+- (void)updateBranchInQueue:(DirectoryItem *)branch  {
+	[self runBlockOnQueue:^{
 		[branch updateBranch];
-		[self stopSpinner];
 		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 			[self reloadData];
 		}];
-		[self.delegate treeViewController:self pauseRefresh:NO];
 	}];
 }
 
@@ -128,7 +121,7 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 	[comparePanel setTargetDirs:[self dirsInTabs]];
 
 	NSInteger n = [self.delegate currentTab] + 1;
-	[comparePanel setSelectedDir:n];
+	[comparePanel setSelectedTarget:n];
 	if ([comparePanel runModal] == NSOKButton) {
 		DirectoryItem *targetDir = findPathInVolumes(comparePanel.targetDirectory);
 		if (targetDir) {
@@ -140,7 +133,7 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 		NSMutableArray *accumulated = [NSMutableArray arrayWithCapacity:50];
 		[accumulated addObject:[NSDictionary dictionaryWithObjectsAndKeys:node, @"source", targetDir, @"target", nil]];
 		if ([comparePanel.compareMode selectedRow])
-			getAllMatching (node, targetDir, &accumulated);
+			getAllMatching (node, targetDir, &accumulated);	// if Directory get all matching subdirectories
 		for (NSDictionary *dict in accumulated) {
 			NSArray *currentContents = [[[dict objectForKey:@"source"] files] filteredArrayUsingPredicate:fileFilterPredicate];
 			NSArray *targetFiles = 	[[dict objectForKey:@"target"] files];
@@ -256,124 +249,6 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 								 [self.delegate treeViewController:self pauseRefresh:NO];
 							 } ];
 }
-#pragma mark Delegate Actions
-- (BOOL)keyPressedInOutlineView:(unichar)character shifted:(BOOL)shifted {
-	if (shifted && character == NSF3FunctionKey) {
-		[self.selectedDir updateDirectory];
-		[self reloadData];
-		return YES;
-	}
-	if (character == NSF3FunctionKey) {
-	[self updateBranchInQueue:self.selectedDir];
-		return YES;
-	}
-	if (character == 0x0d) {
-		[self enterFileView];
-		return YES;
-	}
-	if (character == '*') {
-        if(queue == NULL) {
-            queue = [NSOperationQueue new];
-            [queue setMaxConcurrentOperationCount:10];
-        }
-		[self.delegate treeViewController:self pauseRefresh:YES];
-        [queue addOperationWithBlock:^{
-			[self startSpinner];
-			[self.selectedDir logDirPlus1];
-			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-				[self.dirTree expandItem:self.selectedDir];
-			}];
-			[self.selectedDir logBranch];
-			[self stopSpinner];
-			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-				[self.dirTree expandItem:self.selectedDir expandChildren:YES];
-			}];
-			[self.delegate treeViewController:self pauseRefresh:NO];
-		}];
-		return YES;
-	}
-	if (character == '+' || character == '=') {
-        if(queue == NULL) {
-            queue = [NSOperationQueue new];
-            [queue setMaxConcurrentOperationCount:10];
-        }
-		[self.delegate treeViewController:self pauseRefresh:YES];
-        [queue addOperationWithBlock:^{
-			[self startSpinner];
-			[self.selectedDir logDirPlus1];
-			[self stopSpinner];
-			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-				[self.dirTree expandItem:self.selectedDir];
-			}];
-			[self.delegate treeViewController:self pauseRefresh:NO];
-		}];
-		return YES;
-	}
-	if (character == '-') {
-        [self.dirTree collapseItem:self.selectedDir collapseChildren:YES];
-		[self.selectedDir releaseDir];
-	}
-	if (character == NSF6FunctionKey) {
-		if ([self.dirTree isItemExpanded:self.selectedDir])
-            [self.dirTree collapseItem:self.selectedDir];
-        else
-            [self.dirTree expandItem:self.selectedDir];
-		return YES;
-	}
-    if (character == NSF5FunctionKey) {
-		if (![self.dirTree isItemExpanded:self.selectedDir]) {
-            [self.dirTree expandItem:self.selectedDir];
-            return YES;
-        }
-        BOOL expanded = NO;
-        DirectoryItem *dir;
-        for (dir in [self.selectedDir loggedSubDirectories])
-            expanded = expanded || [self.dirTree isItemExpanded:dir];
-        if (expanded)   // any subdirectory is expanded
-            for (dir in [self.selectedDir loggedSubDirectories])
-                [self.dirTree collapseItem:dir];
-        else
-            for (dir in [self.selectedDir loggedSubDirectories])
-                [self.dirTree expandItem:dir];
-        return YES;
-    }
-	return NO;
-}
-- (BOOL)keyCmdPressedInOutlineView:(unichar)character {
-	if (character == NSUpArrowFunctionKey) {
-		[self setTreeRootNode:(DirectoryItem *)[dataRoot parent]];
-		return YES;
-	}
-	return NO;
-}
-- (BOOL)keyCtlPressedInOutlineView:(unichar)character {
-	if (character == 0x0d) {
-        [self toggleShowTagged];
-		return YES;
-	}
-	if (character == 'b') {
-        [self showAllFiles:NO tagged:YES];
-		return YES;
-	}
-	if (character == 's') {
-        [self showAllFiles:YES tagged:YES];
-		return YES;
-	}
-	return NO;
-}
-
-- (void)mouseDownInOutlineView {
-	if(inFileView) {
-		[self setDirMenu];
-	}
-}
-- (void)validateContextMenu:(NSMenu *)menu {
-    DirectoryItem *item = (DirectoryItem *)[self.dirTree focusedItem];
-	NSMenuItem *mi = [menu itemWithTitle:@"Show Target"];
-	if(mi) [mi setHidden:!item.isAlias];
-	mi = [menu itemWithTitle:@"Create Symlink"];
-	if(mi) [mi setHidden:item.isAlias];
-}
 
 #pragma mark Context Menu Actions
 - (IBAction)copyDir:(id)sender {	// context & menu
@@ -449,6 +324,14 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 	if (item == nil)    return;
     [self symlinkTo:item];
 }
+- (IBAction)setNewRoot:(id)sender {
+    DirectoryItem *item;
+    if ([sender isKindOfClass:[MyWindowController class]])
+		item = [self.dirTree itemAtRow:[self.dirTree selectedRow]];
+	else
+		item = (DirectoryItem *)[self.dirTree focusedItem];
+	[self setTreeRootNode:item];
+}
 
 #pragma mark NSPathControl Menu Actions
 - (IBAction)copyPath:(id)sender {	// context & menu
@@ -490,9 +373,109 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 	if(![as executeAndReturnError:&errorInfo])
         NSLog(@"errorInfo %@", errorInfo);
 }
-//# - (IBAction)addPathToSidebar:(id)sender {	// context only
-//# 	[self.delegate treeViewController:self addToSidebar:item.fullPath];
-//# }
+#pragma mark - Delegate Actions
+- (BOOL)keyPressedInOutlineView:(unichar)character shifted:(BOOL)shifted {
+//	NSLog(@"keyPressedInOutlineView");
+	if (shifted && character == NSF3FunctionKey) {
+		[self.selectedDir updateDirectory];
+		[self reloadData];
+		return YES;
+	}
+	if (character == NSF3FunctionKey) {
+		[self updateBranchInQueue:self.selectedDir];
+		return YES;
+	}
+	if (character == 0x0d) {
+		[self enterFileView];
+		return YES;
+	}
+	if (character == '*') {
+		[self runBlockOnQueue:^{
+			[self.selectedDir logDirPlus1];
+			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+				[self.dirTree expandItem:self.selectedDir];
+			}];
+			[self.selectedDir logBranch];
+			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+				[self.dirTree expandItem:self.selectedDir expandChildren:YES];
+			}];
+		}];
+		return YES;
+	}
+	if (character == '+' || character == '=') {
+		[self runBlockOnQueue:^{
+			[self.selectedDir logDirPlus1];
+			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+				[self.dirTree expandItem:self.selectedDir];
+			}];
+		}];
+		return YES;
+	}
+	if (character == '-') {
+        [self.dirTree collapseItem:self.selectedDir collapseChildren:YES];
+		[self.selectedDir releaseDir];
+	}
+	if (character == NSF6FunctionKey) {
+		if ([self.dirTree isItemExpanded:self.selectedDir])
+            [self.dirTree collapseItem:self.selectedDir];
+        else
+            [self.dirTree expandItem:self.selectedDir];
+		return YES;
+	}
+    if (character == NSF5FunctionKey) {
+		if (![self.dirTree isItemExpanded:self.selectedDir]) {
+            [self.dirTree expandItem:self.selectedDir];
+            return YES;
+        }
+        BOOL expanded = NO;
+        DirectoryItem *dir;
+        for (dir in [self.selectedDir loggedSubDirectories])
+            expanded = expanded || [self.dirTree isItemExpanded:dir];
+        if (expanded)   // any subdirectory is expanded
+            for (dir in [self.selectedDir loggedSubDirectories])
+                [self.dirTree collapseItem:dir];
+        else
+            for (dir in [self.selectedDir loggedSubDirectories])
+                [self.dirTree expandItem:dir];
+        return YES;
+    }
+	return NO;
+}
+- (BOOL)keyCmdPressedInOutlineView:(unichar)character {
+	if (character == NSUpArrowFunctionKey) {
+		[self setTreeRootNode:(DirectoryItem *)[dataRoot parent]];
+		return YES;
+	}
+	return NO;
+}
+- (BOOL)keyCtlPressedInOutlineView:(unichar)character {
+	if (character == 0x0d) {
+        [self toggleShowTagged];
+		return YES;
+	}
+	if (character == 'b') {
+        [self showAllFiles:NO tagged:YES];
+		return YES;
+	}
+	if (character == 's') {
+        [self showAllFiles:YES tagged:YES];
+		return YES;
+	}
+	return NO;
+}
+
+- (void)mouseDownInOutlineView {
+	if(inFileView) {
+		[self setDirMenu];
+	}
+}
+- (void)validateContextMenu:(NSMenu *)menu {
+    DirectoryItem *item = (DirectoryItem *)[self.dirTree focusedItem];
+	NSMenuItem *mi = [menu itemWithTitle:@"Show Target"];
+	if(mi) [mi setHidden:!item.isAlias];
+	mi = [menu itemWithTitle:@"Create Symlink"];
+	if(mi) [mi setHidden:item.isAlias];
+}
 #pragma mark - NSOutlineViewDelegate Protocol methods
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
     [self updateSelectedDir];
@@ -515,9 +498,19 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
     if (newColumnIndex == 0)    return NO;
     return YES;
 }
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldTypeSelectForEvent:(NSEvent *)event withCurrentSearchString:(NSString *)searchString {
+	unichar keyChar = [[event charactersIgnoringModifiers] characterAtIndex:0];
+	if(([event modifierFlags] & NSShiftKeyMask) == NSShiftKeyMask && [[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:keyChar])
+		return YES;
+	if([[NSCharacterSet decimalDigitCharacterSet] characterIsMember:keyChar])
+		return YES;
+	return NO;
+}
+- (NSString *)outlineView:(NSOutlineView *)outlineView typeSelectStringForTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+	return ([[tableColumn identifier] isEqualToString:COLUMNID_NAME]) ? [item valueForKey:[tableColumn identifier]] : nil;
+}
 
 #pragma mark NSOutlineViewDataSource Protocol methods
-
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item {
     return (item == nil) ? 1 : [item numberOfSubDirs];	// nil has 1 child - dataRoot
 }

@@ -6,3 +6,4 @@
 //
 
 extern NSString *getTarget(NSString *fPath);
+extern BOOL isAliasFolder(NSURL *url);

@@ -68,7 +68,7 @@
 	[self.destComboBox removeAllItems];
 	[self.destComboBox addItemsWithObjectValues:target];
 }
-- (void)setSelectedDir:(NSInteger)n {
+- (void)setSelectedTarget:(NSInteger)n {
 	if (n > [self.destComboBox numberOfItems] - 1)	{ n--; if(n) n--;}
 	[self.destComboBox selectItemAtIndex:n];
 }
