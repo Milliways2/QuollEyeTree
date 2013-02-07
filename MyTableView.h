@@ -14,6 +14,7 @@
 - (BOOL)keyPressedInTableView:(unichar)character;
 - (BOOL)keyCmdPressedInTableView:(unichar)character;
 - (BOOL)keyCtlPressedInTableView:(unichar)character;
+- (BOOL)keyAltPressedInTableView:(unichar)character;
 - (void)mouseDownInTableView;
 - (void)validateTableContextMenu:(NSMenu *)menu;
 @end

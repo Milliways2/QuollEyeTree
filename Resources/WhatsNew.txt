@@ -1,4 +1,8 @@
 What's new since 1.0
+Version 1.04 beta 2013-01-27
+- added Branch File Filter (duplicateFiles)
+- fixed move dir did not update selection
+- added tagged file count on status bar
 
 Version 1.03 beta 2012-12-08
 - fixed Show Target Context Menu for file only showed if already logged

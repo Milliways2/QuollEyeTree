@@ -64,6 +64,9 @@
 		3CA8392514385A0F00FD4B86 /* MyWindowController+Refresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA8392414385A0F00FD4B86 /* MyWindowController+Refresh.m */; };
 		3CB745BC14CD3FBD00DD66E7 /* OpenWith.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CB745BB14CD3FBD00DD66E7 /* OpenWith.m */; };
 		3CBCAB0C15A69CB600988ADF /* MyTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBCAB0B15A69CB600988ADF /* MyTextView.m */; };
+		3CBCEECE1689A3A8003A0B0D /* ArraySumTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBCEECD1689A3A7003A0B0D /* ArraySumTransformer.m */; };
+		3CBCEED5168C00E4003A0B0D /* FilterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBCEED3168C00E3003A0B0D /* FilterController.m */; };
+		3CBCEED6168C00E4003A0B0D /* FilterController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CBCEED4168C00E3003A0B0D /* FilterController.xib */; };
 		3CC1C71D16547A7A005D4F4D /* DirectoryItem+Branch.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC1C71C16547A7A005D4F4D /* DirectoryItem+Branch.m */; };
 		3CC3732515C8E6E700B1BDA3 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC3732415C8E6E700B1BDA3 /* Constants.m */; };
 		3CCC2D86143D648E00789F65 /* tabBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC2D85143D648E00789F65 /* tabBg.png */; };
@@ -193,6 +196,11 @@
 		3CB745BB14CD3FBD00DD66E7 /* OpenWith.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenWith.m; sourceTree = "<group>"; };
 		3CBCAB0A15A69CB500988ADF /* MyTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTextView.h; sourceTree = "<group>"; };
 		3CBCAB0B15A69CB600988ADF /* MyTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTextView.m; sourceTree = "<group>"; };
+		3CBCEECC1689A3A6003A0B0D /* ArraySumTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArraySumTransformer.h; sourceTree = "<group>"; };
+		3CBCEECD1689A3A7003A0B0D /* ArraySumTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArraySumTransformer.m; sourceTree = "<group>"; };
+		3CBCEED2168C00E3003A0B0D /* FilterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterController.h; sourceTree = "<group>"; };
+		3CBCEED3168C00E3003A0B0D /* FilterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterController.m; sourceTree = "<group>"; };
+		3CBCEED4168C00E3003A0B0D /* FilterController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterController.xib; sourceTree = "<group>"; };
 		3CC1C71B16547A7A005D4F4D /* DirectoryItem+Branch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DirectoryItem+Branch.h"; sourceTree = "<group>"; };
 		3CC1C71C16547A7A005D4F4D /* DirectoryItem+Branch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DirectoryItem+Branch.m"; sourceTree = "<group>"; };
 		3CC3732415C8E6E700B1BDA3 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Constants.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -254,6 +262,8 @@
 				3C8524EE159ACC3700FFCED9 /* ISO8859String.m */,
 				3C890DF4157DA4A500982367 /* ArrayCountTransformer.h */,
 				3C890DF5157DA4A500982367 /* ArrayCountTransformer.m */,
+				3CBCEECC1689A3A6003A0B0D /* ArraySumTransformer.h */,
+				3CBCEECD1689A3A7003A0B0D /* ArraySumTransformer.m */,
 				3C7AEEBD155DE40800B44AE7 /* IBDateFormatter.h */,
 				3C7AEEBE155DE41A00B44AE7 /* IBDateFormatter.m */,
 				3C7AEE80155A2E8700B44AE7 /* IBPathPopUpButton.h */,
@@ -415,6 +425,8 @@
 				3CF72BBE1588679600E63E73 /* SearchPanelController.m */,
 				3C3C4B9D166AD8E6002E8C32 /* CompareFileController.h */,
 				3C3C4B9E166AD8E6002E8C32 /* CompareFileController.m */,
+				3CBCEED2168C00E3003A0B0D /* FilterController.h */,
+				3CBCEED3168C00E3003A0B0D /* FilterController.m */,
 			);
 			name = Panels;
 			sourceTree = "<group>";
@@ -486,6 +498,7 @@
 				3C9AD715149C23D300AFD274 /* FolderPanel.xib */,
 				3C3C4BA0166ADE00002E8C32 /* CompareFilePanel.xib */,
 				3C6A139F14AD83C300FEBC50 /* ComparePanel.xib */,
+				3CBCEED4168C00E3003A0B0D /* FilterController.xib */,
 				3CF72BC015886BF000E63E73 /* SearchPanel.xib */,
 			);
 			name = XIB;
@@ -627,6 +640,7 @@
 				3C379028165343E100883589 /* close.png in Resources */,
 				3C3C4BA1166ADE00002E8C32 /* CompareFilePanel.xib in Resources */,
 				3C5875FF16775614007E3FC2 /* CompareCmds.plist in Resources */,
+				3CBCEED6168C00E4003A0B0D /* FilterController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -703,6 +717,8 @@
 				3CD0B683164B33CF00F7515D /* folderSize.m in Sources */,
 				3CC1C71D16547A7A005D4F4D /* DirectoryItem+Branch.m in Sources */,
 				3C3C4B9F166AD8E6002E8C32 /* CompareFileController.m in Sources */,
+				3CBCEECE1689A3A8003A0B0D /* ArraySumTransformer.m in Sources */,
+				3CBCEED5168C00E4003A0B0D /* FilterController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -773,7 +789,7 @@
 				"GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS[arch=*]" = BETA_HEADER;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx10.7;
 			};
@@ -789,7 +805,7 @@
 				"GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS[arch=*]" = BETA_HEADER;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx10.7;
 			};

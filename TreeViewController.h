@@ -35,7 +35,9 @@
     NSInteger spinCount;
     NSOperationQueue *queue;
 	NSString *targetDirectory;	// target Dir of Copy/Move/Symlink
+    NSMutableArray *filesInBranch;	// a copy of Branch contents
 }
+@property (unsafe_unretained) IBOutlet NSTextField *taggedFilesCount;
 @property (unsafe_unretained) IBOutlet NSTextView *noFiles;
 @property (unsafe_unretained) IBOutlet NSSplitView *split;
 @property (unsafe_unretained) IBOutlet NSScrollView *splitViewTop;

@@ -26,6 +26,11 @@
 			if([self.keyDelegate keyCtlPressedInTableView:keyChar])
 				return;
 	}
+	if ([theEvent modifierFlags] & NSAlternateKeyMask) {
+		if([self.keyDelegate respondsToSelector:@selector(keyAltPressedInTableView:)])
+			if([self.keyDelegate keyAltPressedInTableView:keyChar])
+				return;
+	}
 	if([self.keyDelegate respondsToSelector:@selector(keyPressedInTableView:)])
 		if([self.keyDelegate keyPressedInTableView:keyChar])
 			return;

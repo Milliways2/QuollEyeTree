@@ -18,12 +18,12 @@
 #import "SearchPanelController.h"
 #import "TextViewerController.h"
 #import "CompareFileController.h"
+#import "FilterController.h"
 
 extern NSPredicate *tagPredicate;
 extern NSPredicate *notEmptyPredicate;
 
 @interface TreeViewController()
-//  TreeViewController
 - (void)setFileMenu;
 - (void)enterFileView;
 - (void)enterDirView;
@@ -62,9 +62,26 @@ extern NSPredicate *notEmptyPredicate;
 }
 - (void)tagFiles:(BOOL)tagValue {
 	NSArray *currentContents = [self.arrayController arrangedObjects];
+	NSDictionary *existingBinding = [self.taggedFilesCount infoForBinding:NSValueBinding];
+	[self.taggedFilesCount unbind:NSValueBinding];	// cancel Tagged Files Count Binding
 	for (FileItem *node in currentContents) {
 		node.tag = tagValue;
 	}
+	[self.taggedFilesCount bind:NSValueBinding
+					   toObject:existingBinding[NSObservedObjectKey]
+					withKeyPath:existingBinding[NSObservedKeyPathKey]
+						options:existingBinding[NSOptionsKey]];
+//	[self runBlockOnQueue:^{
+//		for (FileItem *node in currentContents) {
+////			@autoreleasepool {
+//				node.tag = tagValue;
+////			}
+//		}
+//		[self.taggedFilesCount bind:NSValueBinding
+//						   toObject:existingBinding[NSObservedObjectKey]
+//						withKeyPath:existingBinding[NSObservedKeyPathKey]
+//							options:existingBinding[NSOptionsKey]];
+//	}];
 }
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
@@ -288,7 +305,6 @@ extern NSPredicate *notEmptyPredicate;
 	[comparePanel setFrom:node.fullPath];
 	[self initPanelDest:comparePanel];	// set target to directories in tabs
 	[comparePanel setFilename:node.relativePath];
-//	NSLog(@"%@ - %@", 	[node.fullPath stringByDeletingLastPathComponent], comparePanel.targetDirectory);
 	if ([[node.fullPath stringByDeletingLastPathComponent] isEqualToString:comparePanel.targetDirectory]) {	// i.e. target is self
 		[self updateTargetNames:self target:comparePanel];	// set names of files for self  directory
 	}
@@ -317,14 +333,10 @@ extern NSPredicate *notEmptyPredicate;
 							  @"Compare",	// $0 place holder
 							  source,
 							  target,
-//							  [NSString stringWithFormat:@"%@", source],
-//							  [NSString stringWithFormat:@"%@", target],
 							  nil];
 		[task setArguments:arguments];
 		[task setEnvironment:[NSDictionary dictionaryWithObject:@"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin" forKey:@"PATH"]];
 
-//		NSLog(@"%@", [task arguments]);
-//		NSLog(@"%@", [task environment]);
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(pipeReadCompletionNotification:)
 													 name:NSFileHandleReadCompletionNotification
@@ -470,6 +482,94 @@ extern NSPredicate *notEmptyPredicate;
 - (IBAction)dClickFile:(id)sender {
 	[self openFile:self];
 }
+#pragma mark -
+- (void)duplicateFiles {
+	//		NSLog(@"start");
+	if(!inBranch)			return;
+	FilterController *searchPanel = [FilterController new];
+	if ([searchPanel runModal] != NSOKButton)	return;
+	NSUInteger filterMode =	[searchPanel.filterMode selectedRow];
+	//		NSLog(@"%ld", [searchPanel.filterMode selectedRow]);
+	if(filesInBranch == nil)	filesInBranch = [self.filesInDir copy];	// keep a copy of Branch contents
+	NSArray *sortedContents = [[self.arrayController arrangedObjects] sortedArrayUsingComparator: ^(id obj1, id obj2) {
+		return [((FileItem *)obj1).relativePath caseInsensitiveCompare:((FileItem *)obj2).relativePath];
+	}];
+	//		NSLog(@"sorted");
+	NSMutableIndexSet *all = [NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [sortedContents count])];
+	NSMutableIndexSet *duplicates = [NSMutableIndexSet indexSet];
+	//		NSLog(@"%@", all);
+
+	NSString *name;
+	NSUInteger index = [all firstIndex];
+	NSUInteger lastIndex = [all lastIndex];
+	while(index != NSNotFound) {
+		name = [[sortedContents objectAtIndex:index] relativePath];
+		NSIndexSet *multi = [all indexesInRange:NSMakeRange(index, lastIndex - index) options:0 passingTest:^(NSUInteger idx, BOOL *stop) {
+			if([[[sortedContents objectAtIndex:idx] relativePath] isEqualToString:name])	return YES;
+			*stop = YES;
+			return NO;
+		}];
+		if ([multi count] > 1) {
+			//				NSLog(@"%ld %@", [multi count], name);
+			[all removeIndexes:multi];
+			if(filterMode == DuplicateName) {
+				[duplicates addIndexes:multi];	// normal duplicates
+			} else {
+				NSUInteger idx = [multi firstIndex];
+				NSDate *oldestDate = [[sortedContents objectAtIndex:idx] wDate];
+				NSDate *newestDate = oldestDate;
+				while(idx != NSNotFound) {	// find Oldest, Newest Date
+					NSDate *idxDate = [[sortedContents objectAtIndex:idx] wDate];
+					oldestDate = [oldestDate earlierDate:idxDate];
+					newestDate = [newestDate laterDate:idxDate];
+					idx = [multi indexGreaterThanIndex: idx];
+				}
+
+				idx = [multi firstIndex];
+				while(idx != NSNotFound) {
+					NSDate *idxDate = [[sortedContents objectAtIndex:idx] wDate];
+					if (filterMode == DuplicateIdenticalDate) {
+						NSIndexSet *identical = [multi indexesPassingTest:^(NSUInteger iindx, BOOL *stop) {
+							return (BOOL)([[[sortedContents objectAtIndex:iindx] wDate] timeIntervalSinceDate:idxDate] == 0);
+//							return [[[sortedContents objectAtIndex:iindx] wDate] isEqualToDate:idxDate];
+						}];
+						if ([identical count] > 1) {
+							[duplicates addIndexes:identical];
+						}
+						//				[multi removeIndexes:identical];
+					}
+					if (filterMode == DuplicateOldestDate) {
+						NSIndexSet *older = [multi indexesPassingTest:^(NSUInteger iindx, BOOL *stop) {
+							return [[[sortedContents objectAtIndex:iindx] wDate] isEqualToDate:oldestDate];
+						}];
+						[duplicates addIndexes:older];
+					}
+					if (filterMode == DuplicateNewestDate) {
+						NSIndexSet *newer = [multi indexesPassingTest:^(NSUInteger iindx, BOOL *stop) {
+							return [[[sortedContents objectAtIndex:iindx] wDate] isEqualToDate:newestDate];
+						}];
+						[duplicates addIndexes:newer];
+					}
+					idx = [multi indexGreaterThanIndex: idx];
+				}
+			}
+		}
+		index = [all indexGreaterThanIndex: index];
+	}
+	if(filterMode == Unique) {	// Unique
+		duplicates = all;
+	}
+
+	//		NSLog(@"filtered");
+	NSMutableArray *duplicateFiles = [NSMutableArray arrayWithCapacity:[duplicates count]];
+	index = [duplicates firstIndex];
+	while(index != NSNotFound) {
+		[duplicateFiles addObject:[sortedContents objectAtIndex:index]];
+		index = [duplicates indexGreaterThanIndex:index];
+	}
+	self.filesInDir = duplicateFiles;
+	//		NSLog(@"display");
+}
 #pragma mark Delegate Actions
 - (void)mouseDownInTableView {
 	if(!inFileView) {
@@ -477,8 +577,12 @@ extern NSPredicate *notEmptyPredicate;
 	}
 }
 - (BOOL)keyPressedInTableView:(unichar)character {
-//	NSLog(@"keyPressedInTableView %hu", character);
 	if (character == 0x1b) {
+		if(filesInBranch) {
+			self.filesInDir = filesInBranch;
+			filesInBranch = nil;
+			return YES;
+		}
 		[self restoreSplitView];
 		[self enterDirView];
 		return YES;
@@ -503,6 +607,13 @@ extern NSPredicate *notEmptyPredicate;
 	return NO;
 }
 - (BOOL)keyCmdPressedInTableView:(unichar)character {
+	return NO;
+}
+- (BOOL)keyAltPressedInTableView:(unichar)character {
+	if (character == NSF4FunctionKey) {
+		[self duplicateFiles];
+		return YES;
+	}
 	return NO;
 }
 - (BOOL)keyCtlPressedInTableView:(unichar)character {

@@ -139,7 +139,6 @@ NSOperationQueue *loggingQueue = nil;
 }
 - (void)newTabWithDir:(DirectoryItem *)userDir {
 	TreeViewController *tvcNew = [self newTreeViewControllerAtDir:userDir];
-//	[tabViewBar addTabWithRepresentedObject:[NSDictionary dictionaryWithObject:[tvcNew rootDirName] forKey:@"name"]];
 	[self changeSelection:tvcNew];
 	[tabViewBar addTabWithRepresentedObject:[NSDictionary dictionaryWithObject:[tvcNew rootDirName] forKey:@"name"]];
 }

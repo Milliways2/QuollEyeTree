@@ -385,7 +385,7 @@ NSPredicate *notEmptyPredicate;
         [self updateSelectedDir];
 		self.filesInDir = self.selectedDir.files;
         [self.fileList setBackgroundColor:[NSColor controlBackgroundColor]];
-		if([self.arrayController filterPredicate] != tagPredicate)	[self.fileList setUsesAlternatingRowBackgroundColors:YES];
+		if([self.arrayController filterPredicate] && [self.arrayController filterPredicate] != tagPredicate)	[self.fileList setUsesAlternatingRowBackgroundColors:YES];
 	}
 	inBranch = NO;
 }
@@ -428,9 +428,6 @@ NSPredicate *notEmptyPredicate;
 		return;
 	}
 	dataRoot = node;
-//	if (![dataRoot isPathLoaded])
-//		[dataRoot subDirectories];	// Force logging of root
-	[dataRoot logDir];	// Force logging of root
 	[self expandRoot];
 }
 // restore Tree in SplitView; return YES if restored

@@ -375,7 +375,6 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 }
 #pragma mark - Delegate Actions
 - (BOOL)keyPressedInOutlineView:(unichar)character shifted:(BOOL)shifted {
-//	NSLog(@"keyPressedInOutlineView");
 	if (shifted && character == NSF3FunctionKey) {
 		[self.selectedDir updateDirectory];
 		[self reloadData];
@@ -391,10 +390,10 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 	}
 	if (character == '*') {
 		[self runBlockOnQueue:^{
-			[self.selectedDir logDirPlus1];
-			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-				[self.dirTree expandItem:self.selectedDir];
-			}];
+//			[self.selectedDir logDirPlus1];
+//			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//				[self.dirTree expandItem:self.selectedDir];
+//			}];
 			[self.selectedDir logBranch];
 			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 				[self.dirTree expandItem:self.selectedDir expandChildren:YES];

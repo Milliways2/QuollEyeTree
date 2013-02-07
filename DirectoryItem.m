@@ -154,8 +154,7 @@ static NSArray *properties = nil;
 		}
 		// Populate NSMutableArray subDirectories with contents of index set dirs
 		NSUInteger index = [dirs firstIndex];
-		while(index != NSNotFound)
-		{
+		while(index != NSNotFound) {
 			DirectoryItem *newSubDir = [[DirectoryItem alloc]
 										initWithPath:[array objectAtIndex:index]
 										parent:self];

@@ -14,6 +14,9 @@
 #import "CopyPanelController.h"
 #import "RenamePanelController.h"
 #import "NSString+Rename.h"
+@interface TreeViewController(Dirs)
+- (void)updateSelectedDir;
+@end
 
 static void removeItemForPath(NSString *path) {
     NSString *parentDir = [path stringByDeletingLastPathComponent];
@@ -69,7 +72,7 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
     }
 }
 // execute block on queue; pauses updates & starts progress before; restore updates & stops progress on completion
-- (void) runBlockOnQueue:(void (^)(void))block {
+- (void)runBlockOnQueue:(void (^)(void))block {
 	if(queue == NULL) {
 		queue = [NSOperationQueue new];
 		[queue setMaxConcurrentOperationCount:10];
@@ -172,7 +175,6 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
         }
     }
     [self.delegate treeViewController:self pauseRefresh:NO];
-//    [self stopSpinner];
 }
 - (void)refreshTargetDirectory:(NSString *)targetDir {  // completion of copy
     DirectoryItem *dir = findPathInVolumes(targetDir);
@@ -292,6 +294,7 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
                         [oldParent removeDir:(DirectoryItem *)node];
                         [self.delegate treeViewController:self didRemoveDirectory:itemToRemove];
                         [self.dirTree reloadData];
+						[self updateSelectedDir];	// force update after move
                     }
                 }];
             }

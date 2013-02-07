@@ -13,6 +13,7 @@
 #import "MyWindowController+Refresh.h"
 #import "IBDateFormatter.h"
 #import "ArrayCountTransformer.h"
+#import "ArraySumTransformer.h"
 
 @implementation QuollEyeTreeAppDelegate
 @synthesize myWindowController;
@@ -41,6 +42,8 @@
     // create and register ArrayCountTransformer value transformer
     ArrayCountTransformer *countTransformer = [[ArrayCountTransformer alloc] init];
     [NSValueTransformer setValueTransformer:countTransformer forName:@"ArrayCountTransformer"];
+    ArraySumTransformer *sumTransformer = [[ArraySumTransformer alloc] init];
+    [NSValueTransformer setValueTransformer:sumTransformer forName:@"ArraySumTransformer"];
 }
 
 #pragma mark NSApplicationDelegate Protocol
