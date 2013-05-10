@@ -12,6 +12,19 @@
 #import "TreeViewController.h"
 
 @implementation MyWindowController(Refresh)
+static dispatch_queue_t refreshQueue;
+
+//- (void) refreshDirectories:(NSArray *) dirs treeViewController:(TreeViewController *)tvc {
+void refreshDirectories(NSArray *dirs, TreeViewController *tvc) {
+	dispatch_retain(refreshQueue);
+	dispatch_async(refreshQueue, ^{
+		for(DirectoryItem *node in dirs) {
+			[node updateDirectory];
+		}
+		if(tvc)	[tvc reloadData];
+		dispatch_release(refreshQueue);
+	});
+}
 
 void fsevents_callback(ConstFSEventStreamRef streamRef,
                        void *userData,
@@ -32,10 +45,12 @@ void fsevents_callback(ConstFSEventStreamRef streamRef,
 		}
 	}
 	if([dirsToRefresh count]) {
-		for(DirectoryItem * node in dirsToRefresh) {
-			[node updateDirectory];
-		}
-		[wc.currentTvc reloadData];
+//		for(DirectoryItem *node in dirsToRefresh) {
+//			[node updateDirectory];
+//		}
+//		[wc.currentTvc reloadData];
+//		[wc refreshDirectories:dirsToRefresh treeViewController:wc.currentTvc];
+		refreshDirectories(dirsToRefresh, wc.currentTvc);
 	}
 }
 
@@ -54,6 +69,7 @@ void fsevents_callback(ConstFSEventStreamRef streamRef,
 								 );
 	FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 	FSEventStreamStart(stream);
+	refreshQueue = dispatch_queue_create("au.id.binnie.refreshQueue", NULL);
 }
 
 - (void)startMonitoring {

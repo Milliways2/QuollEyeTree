@@ -18,7 +18,7 @@
 #import "SearchPanelController.h"
 #import "TextViewerController.h"
 #import "CompareFileController.h"
-#import "FilterController.h"
+#import "CompareFilterController.h"
 
 extern NSPredicate *tagPredicate;
 extern NSPredicate *notEmptyPredicate;
@@ -60,17 +60,43 @@ extern NSPredicate *notEmptyPredicate;
     node.tag = tagValue;
     [self.arrayController selectNext:self];
 }
+- (void)unTagFiles {
+	NSArray *currentContents = [self.arrayController arrangedObjects];
+	if(showOnlyTagged) {
+		[self toggleShowTagged];
+	}
+	for (FileItem *node in currentContents) {
+		node.tag = NO;
+	}
+}
 - (void)tagFiles:(BOOL)tagValue {
 	NSArray *currentContents = [self.arrayController arrangedObjects];
-	NSDictionary *existingBinding = [self.taggedFilesCount infoForBinding:NSValueBinding];
-	[self.taggedFilesCount unbind:NSValueBinding];	// cancel Tagged Files Count Binding
+	// Need to pause Tag filtering on untag to prevent excessive processor use
+//	NSPredicate *saveFilter;
+//	if(showOnlyTagged) {
+//		saveFilter = [self.arrayController filterPredicate];
+//		[self.arrayController setFilterPredicate:fileFilterPredicate];
+//	}
+	if(showOnlyTagged && !tagValue) {
+		[self toggleShowTagged];
+//		showOnlyTagged = !showOnlyTagged;
+//		[self.arrayController setFilterPredicate:fileFilterPredicate];
+	}
+
+//	NSDictionary *existingBinding = [self.taggedFilesCount infoForBinding:NSValueBinding];
+//	[self.taggedFilesCount unbind:NSValueBinding];	// cancel Tagged Files Count Binding
 	for (FileItem *node in currentContents) {
 		node.tag = tagValue;
 	}
-	[self.taggedFilesCount bind:NSValueBinding
-					   toObject:existingBinding[NSObservedObjectKey]
-					withKeyPath:existingBinding[NSObservedKeyPathKey]
-						options:existingBinding[NSOptionsKey]];
+//
+//	if(showOnlyTagged) {
+//		[self.arrayController setFilterPredicate:saveFilter];
+//	}
+
+//	[self.taggedFilesCount bind:NSValueBinding
+//					   toObject:existingBinding[NSObservedObjectKey]
+//					withKeyPath:existingBinding[NSObservedKeyPathKey]
+//						options:existingBinding[NSOptionsKey]];
 //	[self runBlockOnQueue:^{
 //		for (FileItem *node in currentContents) {
 ////			@autoreleasepool {
@@ -145,7 +171,8 @@ extern NSPredicate *notEmptyPredicate;
 	[self tagFiles:YES];
 }
 - (void)untagAllFiles {
-	[self tagFiles:NO];
+	[self unTagFiles];
+//	[self tagFiles:NO];
 }
 - (void)invertTaggedFiles {
 	NSArray *currentContents = [self.arrayController arrangedObjects];
@@ -403,6 +430,11 @@ extern NSPredicate *notEmptyPredicate;
 	if (node == nil)    return;
     [self copyToPasteboard:node.fullPath];
 }
+- (IBAction)copyFileNameToClipboard:(id)sender {
+    FileItem *node = [self selectedFile];
+	if (node == nil)    return;
+    [self copyToPasteboard:node.relativePath];
+}
 - (IBAction)copyFile:(id)sender {
     FileItem *node = [self selectedFile];
 	if (node == nil)    return;
@@ -484,20 +516,16 @@ extern NSPredicate *notEmptyPredicate;
 }
 #pragma mark -
 - (void)duplicateFiles {
-	//		NSLog(@"start");
 	if(!inBranch)			return;
-	FilterController *searchPanel = [FilterController new];
+	CompareFilterController *searchPanel = [CompareFilterController new];
 	if ([searchPanel runModal] != NSOKButton)	return;
 	NSUInteger filterMode =	[searchPanel.filterMode selectedRow];
-	//		NSLog(@"%ld", [searchPanel.filterMode selectedRow]);
 	if(filesInBranch == nil)	filesInBranch = [self.filesInDir copy];	// keep a copy of Branch contents
 	NSArray *sortedContents = [[self.arrayController arrangedObjects] sortedArrayUsingComparator: ^(id obj1, id obj2) {
 		return [((FileItem *)obj1).relativePath caseInsensitiveCompare:((FileItem *)obj2).relativePath];
 	}];
-	//		NSLog(@"sorted");
 	NSMutableIndexSet *all = [NSMutableIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [sortedContents count])];
 	NSMutableIndexSet *duplicates = [NSMutableIndexSet indexSet];
-	//		NSLog(@"%@", all);
 
 	NSString *name;
 	NSUInteger index = [all firstIndex];
@@ -510,7 +538,6 @@ extern NSPredicate *notEmptyPredicate;
 			return NO;
 		}];
 		if ([multi count] > 1) {
-			//				NSLog(@"%ld %@", [multi count], name);
 			[all removeIndexes:multi];
 			if(filterMode == DuplicateName) {
 				[duplicates addIndexes:multi];	// normal duplicates
@@ -531,7 +558,6 @@ extern NSPredicate *notEmptyPredicate;
 					if (filterMode == DuplicateIdenticalDate) {
 						NSIndexSet *identical = [multi indexesPassingTest:^(NSUInteger iindx, BOOL *stop) {
 							return (BOOL)([[[sortedContents objectAtIndex:iindx] wDate] timeIntervalSinceDate:idxDate] == 0);
-//							return [[[sortedContents objectAtIndex:iindx] wDate] isEqualToDate:idxDate];
 						}];
 						if ([identical count] > 1) {
 							[duplicates addIndexes:identical];
@@ -560,7 +586,6 @@ extern NSPredicate *notEmptyPredicate;
 		duplicates = all;
 	}
 
-	//		NSLog(@"filtered");
 	NSMutableArray *duplicateFiles = [NSMutableArray arrayWithCapacity:[duplicates count]];
 	index = [duplicates firstIndex];
 	while(index != NSNotFound) {
@@ -568,7 +593,6 @@ extern NSPredicate *notEmptyPredicate;
 		index = [duplicates indexGreaterThanIndex:index];
 	}
 	self.filesInDir = duplicateFiles;
-	//		NSLog(@"display");
 }
 #pragma mark Delegate Actions
 - (void)mouseDownInTableView {

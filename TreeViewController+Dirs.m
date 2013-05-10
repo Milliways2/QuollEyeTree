@@ -233,13 +233,14 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 	DirectoryItem *dir = self.selectedDir;
 	NSString *dirToRemove = [dir fullPath];	// item to delete
 	NSArray *dirsToDelete = [NSArray arrayWithObject:dir.url];
-	[[NSWorkspace sharedWorkspace] recycleURLs:dirsToDelete
+  	[[NSWorkspace sharedWorkspace] recycleURLs:dirsToDelete
 							 completionHandler:^(NSDictionary *newURLs, NSError *error) {
 								 if (error == nil) {
 									 self.selectedDir = NULL;
                                      [[DeletedItems sharedDeletedItems] addWithPath:dirToRemove trashLocation:[[newURLs objectForKey:dir.url] path]];
 									 [dir.parent removeDir:dir];
 									 [self.dirTree reloadData];
+									 [self updateSelectedDir];	// force update after move
 									 [self.delegate treeViewController:self didRemoveDirectory:dirToRemove];
 								 }
 								 else {

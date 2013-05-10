@@ -1,8 +1,10 @@
 What's new since 1.0
-Version 1.04 beta 2013-01-27
+Version 1.04 beta 2013-05-03
+- fixed files and directories not dislayed on later versions of OSX 10.7 (Lion)
 - added Branch File Filter (duplicateFiles)
 - fixed move dir did not update selection
 - added tagged file count on status bar
+- fixed preferences for Size
 
 Version 1.03 beta 2012-12-08
 - fixed Show Target Context Menu for file only showed if already logged

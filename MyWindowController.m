@@ -131,6 +131,7 @@ NSOperationQueue *loggingQueue = nil;
 }
 - (void)changeSelection:(TreeViewController *)tvcNew {
     [[currentTvc view] removeFromSuperview];
+	[currentTvc suspendTreeView];	// tell currentTvc to suspend processor intensive operations
     currentTvc = tvcNew;
 	[self.viewContainer addSubview:[currentTvc view]];	// embed the TreeView in our host view
 	[[currentTvc view] setFrame:[self.viewContainer bounds]];	// resize the controller's view to the host size
@@ -179,10 +180,13 @@ NSOperationQueue *loggingQueue = nil;
 
 - (void)doAutomatorAction:(NSNotification *)notification {
     id dir = [[notification userInfo] valueForKey:@"Directory"];
+//	NSLog(@"%@", dir);
     NSString *path = [dir objectAtIndex:0];
     [self selectDirectory:path inTab:YES];
 }
-
+- (void)timedUpdate:(NSTimer*)theTimer {
+	[currentTvc refreshCounters];
+}
 - (void)awakeFromNib {
 	sidebarController = [[SidebarViewController alloc]
 						 initWithNibName:@"SidebarView"
@@ -193,6 +197,9 @@ NSOperationQueue *loggingQueue = nil;
     NSImage *image = [[NSImage alloc] initWithContentsOfURL:filter];
     [[[filterString cell] searchButtonCell] setImage:image];
     [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(doAutomatorAction:) name:QETNotification object:nil];
+	[NSTimer scheduledTimerWithTimeInterval:3
+									 target:self selector:@selector(timedUpdate:)
+								   userInfo:nil repeats:YES];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
@@ -497,7 +504,7 @@ NSOperationQueue *loggingQueue = nil;
 	TreeViewController *tvcSelected = [viewMap objectForKey:tab];
 	if (tvcSelected)
 		if (tvcSelected != currentTvc)
-			[self changeSelection: tvcSelected];
+			[self changeSelection:tvcSelected];
 }
 - (void)tabView:(SFTabView *)tabView willSelectTab:(CALayer *)tab {}
 

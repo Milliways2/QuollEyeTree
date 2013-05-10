@@ -37,6 +37,7 @@
 	NSString *targetDirectory;	// target Dir of Copy/Move/Symlink
     NSMutableArray *filesInBranch;	// a copy of Branch contents
 }
+@property (unsafe_unretained) NSUInteger countTaggedFiles;
 @property (unsafe_unretained) IBOutlet NSTextField *taggedFilesCount;
 @property (unsafe_unretained) IBOutlet NSTextView *noFiles;
 @property (unsafe_unretained) IBOutlet NSSplitView *split;
@@ -56,11 +57,13 @@
 - (NSString *)getTargetFile;
 - (NSString *)rootDirName;
 - (void)activateTreeView;
+- (void)suspendTreeView;
 - (void)reloadData;
 - (void)initWithDir:(DirectoryItem *)node;
 - (void)setTreeRootNode:(DirectoryItem *)node;
 - (DirectoryItem *)treeRootNode;
 - (BOOL)shouldTerminate;
+- (void)refreshCounters;
 	
 // Toolbar Actions
 - (void)segControlClicked:(id)sender;

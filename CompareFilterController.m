@@ -6,16 +6,16 @@
 //
 //
 
-#import "FilterController.h"
+#import "CompareFilterController.h"
 
-@interface FilterController ()
+@interface CompareFilterController ()
 
 @end
 
-@implementation FilterController
+@implementation CompareFilterController
 
 - (id)init {
-	if (self = [super initWithWindowNibName: @"FilterController"]) {
+	if (self = [super initWithWindowNibName: @"CompareFilterPanel"]) {
 		[self window];
 	}
 	return self;

@@ -35,11 +35,11 @@
 - (IBAction)defaultColumns:(id)sender;
 - (IBAction)saveColumns:(id)sender;
 
-@property (assign) IBOutlet NSTextField *dateSample;
-@property (assign) IBOutlet NSTextField *createDateSample;
-@property (assign) IBOutlet NSMatrix *selectDateFormat;
-@property (assign) IBOutlet NSButton *relativeDate;
-@property (assign) IBOutlet NSButton *createTime;
+@property (unsafe_unretained) IBOutlet NSTextField *dateSample;
+@property (unsafe_unretained) IBOutlet NSTextField *createDateSample;
+@property (unsafe_unretained) IBOutlet NSMatrix *selectDateFormat;
+@property (unsafe_unretained) IBOutlet NSButton *relativeDate;
+@property (unsafe_unretained) IBOutlet NSButton *createTime;
 
 - (IBAction)formatDate:(id)sender;
 - (IBAction)toggleRelative:(id)sender;

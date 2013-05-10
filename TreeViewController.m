@@ -53,6 +53,11 @@ NSPredicate *notEmptyPredicate;
 - (NSString *)getTargetFile {
 	return[[self selectedFile] relativePath];
 }
+- (void)refreshCounters {
+	NSArray *taggedObjects = [[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate];
+	self.countTaggedFiles = [taggedObjects count];
+//    NSLog(@"Timer fired %lu", self.countTaggedFiles);
+}
 + (void)initialize {
 	yesPredicate = [NSPredicate predicateWithValue:YES];
 	tagPredicate = [NSPredicate predicateWithFormat:@"SELF.tag == YES"];
@@ -266,9 +271,13 @@ NSPredicate *notEmptyPredicate;
 			indx++;
         }
 	}
-	if ([NSByteCountFormatter class]) {
+	Class cls = NSClassFromString (@"NSByteCountFormatter");
+	if (cls) {
 		NSByteCountFormatter *newForm = [NSByteCountFormatter new];
-		newForm.allowsNonnumericFormatting = NO;
+		if ([NSByteCountFormatter instancesRespondToSelector:
+			 @selector (setAllowsNonnumericFormatting:)]) {
+			newForm.allowsNonnumericFormatting = NO;
+		}
 		if([[NSUserDefaults standardUserDefaults] boolForKey:PREF_TOTAL_MODE]) {
 			[[[self.dirTree tableColumnWithIdentifier:@"sizeOfFiles"] dataCell] setFormatter:newForm];
 		}
@@ -276,6 +285,16 @@ NSPredicate *notEmptyPredicate;
 			[[[self.fileList tableColumnWithIdentifier:@"fileSize"] dataCell] setFormatter:newForm];
 		}
 	}
+//	if ([NSByteCountFormatter class]) {
+//		NSByteCountFormatter *newForm = [NSByteCountFormatter new];
+//		newForm.allowsNonnumericFormatting = NO;
+//		if([[NSUserDefaults standardUserDefaults] boolForKey:PREF_TOTAL_MODE]) {
+//			[[[self.dirTree tableColumnWithIdentifier:@"sizeOfFiles"] dataCell] setFormatter:newForm];
+//		}
+//		if([[NSUserDefaults standardUserDefaults] boolForKey:PREF_SIZE_MODE]) {
+//			[[[self.fileList tableColumnWithIdentifier:@"fileSize"] dataCell] setFormatter:newForm];
+//		}
+//	}
     [self.dirTree sizeToFit];
 }
 - (void)awakeFromNib {
@@ -338,6 +357,10 @@ NSPredicate *notEmptyPredicate;
 	}
 	[self.delegate treeViewController:self tabState:showOnlyTagged];
 	[self.delegate treeViewController:self filterValue:savedSearchString];
+	[self applyFileAndTagFilter:fileFilterPredicate];	//******************* restore filter
+}
+- (void)suspendTreeView {
+		[self.arrayController setFilterPredicate:nil];
 }
 - (BOOL)shouldTerminate {
 	if (inFileView)

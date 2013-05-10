@@ -841,7 +841,7 @@
 															<reference key="NSTextColor" ref="358276570"/>
 														</object>
 														<object class="NSTextFieldCell" key="NSDataCell" id="309140816">
-															<int key="NSCellFlags">337641536</int>
+															<int key="NSCellFlags">67108928</int>
 															<int key="NSCellFlags2">-2147481600</int>
 															<string key="NSContents">Text Cell</string>
 															<reference key="NSSupport" ref="426845241"/>
@@ -1202,6 +1202,14 @@
 						<reference key="NSOnImage" ref="962156751"/>
 						<reference key="NSMixedImage" ref="566866374"/>
 					</object>
+					<object class="NSMenuItem" id="824893463">
+						<reference key="NSMenu" ref="260129018"/>
+						<string key="NSTitle">Copy File Name</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="962156751"/>
+						<reference key="NSMixedImage" ref="566866374"/>
+					</object>
 					<object class="NSMenuItem" id="730427078">
 						<reference key="NSMenu" ref="260129018"/>
 						<string key="NSTitle">Copy File</string>
@@ -1303,11 +1311,9 @@
 				<array class="NSMutableArray" key="NSMenuItems"/>
 			</object>
 			<object class="NSTextView" id="636039219">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">2322</int>
 				<string key="NSFrameSize">{394, 49}</string>
-				<reference key="NSSuperview"/>
-				<reference key="NSNextKeyView"/>
 				<string key="NSReuseIdentifierKey">_NS:13</string>
 				<object class="NSTextContainer" key="NSTextContainer" id="7447222">
 					<object class="NSLayoutManager" key="NSLayoutManager">
@@ -1694,6 +1700,14 @@
 					<int key="connectionID">745</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">copyFileNameToClipboard:</string>
+						<reference key="source" ref="79825435"/>
+						<reference key="destination" ref="824893463"/>
+					</object>
+					<int key="connectionID">788</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="422604408"/>
@@ -1933,7 +1947,7 @@
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">562</int>
+					<int key="connectionID">765</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -2009,7 +2023,7 @@
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">662</int>
+					<int key="connectionID">785</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -2065,23 +2079,19 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: arrangedObjects.tag</string>
+						<string key="label">value: countTaggedFiles</string>
 						<reference key="source" ref="1029697647"/>
-						<reference key="destination" ref="846440013"/>
+						<reference key="destination" ref="79825435"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="1029697647"/>
-							<reference key="NSDestination" ref="846440013"/>
-							<string key="NSLabel">value: arrangedObjects.tag</string>
+							<reference key="NSDestination" ref="79825435"/>
+							<string key="NSLabel">value: countTaggedFiles</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">arrangedObjects.tag</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSValueTransformerName</string>
-								<string key="NS.object.0">ArraySumTransformer</string>
-							</object>
+							<string key="NSKeyPath">countTaggedFiles</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">742</int>
+					<int key="connectionID">753</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2136,6 +2146,7 @@
 							<reference ref="694366151"/>
 							<reference ref="623378601"/>
 							<reference ref="310579126"/>
+							<reference ref="824893463"/>
 						</array>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">File Context Menu</string>
@@ -2718,6 +2729,11 @@
 						<reference key="object" ref="876649199"/>
 						<reference key="parent" ref="778608201"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">786</int>
+						<reference key="object" ref="824893463"/>
+						<reference key="parent" ref="260129018"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2826,6 +2842,7 @@
 				<integer value="1040" key="739.IBNumberFormatterBehaviorMetadataKey"/>
 				<boolean value="NO" key="739.IBNumberFormatterLocalizesFormatMetadataKey"/>
 				<string key="739.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="786.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<dictionary class="NSMutableDictionary" key="93.IBAttributePlaceholdersKey"/>
@@ -2836,7 +2853,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">745</int>
+			<int key="maxID">788</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

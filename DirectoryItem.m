@@ -273,8 +273,11 @@ static NSArray *properties = nil;
 	// compare logged files with array
 	for (FileItem *element in _files) {
 		BOOL found = NO;
+//		NSURL *urlFound = nil;
+		NSURL *url = nil;
 		NSString *dir = [element relativePath];
-		for (NSURL *url in array) {
+//		for (NSURL *url in array) {
+		for (url in array) {
 			if ([dir compare:[url lastPathComponent] options:NSCaseInsensitiveSearch] == NSOrderedSame) {
 				found = YES;
 				NSDate * tempDate;
@@ -293,14 +296,21 @@ static NSArray *properties = nil;
 						element.fileSize = size;
 					}
 				}
-				[array removeObject:url];
+//				[array removeObject:url];
+//				urlFound = url;
 				break;
 			}
         }
-		if(!found) {
+//		[array removeObject:urlFound];
+//		if(!found) {
+		if(found) {
+			[array removeObject:url];
+		} else {
 			[itemsToRemove addObject:element];	// add element to itemsToRemove
 		}
+//		[itemsToRemove addObject:element];	// add element to itemsToRemove
 	}
+
 	if([itemsToRemove count]) {
 		[_files removeObjectsInArray:itemsToRemove];
 		[itemsToRemove removeAllObjects];
@@ -309,22 +319,28 @@ static NSArray *properties = nil;
 	// compare logged subDirectories with array
 	for (DirectoryItem *element in _subDirectories) {
 		BOOL found = NO;
+//		NSURL *urlFound = nil;
+		NSURL *url = nil;
 		NSString *dir = [element relativePath];
-		for (NSURL *url in array) {
+//		for (NSURL *url in array) {
+		for (url in array) {
 			if ([dir compare:[url lastPathComponent] options:NSCaseInsensitiveSearch] == NSOrderedSame) {
 				found = YES;
-				NSDate * tempDate;
+				NSDate *tempDate;
 				[url getResourceValue:&tempDate forKey:NSURLContentModificationDateKey error:nil];
-				if([element.wDate isEqualToDate:tempDate]) {
-				}
-				else {
+				if(![element.wDate isEqualToDate:tempDate]) {
 					element.wDate = tempDate;
-				}
-				[array removeObject:url];
+				}	
+//				[array removeObject:url];	// this is a bug!!!!! cannot modify in loop
+//				urlFound = url;
 				break;
 			}
 		}
-		if(!found) {
+//		[array removeObject:urlFound];
+//		if(!found) {
+		if(found) {
+			[array removeObject:url];
+		} else {
 			[itemsToRemove addObject:element];	// add element to itemsToRemove
 		}
 	}

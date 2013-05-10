@@ -13,7 +13,8 @@
 }
 @property (assign) IBOutlet NSTextField *searchFor;
 @property (assign) IBOutlet NSMatrix *regex;
-@property (assign, readonly) IBOutlet NSButton *caseSensitive;
+//@property (assign, readonly) IBOutlet NSButton *caseSensitive;
+@property (assign) IBOutlet NSButton *caseSensitive;
 
 - (IBAction)cancelSearch:(id)sender;
 - (IBAction)performSearch:(id)sender;

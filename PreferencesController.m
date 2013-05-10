@@ -14,8 +14,6 @@
 #import "IBPathPopUpButton.h"
 
 @implementation PreferencesController
-@synthesize sizeMode;
-@synthesize sizeTotalMode;
 
 NSArray *sortColumns;
 - (IBAction)sortField:(id)sender {
@@ -156,6 +154,8 @@ NSArray *sortColumns;
     [self.relativeDate setState:[[NSUserDefaults standardUserDefaults]boolForKey:PREF_DATE_RELATIVE]];
 	[self.createTime setState:[[NSUserDefaults standardUserDefaults]boolForKey:PREF_DATE_SHOW_CREATE]];
     [self showDate];
+    [self.sizeMode setState:[[NSUserDefaults standardUserDefaults]boolForKey:PREF_SIZE_MODE]];
+    [self.sizeTotalMode setState:[[NSUserDefaults standardUserDefaults]boolForKey:PREF_TOTAL_MODE]];
 	plistContents = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CompareCmds" ofType:@"plist"]];
 	NSString *cmd = [[NSUserDefaults standardUserDefaults] stringForKey:PREF_COMPARE_COMMAND];
 	BOOL cmdFound = FALSE;

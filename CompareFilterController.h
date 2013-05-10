@@ -15,7 +15,7 @@ enum {	// filterMode
 	DuplicateNewestDate,
 	Unique };
 
-@interface FilterController : NSWindowController
+@interface CompareFilterController : NSWindowController
 @property (unsafe_unretained) IBOutlet NSMatrix *filterMode;
 
 - (IBAction)performFilter:(id)sender;

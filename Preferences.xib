@@ -69,7 +69,7 @@
 							<int key="NSvFlags">36</int>
 							<string key="NSFrame">{{-8, -349}, {332, 841}}</string>
 							<reference key="NSSuperview" ref="1006"/>
-							<reference key="NSNextKeyView" ref="758035696"/>
+							<reference key="NSNextKeyView" ref="452018910"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<object class="NSMutableArray" key="NSTabViewItems">
 								<bool key="EncodedWithXMLCoder">YES</bool>
@@ -854,7 +854,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 								<object class="NSTabViewItem" id="604987602">
 									<string key="NSIdentifier">2</string>
 									<object class="NSView" key="NSView" id="452018910">
-										<nil key="NSNextResponder"/>
+										<reference key="NSNextResponder" ref="516481424"/>
 										<int key="NSvFlags">256</int>
 										<object class="NSMutableArray" key="NSSubviews">
 											<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1185,6 +1185,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																<int key="NSvFlags">268</int>
 																<string key="NSFrame">{{28, 14}, {152, 18}}</string>
 																<reference key="NSSuperview" ref="108191271"/>
+																<reference key="NSNextKeyView"/>
 																<string key="NSReuseIdentifierKey">_NS:797</string>
 																<bool key="NSEnabled">YES</bool>
 																<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -1330,7 +1331,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																<string key="NSReuseIdentifierKey">_NS:9</string>
 																<bool key="NSEnabled">YES</bool>
 																<object class="NSButtonCell" key="NSCell" id="722008924">
-																	<int key="NSCellFlags">603979776</int>
+																	<int key="NSCellFlags">67108864</int>
 																	<int key="NSCellFlags2">268435456</int>
 																	<string key="NSContents">Individual File Size as K,M</string>
 																	<reference key="NSSupport" ref="571032490"/>
@@ -1356,7 +1357,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 																<string key="NSReuseIdentifierKey">_NS:9</string>
 																<bool key="NSEnabled">YES</bool>
 																<object class="NSButtonCell" key="NSCell" id="959297775">
-																	<int key="NSCellFlags">603979776</int>
+																	<int key="NSCellFlags">67108864</int>
 																	<int key="NSCellFlags2">268435456</int>
 																	<string key="NSContents">Total File Size as K,M</string>
 																	<reference key="NSSupport" ref="571032490"/>
@@ -1404,6 +1405,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											</object>
 										</object>
 										<string key="NSFrame">{{10, 33}, {312, 795}}</string>
+										<reference key="NSSuperview" ref="516481424"/>
 										<reference key="NSNextKeyView" ref="43187998"/>
 										<string key="NSReuseIdentifierKey">_NS:28</string>
 									</object>
@@ -1413,7 +1415,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 								</object>
 								<object class="NSTabViewItem" id="505141224">
 									<object class="NSView" key="NSView" id="758035696">
-										<reference key="NSNextResponder" ref="516481424"/>
+										<nil key="NSNextResponder"/>
 										<int key="NSvFlags">256</int>
 										<object class="NSMutableArray" key="NSSubviews">
 											<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1422,7 +1424,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 												<int key="NSvFlags">268</int>
 												<string key="NSFrame">{{147, 672}, {151, 26}}</string>
 												<reference key="NSSuperview" ref="758035696"/>
-												<reference key="NSNextKeyView"/>
 												<string key="NSReuseIdentifierKey">_NS:9</string>
 												<bool key="NSEnabled">YES</bool>
 												<object class="NSComboBoxCell" key="NSCell" id="529355609">
@@ -1441,7 +1442,7 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 													<object class="NSComboTableView" key="NSTableView" id="735971959">
 														<reference key="NSNextResponder"/>
 														<int key="NSvFlags">274</int>
-														<string key="NSFrameSize">{13, 63}</string>
+														<string key="NSFrameSize">{13, 0}</string>
 														<reference key="NSSuperview"/>
 														<reference key="NSWindow"/>
 														<string key="NSReuseIdentifierKey">_NS:24</string>
@@ -1538,7 +1539,6 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 											</object>
 										</object>
 										<string key="NSFrame">{{10, 33}, {312, 795}}</string>
-										<reference key="NSSuperview" ref="516481424"/>
 										<reference key="NSNextKeyView" ref="680062495"/>
 									</object>
 									<string key="NSLabel">Advanced</string>
@@ -1546,14 +1546,14 @@ AAMAAAABAAEAAAFTAAMAAAAEAAAFwgAAAAAACAAIAAgACAABAAEAAQABA</bytes>
 									<reference key="NSTabView" ref="516481424"/>
 								</object>
 							</object>
-							<reference key="NSSelectedTabViewItem" ref="505141224"/>
+							<reference key="NSSelectedTabViewItem" ref="604987602"/>
 							<reference key="NSFont" ref="571032490"/>
 							<int key="NSTvFlags">0</int>
 							<bool key="NSAllowTruncatedLabels">YES</bool>
 							<bool key="NSDrawsBackground">YES</bool>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
-								<reference ref="758035696"/>
+								<reference ref="452018910"/>
 							</object>
 						</object>
 					</object>

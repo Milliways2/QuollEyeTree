@@ -234,7 +234,7 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
             [queue setMaxConcurrentOperationCount:10];
         }
 
-        [queue addOperationWithBlock:^{
+        [queue addOperationWithBlock:^{	// add copyItemAtPath to queue
             NSError *error = nil;
             [self startSpinner];
             if([fileManager copyItemAtPath:node.fullPath
@@ -347,7 +347,7 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 		[copyPanel setTitle:@"Copy Directory"];
 	if ([copyPanel runModal] == NSOKButton) {
 		[self.delegate treeViewController:self pauseRefresh:YES];
-		[self copySingle:node];
+		[self copySingle:node];	// add copyItemAtPath to queue
         [self refreshAfter:@selector(refreshTargetDirectory:) object:copyPanel.targetDirectory];    // refresh target after completion of copy
 	}
     copyPanel = nil;

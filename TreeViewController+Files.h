@@ -32,6 +32,7 @@
 // Context Menu Actions
 - (IBAction)openFile:(id)sender;
 - (IBAction)copyFileToClipboard:(id)sender;
+- (IBAction)copyFileNameToClipboard:(id)sender;
 - (IBAction)copyFile:(id)sender;
 - (IBAction)copyTaggedFiles:(id)sender;
 - (IBAction)revealFileInFinder:(id)sender;
