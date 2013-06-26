@@ -245,7 +245,8 @@ static NSArray *properties = nil;
 - (void)logDirPlus1 {
 	NSArray *tempArray = [NSArray arrayWithArray:self.subDirectories];
 	for (DirectoryItem *dir in tempArray) {
-		[dir loadSubDirectories];
+//		[dir loadSubDirectories];
+		[dir subDirectories];
 	}
 }
 - (DirectoryItem *)logDir {

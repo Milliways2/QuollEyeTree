@@ -391,10 +391,6 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 	}
 	if (character == '*') {
 		[self runBlockOnQueue:^{
-//			[self.selectedDir logDirPlus1];
-//			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//				[self.dirTree expandItem:self.selectedDir];
-//			}];
 			[self.selectedDir logBranch];
 			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
 				[self.dirTree expandItem:self.selectedDir expandChildren:YES];
@@ -476,7 +472,38 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 	mi = [menu itemWithTitle:@"Create Symlink"];
 	if(mi) [mi setHidden:item.isAlias];
 }
+
 #pragma mark - NSOutlineViewDelegate Protocol methods
+- (void)outlineViewItemWillExpand:(NSNotification *)notification {
+//	NSLog(@"outlineViewItemWillExpand %@", notification);
+	DirectoryItem *dirToExpand = [[notification userInfo] objectForKey:@"NSObject"];
+	[self startSpinner];
+	[dirToExpand logDirPlus1];
+	[self stopSpinner];
+}
+//- (void)outlineViewItemDidExpand:(NSNotification *)notification {
+//	NSLog(@"outlineViewItemDidExpand %@", notification);
+//	//    [self updateSelectedDir];
+//}
+
+//NSOutlineViewItemDidExpandNotification
+//Posted whenever an item is expanded in an NSOutlineView object.
+//The notification object is the NSOutlineView object in which an item was expanded. The userInfo dictionary contains the following information:
+//
+//Key
+//Value
+//@"NSObject"
+//The item that was expanded (an id)
+
+//NSOutlineViewItemWillExpandNotification
+//Posted before an item is expanded (after the user clicks the arrow but before the item is collapsed).
+//The notification object is the outline view that contains an item about to be expanded. The userInfo dictionary contains the following information:
+//
+//Key
+//Value
+//@"NSObject"
+//The item that is to be expanded (an id)
+
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
     [self updateSelectedDir];
 }
