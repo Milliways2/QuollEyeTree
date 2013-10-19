@@ -245,7 +245,6 @@ static NSArray *properties = nil;
 - (void)logDirPlus1 {
 	NSArray *tempArray = [NSArray arrayWithArray:self.subDirectories];
 	for (DirectoryItem *dir in tempArray) {
-//		[dir loadSubDirectories];
 		[dir subDirectories];
 	}
 }
@@ -274,10 +273,8 @@ static NSArray *properties = nil;
 	// compare logged files with array
 	for (FileItem *element in _files) {
 		BOOL found = NO;
-//		NSURL *urlFound = nil;
 		NSURL *url = nil;
 		NSString *dir = [element relativePath];
-//		for (NSURL *url in array) {
 		for (url in array) {
 			if ([dir compare:[url lastPathComponent] options:NSCaseInsensitiveSearch] == NSOrderedSame) {
 				found = YES;
@@ -297,19 +294,14 @@ static NSArray *properties = nil;
 						element.fileSize = size;
 					}
 				}
-//				[array removeObject:url];
-//				urlFound = url;
 				break;
 			}
         }
-//		[array removeObject:urlFound];
-//		if(!found) {
 		if(found) {
 			[array removeObject:url];
 		} else {
 			[itemsToRemove addObject:element];	// add element to itemsToRemove
 		}
-//		[itemsToRemove addObject:element];	// add element to itemsToRemove
 	}
 
 	if([itemsToRemove count]) {
@@ -320,10 +312,8 @@ static NSArray *properties = nil;
 	// compare logged subDirectories with array
 	for (DirectoryItem *element in _subDirectories) {
 		BOOL found = NO;
-//		NSURL *urlFound = nil;
 		NSURL *url = nil;
 		NSString *dir = [element relativePath];
-//		for (NSURL *url in array) {
 		for (url in array) {
 			if ([dir compare:[url lastPathComponent] options:NSCaseInsensitiveSearch] == NSOrderedSame) {
 				found = YES;
@@ -332,13 +322,9 @@ static NSArray *properties = nil;
 				if(![element.wDate isEqualToDate:tempDate]) {
 					element.wDate = tempDate;
 				}	
-//				[array removeObject:url];	// this is a bug!!!!! cannot modify in loop
-//				urlFound = url;
 				break;
 			}
 		}
-//		[array removeObject:urlFound];
-//		if(!found) {
 		if(found) {
 			[array removeObject:url];
 		} else {
@@ -424,6 +410,14 @@ static NSArray *properties = nil;
 // Check if subDirectories loaded - needs to access ivar to prevent automatic loading
 - (BOOL)isPathLoaded {
 	return _subDirectories != nil;
+}
+// Check if subsubDirectories loaded
+- (BOOL)isDirPlus1Loaded {
+	for (DirectoryItem *dir in self.loggedSubDirectories) {
+		if (![dir isPathLoaded])
+			return NO;
+	}
+	return YES;
 }
 - (DirectoryItem *)loadPath:(NSString *)path expandHidden:(BOOL)expandHidden {
 	NSArray *pathComponents = [path pathComponents];

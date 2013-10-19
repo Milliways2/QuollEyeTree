@@ -26,6 +26,7 @@
 	BOOL inBranch;
 	BOOL quickLook;
 	BOOL cancelAll;
+	BOOL currentlyLogging;
 	CopyPanelController *copyPanel;
 	RenamePanelController *renamePanel;
     TextViewerController *textViewer;

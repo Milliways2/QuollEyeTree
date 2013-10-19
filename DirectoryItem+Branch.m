@@ -55,13 +55,13 @@ void loggedSubDirectoriesInBranch(DirectoryItem *source, NSMutableArray **accumu
 void logSubDirectoriesInBranch (DirectoryItem *source, NSMutableSet **accumulated) {
 	if ([source isLeafNode])	return;
 	[*accumulated addObject:source];
-	NSArray *tempArray = [NSArray arrayWithArray:source.subDirectories];
+	NSArray *tempArray = [NSArray arrayWithArray:source.subDirectories];	// Loads subDirectories if not already loaded; Returns subDirectories
 	for (DirectoryItem *dir in tempArray) {
 		if ([*accumulated containsObject:dir]) continue;
-		logSubDirectoriesInBranch(dir, accumulated);
+		logSubDirectoriesInBranch(dir, accumulated);	// recursively add subDirectories to task
 	}
 }
-- (void)logBranch {
+- (void)logBranch {	// log all subdirectories in Branch
 	NSMutableSet *accumulated = [NSMutableSet setWithCapacity:100];
 	logSubDirectoriesInBranch(self, &accumulated);
 }

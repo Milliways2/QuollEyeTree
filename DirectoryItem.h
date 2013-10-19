@@ -27,6 +27,7 @@
 - (NSMutableArray *)subDirectories;
 - (NSUInteger)sizeOfFiles;
 - (BOOL)isPathLoaded;
+- (BOOL)isDirPlus1Loaded;
 
 - (DirectoryItem *)findPathInDir:(NSString *)path;
 - (DirectoryItem *)loadPath:(NSString *)path;

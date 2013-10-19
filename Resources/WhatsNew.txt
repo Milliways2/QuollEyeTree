@@ -1,4 +1,7 @@
 What's new since 1.0
+Version 1.05 beta 2013-10-04
+- fixed Logging branch with Option-click may become unresponsive, and use excessive memory
+
 Version 1.04 beta 2013-05-03
 - fixed files and directories not dislayed on later versions of OSX 10.7 (Lion)
 - added Branch File Filter (duplicateFiles)

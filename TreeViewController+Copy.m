@@ -71,12 +71,16 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
         }
     }
 }
-// execute block on queue; pauses updates & starts progress before; restore updates & stops progress on completion
-- (void)runBlockOnQueue:(void (^)(void))block {
-	if(queue == NULL) {
+- (void)copyQueue {
+    if(queue == NULL) {
 		queue = [NSOperationQueue new];
 		[queue setMaxConcurrentOperationCount:10];
 	}
+}
+
+// execute block on queue; pauses updates & starts progress before; restore updates & stops progress on completion
+- (void)runBlockOnQueue:(void (^)(void))block {
+	[self copyQueue];
 	[self.delegate treeViewController:self pauseRefresh:YES];
 	[self startSpinner];
 	NSBlockOperation *op = [NSBlockOperation blockOperationWithBlock:block];
@@ -86,6 +90,25 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 	}];
 	[queue addOperation:op];
 }
+// execute block on queue; pauses updates & starts progress before; restore updates & stops progress on completion
+//- (void)runBlockOnQueue:(void (^)(void))block finalBlock:(void (^)(void))finalBlock {
+//	if(queue == NULL) {
+//		queue = [NSOperationQueue new];
+//		[queue setMaxConcurrentOperationCount:10];
+//	}
+//	[self.delegate treeViewController:self pauseRefresh:YES];
+//	[self startSpinner];
+//
+//	NSBlockOperation *op = [NSBlockOperation blockOperationWithBlock:block];
+//	NSBlockOperation *final = [NSBlockOperation blockOperationWithBlock:finalBlock];
+//	[final addDependency:op];
+//	[final setCompletionBlock:^{
+//		[self stopSpinner];
+//		[self.delegate treeViewController:self pauseRefresh:NO];
+//	}];
+//	[queue addOperation:op];
+//	[queue addOperation:final];
+//}
 
 - (BOOL)checkExistingTarget:(NSString *)target fileManager:(NSFileManager *)fileManager sourceDate:(NSDate *)sourceDate replace:(BOOL)replace createDirectories:(BOOL)create {
     cancelAll = NO;
@@ -229,11 +252,7 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 	targetDirectory = copyPanel.targetDirectory;
 	NSString *target = [targetDirectory stringByAppendingPathComponent:[node.relativePath stringByRenamingingLastPathComponent:copyPanel.filename]];
 	if([self checkExistingTarget:target fileManager:fileManager sourceDate:[node wDate] replace:[copyPanel.replaceExisting state] createDirectories:[copyPanel.createDirectories state]]) {
-        if(queue == NULL) {
-            queue = [NSOperationQueue new];
-            [queue setMaxConcurrentOperationCount:10];
-        }
-
+		[self copyQueue];
         [queue addOperationWithBlock:^{	// add copyItemAtPath to queue
             NSError *error = nil;
             [self startSpinner];
@@ -262,11 +281,7 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 	NSString *itemToRemove = [node fullPath];	// item to delete
 	NSString *newName = [target lastPathComponent];
 	if([self checkExistingTarget:target fileManager:fileManager sourceDate:[node wDate] replace:[copyPanel.replaceExisting state] createDirectories:[copyPanel.createDirectories state]]) {
-        if(queue == NULL) {
-            queue = [NSOperationQueue new];
-            [queue setMaxConcurrentOperationCount:10];
-        }
-
+		[self copyQueue];
         DirectoryItem *targetDir = findPathInVolumes(targetDirectory);
         [queue addOperationWithBlock:^{
             NSError *error = nil;
@@ -382,11 +397,7 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
 		[url getResourceValue:&tempDate forKey:NSURLContentModificationDateKey error:nil];
 		target = [[toUrl URLByAppendingPathComponent:[url lastPathComponent]] path];
 		if([self checkExistingTarget:target fileManager:fileManager sourceDate:tempDate replace:NO createDirectories:NO]) {
-            if(queue == NULL) {
-                queue = [NSOperationQueue new];
-                [queue setMaxConcurrentOperationCount:10];
-            }
-
+			[self copyQueue];
             [queue addOperationWithBlock:^{
                 NSError *error = nil;
                 [self startSpinner];

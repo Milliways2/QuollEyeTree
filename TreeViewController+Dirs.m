@@ -56,6 +56,16 @@
 	}
 	[self checkFilter];
 }
+//- (void)updateBranchInQueue:(DirectoryItem *)branch  {
+//	[self runBlockOnQueue:^{
+//		[branch updateBranch];
+//	}
+//			   finalBlock:^{
+//		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//			[self reloadData];
+//		}];
+//	}];
+//}
 - (void)updateBranchInQueue:(DirectoryItem *)branch  {
 	[self runBlockOnQueue:^{
 		[branch updateBranch];
@@ -374,6 +384,71 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 	if(![as executeAndReturnError:&errorInfo])
         NSLog(@"errorInfo %@", errorInfo);
 }
+
+#pragma mark - logging
+- (void)expandBranch:(id)item {
+	[self runBlockOnQueue:^{
+		currentlyLogging = YES;
+		[item logBranch];
+		currentlyLogging = NO;
+		NSLog(@"logBranch %@", ((DirectoryItem *)item).fullPath);
+		[[NSOperationQueue mainQueue] addOperationWithBlock:^{	// queue expand on main queue to update display
+			[self.dirTree expandItem:item expandChildren:YES];
+		}];
+	}];
+}
+//- (void)expandBranch:(id)item {
+//	[self runBlockOnQueue:^{
+//		currentlyLogging = YES;
+//		[item logBranch];
+//		//		NSLog(@"logBranch %@", ((DirectoryItem *)item).fullPath);
+//	}
+//			   finalBlock:^{
+//				   [[NSOperationQueue mainQueue] addOperationWithBlock:^{	// queue expand on main queue to update display
+//					   currentlyLogging = NO;
+//					   [self.dirTree expandItem:item expandChildren:YES];
+//				   }];
+//			   }
+//	 ];
+//}
+//- (void)expandBranch:(id)item {
+//    [self runBlockOnQueue:^{
+////        [item logDirPlus1];
+////        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+////            [self.dirTree expandItem:item];
+////        }];
+//		currentlyLogging = YES;
+//        [item logBranch];
+////		NSLog(@"logBranch %@", ((DirectoryItem *)item).fullPath);
+//        [[NSOperationQueue mainQueue] addOperationWithBlock:^{	// queue expand on main queue to update display
+//			currentlyLogging = NO;
+//            [self.dirTree expandItem:item expandChildren:YES];
+//        }];
+//    }];
+//}
+//- (BOOL)expandDir:(id)item {
+//	if ([item isDirPlus1Loaded])	return YES;	// already Loaded
+//	[self runBlockOnQueue:^{
+//		[item logDirPlus1];
+//	}
+//			   finalBlock:^{
+//				   [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//					   [self.dirTree expandItem:item];
+//				   }];
+//			   }];
+//	return NO;
+//}
+- (void)expandDir:(id)item {
+	if ([item isDirPlus1Loaded])	return;	// already Loaded
+	[self runBlockOnQueue:^{
+		[item logDirPlus1];
+		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+			[self.dirTree expandItem:item];
+		}];
+	}];
+	return;
+}
+
 #pragma mark - Delegate Actions
 - (BOOL)keyPressedInOutlineView:(unichar)character shifted:(BOOL)shifted {
 	if (shifted && character == NSF3FunctionKey) {
@@ -390,21 +465,11 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 		return YES;
 	}
 	if (character == '*') {
-		[self runBlockOnQueue:^{
-			[self.selectedDir logBranch];
-			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-				[self.dirTree expandItem:self.selectedDir expandChildren:YES];
-			}];
-		}];
+        [self expandBranch:self.selectedDir];
 		return YES;
 	}
 	if (character == '+' || character == '=') {
-		[self runBlockOnQueue:^{
-			[self.selectedDir logDirPlus1];
-			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-				[self.dirTree expandItem:self.selectedDir];
-			}];
-		}];
+        [self expandDir:self.selectedDir];
 		return YES;
 	}
 	if (character == '-') {
@@ -474,36 +539,20 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 }
 
 #pragma mark - NSOutlineViewDelegate Protocol methods
-- (void)outlineViewItemWillExpand:(NSNotification *)notification {
-//	NSLog(@"outlineViewItemWillExpand %@", notification);
-	DirectoryItem *dirToExpand = [[notification userInfo] objectForKey:@"NSObject"];
-	[self startSpinner];
-	[dirToExpand logDirPlus1];
-	[self stopSpinner];
+- (BOOL)outlineView:(NSOutlineView *)outlineView shouldExpandItem:(id)item {
+	if(currentlyLogging)	return NO;
+//	NSLog(@"shouldExpandItem %lx", (unsigned long)[[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask);
+    if([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask) {
+        [self expandBranch:item];
+		return NO;
+	}
+//	else {
+////        [self expandDir:item];
+//        return [self expandDir:item];
+////		return NO;
+//	}
+	return YES;
 }
-//- (void)outlineViewItemDidExpand:(NSNotification *)notification {
-//	NSLog(@"outlineViewItemDidExpand %@", notification);
-//	//    [self updateSelectedDir];
-//}
-
-//NSOutlineViewItemDidExpandNotification
-//Posted whenever an item is expanded in an NSOutlineView object.
-//The notification object is the NSOutlineView object in which an item was expanded. The userInfo dictionary contains the following information:
-//
-//Key
-//Value
-//@"NSObject"
-//The item that was expanded (an id)
-
-//NSOutlineViewItemWillExpandNotification
-//Posted before an item is expanded (after the user clicks the arrow but before the item is collapsed).
-//The notification object is the outline view that contains an item about to be expanded. The userInfo dictionary contains the following information:
-//
-//Key
-//Value
-//@"NSObject"
-//The item that is to be expanded (an id)
-
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
     [self updateSelectedDir];
 }
