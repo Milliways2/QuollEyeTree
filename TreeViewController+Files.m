@@ -3,7 +3,7 @@
 //  QuollEyeTree
 //
 //  Created by Ian Binnie on 1/10/11.
-//  Copyright 2011 Ian Binnie. All rights reserved.
+//  Copyright 2011-2013 Ian Binnie. All rights reserved.
 //
 
 #import "TreeViewController+Files.h"
@@ -72,42 +72,12 @@ extern NSPredicate *notEmptyPredicate;
 - (void)tagFiles:(BOOL)tagValue {
 	NSArray *currentContents = [self.arrayController arrangedObjects];
 	// Need to pause Tag filtering on untag to prevent excessive processor use
-//	NSPredicate *saveFilter;
-//	if(showOnlyTagged) {
-//		saveFilter = [self.arrayController filterPredicate];
-//		[self.arrayController setFilterPredicate:fileFilterPredicate];
-//	}
 	if(showOnlyTagged && !tagValue) {
 		[self toggleShowTagged];
-//		showOnlyTagged = !showOnlyTagged;
-//		[self.arrayController setFilterPredicate:fileFilterPredicate];
 	}
-
-//	NSDictionary *existingBinding = [self.taggedFilesCount infoForBinding:NSValueBinding];
-//	[self.taggedFilesCount unbind:NSValueBinding];	// cancel Tagged Files Count Binding
 	for (FileItem *node in currentContents) {
 		node.tag = tagValue;
 	}
-//
-//	if(showOnlyTagged) {
-//		[self.arrayController setFilterPredicate:saveFilter];
-//	}
-
-//	[self.taggedFilesCount bind:NSValueBinding
-//					   toObject:existingBinding[NSObservedObjectKey]
-//					withKeyPath:existingBinding[NSObservedKeyPathKey]
-//						options:existingBinding[NSOptionsKey]];
-//	[self runBlockOnQueue:^{
-//		for (FileItem *node in currentContents) {
-////			@autoreleasepool {
-//				node.tag = tagValue;
-////			}
-//		}
-//		[self.taggedFilesCount bind:NSValueBinding
-//						   toObject:existingBinding[NSObservedObjectKey]
-//						withKeyPath:existingBinding[NSObservedKeyPathKey]
-//							options:existingBinding[NSOptionsKey]];
-//	}];
 }
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
@@ -172,7 +142,6 @@ extern NSPredicate *notEmptyPredicate;
 }
 - (void)untagAllFiles {
 	[self unTagFiles];
-//	[self tagFiles:NO];
 }
 - (void)invertTaggedFiles {
 	NSArray *currentContents = [self.arrayController arrangedObjects];

@@ -15,7 +15,7 @@ static NSArray *leafNode = nil;
 - (id)init {
 	if (self = [super init]) {
 		[self setNodeTitle:@"BaseNode Untitled"];
-		[self setChildren:[NSArray array]];
+		[self setChildren:[NSMutableArray array]];
 		[self setLeaf:NO];			// container by default
 	}
 	return self;
@@ -31,10 +31,9 @@ static NSArray *leafNode = nil;
 - (void)setLeaf:(BOOL)flag {
 	isLeaf = flag;
 	if (isLeaf)
-//		[self setChildren:[NSArray arrayWithObject:self]];
-		[self setChildren:[NSArray arrayWithObject:leafNode]];
+		[self setChildren:[NSMutableArray arrayWithObject:leafNode]];
 	else
-		[self setChildren:[NSArray array]];
+		[self setChildren:[NSMutableArray array]];
 }
 - (BOOL)isLeaf {
 	return isLeaf;
