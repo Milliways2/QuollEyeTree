@@ -3,17 +3,21 @@
 //  QuollEyeTree
 //
 //  Created by Ian Binnie on 18/07/11.
-//  Copyright 2011 Ian Binnie. All rights reserved.
+//  Copyright 2011-2013 Ian Binnie. All rights reserved.
 //
 
 #import "MyTableView.h"
 
 @implementation MyTableView
+- (id)validRequestorForSendType:(NSString *)sendType returnType:(NSString *)returnType {
+	if([self.keyDelegate respondsToSelector:@selector(validRequestorForSendType:returnType:)])
+        return [self.keyDelegate validRequestorForSendType:sendType returnType:returnType];
+    return [super validRequestorForSendType:sendType returnType:returnType];
+}
 - (void)copy:(id)sender {
     if([self.keyDelegate respondsToSelector:@selector(copyFile:)])
         [self.keyDelegate copyFile:sender];
 }
-
 - (void)keyDown:(NSEvent *)theEvent {
 	unichar keyChar = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
 	if ([theEvent modifierFlags] & NSCommandKeyMask) {

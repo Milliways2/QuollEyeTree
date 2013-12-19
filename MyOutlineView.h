@@ -3,7 +3,7 @@
 //  QuollEyeTree
 //
 //  Created by Ian Binnie on 18/07/11.
-//  Copyright 2011 Ian Binnie. All rights reserved.
+//  Copyright 20111-2013 Ian Binnie. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -15,6 +15,7 @@
 - (BOOL)keyCtlPressedInOutlineView:(unichar)character;
 - (void)mouseDownInOutlineView;
 - (void)validateContextMenu:(NSMenu *)menu;
+- (id)validRequestorForSendType:(NSString *)sendType returnType:(NSString *)returnType;
 @end
 
 @interface MyOutlineView: NSOutlineView {

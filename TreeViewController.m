@@ -3,7 +3,7 @@
 //  QuollEyeTree
 //
 //  Created by Ian Binnie on 13/06/11.
-//  Copyright 2011 Ian Binnie. All rights reserved.
+//  Copyright 20111-2013 Ian Binnie. All rights reserved.
 //
 
 #import "TreeViewController.h"
@@ -61,6 +61,7 @@ NSPredicate *notEmptyPredicate;
 	yesPredicate = [NSPredicate predicateWithValue:YES];
 	tagPredicate = [NSPredicate predicateWithFormat:@"SELF.tag == YES"];
     notEmptyPredicate = [NSPredicate predicateWithFormat:@"(SELF.fileSize > 0) AND (SELF.isPackage == NO)"];
+	[NSApp registerServicesMenuSendTypes:[NSArray arrayWithObjects:(__bridge NSString *)kUTTypeDirectory, (__bridge NSString *)kUTTypeFileURL, nil] returnTypes:nil];
 }
 - (void)setRoot {
 	[self setTreeRootNode:[self.selectedDir rootDir]];
@@ -363,6 +364,19 @@ NSPredicate *notEmptyPredicate;
 - (void)reloadData {
 	[self.dirTree reloadData];
 	[self.arrayController rearrangeObjects];
+}
+
+#pragma mark Delegate Actions - Services Support
+- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard types:(NSArray *)types {
+	if (inFileView)
+		return [pboard setString:[[[self selectedFile] url] absoluteString] forType:(__bridge NSString *)kUTTypeFileURL];
+	else
+		return [pboard setString:[[[self selectedDir] url] absoluteString] forType:(__bridge NSString *)kUTTypeFileURL];
+}
+- (id)validRequestorForSendType:(NSString *)sendType returnType:(NSString *)returnType {
+    if ([sendType isEqual:(__bridge NSString *)kUTTypeFileURL])
+            return self;
+	return nil;
 }
 
 #pragma mark NSMenu Delegate Methods
