@@ -1,4 +1,8 @@
 What's new since 1.0
+
+Version 2.0 2014-01-02
+- added Services Menu
+
 Version 1.05 beta 2013-11-07
 - fixed Logging branch with Option-click may become unresponsive, and use excessive memory
 - changed Copy/Move/Paste/Symlink to better use queue and improve update after operation
