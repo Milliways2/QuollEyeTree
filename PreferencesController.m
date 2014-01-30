@@ -132,6 +132,12 @@ NSArray *sortColumns;
 	 setObject:[self.compareProgram stringValue]
 	 forKey:PREF_COMPARE_COMMAND];
 }
+- (IBAction)editCmdSelected:(id)sender {
+	[[NSUserDefaults standardUserDefaults]
+	 setObject:[self.editProgram stringValue]
+	 forKey:PREF_EDIT_COMMAND];
+}
+
 #pragma mark -
 - (void)awakeFromNib {
 	sortColumns = [NSArray arrayWithObjects:COLUMNID_NAME, COLUMNID_SIZE, COLUMNID_DATE, nil];
@@ -170,6 +176,7 @@ NSArray *sortColumns;
 		[self.compareProgram addItemWithObjectValue:cmd];
 		[self.compareProgram selectItemWithObjectValue:cmd];
 	}
+	[self.editProgram setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey:PREF_EDIT_COMMAND] ];
 }
 
 @end

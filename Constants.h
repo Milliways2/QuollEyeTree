@@ -34,6 +34,8 @@ extern NSString *const PREF_SIZE_MODE;
 extern NSString *const PREF_TOTAL_MODE;
 extern NSString *const PREF_COMPARE_COMMAND;
 extern NSString *const DEFAULT_COMPARE_COMMAND;
+extern NSString *const PREF_EDIT_COMMAND;
+extern NSString *const DEFAULT_EDIT_COMMAND;
 
 extern NSString *const PreferencesControllerDateWidthsDidChangeNotification;
 extern NSString *const DirectoryItemDidRemoveDirectoriesNotification;

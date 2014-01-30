@@ -31,6 +31,8 @@ NSString *const PREF_SIZE_MODE = @"sizeMode";
 NSString *const PREF_TOTAL_MODE = @"totalMode";
 NSString *const PREF_COMPARE_COMMAND = @"compareCommand";
 NSString *const DEFAULT_COMPARE_COMMAND = @"sdiff -l --strip-trailing-cr $1 $2";	// if changed, also change value in CompareCmds.plist
+NSString *const PREF_EDIT_COMMAND = @"editorCommand";
+NSString *const DEFAULT_EDIT_COMMAND = @"TextEdit.app";
 
 NSString *const PreferencesControllerDateWidthsDidChangeNotification = @"DateChanged";
 NSString *const DirectoryItemDidRemoveDirectoriesNotification = @"DirectoriesRemoved";

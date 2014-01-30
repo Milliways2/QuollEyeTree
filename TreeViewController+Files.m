@@ -345,6 +345,11 @@ extern NSPredicate *notEmptyPredicate;
 - (void)compareFile {
 	[self compareTo:[self selectedFile]];
 }
+- (void)editFile {
+	if(![[NSWorkspace sharedWorkspace] openFile:[[self selectedFile] fullPath]
+								withApplication:[[NSUserDefaults standardUserDefaults] stringForKey:PREF_EDIT_COMMAND]])
+		[self postStatusMessage:@"unable to open file"];
+}
 
 #pragma mark - Text Viewer
 - (void)showFileInViewer {
@@ -569,6 +574,7 @@ extern NSPredicate *notEmptyPredicate;
 		[self setFileMenu];
 	}
 }
+// Most keys are set in MainWindow.xib and dispatched via MyWindowController+FileMenu
 - (BOOL)keyPressedInTableView:(unichar)character {
 	if (character == 0x1b) {
 		if(filesInBranch) {

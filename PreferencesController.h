@@ -48,6 +48,8 @@
 
 @property (unsafe_unretained) IBOutlet NSComboBox *compareProgram;
 - (IBAction)compareCmdSelected:(NSComboBox *)sender;
+@property (unsafe_unretained) IBOutlet NSTextField *editProgram;
+- (IBAction)editCmdSelected:(NSTextField *)sender;
 
 
 @end

@@ -59,6 +59,9 @@
 - (IBAction)compareFile:(id)sender {
 	[currentTvc compareFile];
 }
+- (IBAction)editFile:(id)sender {
+	[currentTvc editFile];
+}
 
 - (IBAction)showFilesInBranch:(id)sender {	//?
 	[currentTvc showAllFiles:NO tagged:NO];

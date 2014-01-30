@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1060" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
@@ -13,6 +13,7 @@
                 <outlet property="createTime" destination="381" id="395"/>
                 <outlet property="dateSample" destination="378" id="396"/>
                 <outlet property="defaultPathButton" destination="193" id="196"/>
+                <outlet property="editProgram" destination="1lN-ww-xMO" id="hkj-nK-1yv"/>
                 <outlet property="hide" destination="85" id="91"/>
                 <outlet property="iconDir" destination="28" id="82"/>
                 <outlet property="iconFile" destination="30" id="33"/>
@@ -451,8 +452,17 @@
                             <tabViewItem label="Advanced" identifier="" id="437">
                                 <view key="view" id="438">
                                     <rect key="frame" x="10" y="33" width="312" height="795"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
+                                        <textField verticalHuggingPriority="750" id="441">
+                                            <rect key="frame" x="14" y="678" width="133" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Compare Command" id="442">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                         <comboBox verticalHuggingPriority="750" id="439">
                                             <rect key="frame" x="147" y="672" width="151" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -465,14 +475,26 @@
                                                 <action selector="compareCmdSelected:" target="-2" id="445"/>
                                             </connections>
                                         </comboBox>
-                                        <textField verticalHuggingPriority="750" id="441">
-                                            <rect key="frame" x="14" y="678" width="133" height="17"/>
+                                        <textField verticalHuggingPriority="750" id="M53-3w-LCb">
+                                            <rect key="frame" x="14" y="592" width="133" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Compare Command" id="442">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Edit Command" id="bZs-q9-OGK">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" id="1lN-ww-xMO">
+                                            <rect key="frame" x="147" y="589" width="148" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="mor-2w-O7x">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <connections>
+                                                <action selector="editCmdSelected:" target="-2" id="ig2-kq-hKn"/>
+                                            </connections>
                                         </textField>
                                     </subviews>
                                 </view>

@@ -32,7 +32,7 @@
     FSEventStreamRef stream;
 	NSMapTable *viewMap;    // relationsship between View and Tab
     NSInteger pauseCount;
-	IBOutlet SFTabView *__unsafe_unretained tabViewBar;
+//	IBOutlet SFTabView *__unsafe_unretained tabViewBar;
     IBOutlet NSDrawer *__unsafe_unretained sidebarDrawer;
 }
 
