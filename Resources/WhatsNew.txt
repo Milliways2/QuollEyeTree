@@ -1,5 +1,9 @@
 What's new since 1.0
 
+Version 2.01 2014-02-09
+- added Edit File commands
+- fixed compositeToPoint deprecated
+
 Version 2.0 2014-01-02
 - added Services Menu
 

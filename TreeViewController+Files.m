@@ -94,6 +94,9 @@ extern NSPredicate *notEmptyPredicate;
         }
     }
 }
+- (NSArray *)taggedFiles {
+	return[[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate];
+}
 - (void)searchTagged {
     NSArray *objectsToSearch = [[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate];
 	SearchPanelController *searchPanel = [SearchPanelController singleton];
@@ -349,6 +352,13 @@ extern NSPredicate *notEmptyPredicate;
 	if(![[NSWorkspace sharedWorkspace] openFile:[[self selectedFile] fullPath]
 								withApplication:[[NSUserDefaults standardUserDefaults] stringForKey:PREF_EDIT_COMMAND]])
 		[self postStatusMessage:@"unable to open file"];
+}
+- (void)editTaggedFiles {
+	for (FileItem *node in self.taggedFiles) {
+		if(![[NSWorkspace sharedWorkspace] openFile:node.fullPath
+									withApplication:[[NSUserDefaults standardUserDefaults] stringForKey:PREF_EDIT_COMMAND]])
+			[self postStatusMessage:@"unable to open file"];
+	}
 }
 
 #pragma mark - Text Viewer
@@ -676,6 +686,7 @@ extern NSPredicate *notEmptyPredicate;
 				}
 			[(ImageAndTextCell*)cell setImage:[node nodeIcon]];	// set the cell's image
 		}
+//		[cell setTextColor:[NSColor blueColor]];
 	}
 }
 - (BOOL)tableView:(NSTableView *)tableView shouldReorderColumn:(NSInteger)columnIndex toColumn:(NSInteger)newColumnIndex {

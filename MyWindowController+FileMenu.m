@@ -62,6 +62,9 @@
 - (IBAction)editFile:(id)sender {
 	[currentTvc editFile];
 }
+- (IBAction)editTaggedFiles:(id)sender {
+	[currentTvc editTaggedFiles];
+}
 
 - (IBAction)showFilesInBranch:(id)sender {	//?
 	[currentTvc showAllFiles:NO tagged:NO];

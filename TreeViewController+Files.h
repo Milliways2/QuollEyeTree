@@ -29,6 +29,7 @@
 - (void)renameFile;
 - (void)compareFile;
 - (void)editFile;
+- (void)editTaggedFiles;
 
 // Context Menu Actions
 - (IBAction)openFile:(id)sender;

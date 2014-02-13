@@ -105,14 +105,14 @@
                             </connections>
                         </button>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="E015C66F-35C1-48EF-8247-E9B1B129EB77" label="Tag" paletteLabel="Tag" image="0A07EB82-411C-456F-9918-6BB2B0D678F2" selectable="YES" id="55">
+                    <toolbarItem implicitItemIdentifier="E015C66F-35C1-48EF-8247-E9B1B129EB77" label="Tag" paletteLabel="Tag" image="D589643B-3B9B-475E-AD6D-0324F9C27D74" selectable="YES" id="55">
                         <nil key="toolTip"/>
                         <size key="minSize" width="19" height="25"/>
                         <size key="maxSize" width="54" height="25"/>
                         <button key="view" id="56">
                             <rect key="frame" x="0.0" y="14" width="46" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                            <buttonCell key="cell" type="check" title="Tag" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="57">
+                            <buttonCell key="cell" type="bevel" title="Tag" bezelStyle="regularSquare" image="D589643B-3B9B-475E-AD6D-0324F9C27D74" imagePosition="left" alignment="left" inset="2" id="57">
                                 <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
@@ -274,6 +274,12 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="editFile:" target="-2" id="BjP-3n-CRQ"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Edit tagged Files" keyEquivalent="e" id="dT8-LC-22O">
+                    <modifierMask key="keyEquivalentModifierMask" control="YES"/>
+                    <connections>
+                        <action selector="editTaggedFiles:" target="-2" id="mh0-Zu-gx6"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Reveal in Finder" keyEquivalent="r" id="216">
@@ -483,7 +489,7 @@ CA
         </drawer>
     </objects>
     <resources>
-        <image name="0A07EB82-411C-456F-9918-6BB2B0D678F2" width="18" height="18">
+        <image name="D589643B-3B9B-475E-AD6D-0324F9C27D74" width="18" height="18">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGW1xYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK8QFwcI
 ERYbHCc0NTY3ODk6O0JDRElMT1VYVSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNS
