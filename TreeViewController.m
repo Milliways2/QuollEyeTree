@@ -350,7 +350,7 @@ NSPredicate *notEmptyPredicate;
 	[self applyFileAndTagFilter:fileFilterPredicate];	//******************* restore filter
 }
 - (void)suspendTreeView {
-		[self.arrayController setFilterPredicate:nil];
+		[self.arrayController setFilterPredicate:nil];	// suspend processor intensive operations
 }
 - (BOOL)shouldTerminate {
 	if (inFileView)

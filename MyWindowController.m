@@ -364,17 +364,6 @@ NSOperationQueue *loggingQueue = nil;
 	return [tabViewBar indexOfTab:[tabViewBar selectedTab]];
 }
 - (void)selectDirectory:(NSString *)directory inTab:(BOOL)inTab {
-//	[loggingQueue addOperationWithBlock:^{
-//		[self pauseMonitoring:YES];
-//		DirectoryItem *userDir = locateOrAddDirectoryInVolumes(directory);
-//		if (userDir) {
-//			[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-//				if (inTab)  [self newTabWithDir:userDir];
-//				else    [currentTvc setTreeRootNode:userDir];
-//			}];
-//		}
-//		[self pauseMonitoring:NO];
-//	}];
 	DirectoryItem *userDir = locateOrAddDirectoryInVolumes(directory);
     if (userDir) {
 		if (inTab)  [self newTabWithDir:userDir];

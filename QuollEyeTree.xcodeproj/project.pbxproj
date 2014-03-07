@@ -545,10 +545,7 @@
 				3C25E96113A1B85C008BB53E /* DirectoryItem.m */,
 				3CC1C71B16547A7A005D4F4D /* DirectoryItem+Branch.h */,
 				3CC1C71C16547A7A005D4F4D /* DirectoryItem+Branch.m */,
-				3C68F6CD145CBD9C009C8762 /* VolumeItem.h */,
-				3C68F6CE145CBD9C009C8762 /* VolumeItem.m */,
-				3CB0A4FD1643F062007369C9 /* volume.h */,
-				3C7554AB15DB74B6006A795F /* volume.m */,
+				3CCC9C4618A9D691001CB048 /* Volumes */,
 				3CD0B6721648BDC500F7515D /* alias.h */,
 				3CD0B6731648BDC600F7515D /* alias.m */,
 				3CD0B681164B33CF00F7515D /* folderSize.h */,
@@ -649,6 +646,17 @@
 				3CD4AFA413C17A870062E1C0 /* MyWindowController.m */,
 			);
 			name = WindowController;
+			sourceTree = "<group>";
+		};
+		3CCC9C4618A9D691001CB048 /* Volumes */ = {
+			isa = PBXGroup;
+			children = (
+				3C68F6CD145CBD9C009C8762 /* VolumeItem.h */,
+				3C68F6CE145CBD9C009C8762 /* VolumeItem.m */,
+				3CB0A4FD1643F062007369C9 /* volume.h */,
+				3C7554AB15DB74B6006A795F /* volume.m */,
+			);
+			name = Volumes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

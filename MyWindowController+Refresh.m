@@ -45,11 +45,6 @@ void fsevents_callback(ConstFSEventStreamRef streamRef,
 		}
 	}
 	if([dirsToRefresh count]) {
-//		for(DirectoryItem *node in dirsToRefresh) {
-//			[node updateDirectory];
-//		}
-//		[wc.currentTvc reloadData];
-//		[wc refreshDirectories:dirsToRefresh treeViewController:wc.currentTvc];
 		refreshDirectories(dirsToRefresh, wc.currentTvc);
 	}
 }

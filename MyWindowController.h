@@ -33,13 +33,13 @@
 	NSMapTable *viewMap;    // relationsship between View and Tab
     NSInteger pauseCount;
 //	IBOutlet SFTabView *__unsafe_unretained tabViewBar;
-    IBOutlet NSDrawer *__unsafe_unretained sidebarDrawer;
+//    IBOutlet NSDrawer *__unsafe_unretained sidebarDrawer;
 }
 
 @property (assign) IBOutlet NSView *viewContainer;
 @property (readonly) TreeViewController *currentTvc;
-@property (unsafe_unretained, readonly) SFTabView *tabViewBar;
-@property (unsafe_unretained, readonly) NSDrawer *sidebarDrawer;
+@property (unsafe_unretained, readonly) IBOutlet SFTabView *tabViewBar;
+@property (unsafe_unretained, readonly) IBOutlet NSDrawer *sidebarDrawer;
 
 - (NSArray *)tvcInTabs;
 - (NSInteger)currentTab;

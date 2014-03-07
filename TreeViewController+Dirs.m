@@ -405,6 +405,7 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 		return YES;
 	}
 	if (character == NSF3FunctionKey) {
+		[self.selectedDir updateDirectory];
 		[self updateBranchInQueue:self.selectedDir];
 		return YES;
 	}
