@@ -25,6 +25,7 @@
 	IBOutlet NSSearchField *filterString;
     IBOutlet NSProgressIndicator *refresh;
 	TreeViewController *currentTvc;
+	TreeViewController *previousTvc;
     SidebarViewController *sidebarController;
     QLPreviewPanel *previewPanel;
     NSArray *panelData;
@@ -62,4 +63,5 @@
 - (IBAction)addNewTabAt:(id)sender;
 
 - (IBAction)gotoDir:(id)sender;
+- (IBAction)goBack:(id)sender;
 @end

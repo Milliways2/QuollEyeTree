@@ -1,6 +1,9 @@
 What's new since 1.0
 
-Version 2.02 2014-03-07
+Version 2.02 2014-12-07
+- fixed Directory shading print through in TextView on Yosemite
+- added Delete Chracter '/' to Rename/Copy?Move
+- added Go Back to previous tab content (removed 2014-10-08)
 - fixed F3 refresh Branch did not refresh Dir contents 
 
 Version 2.01 2014-02-09

@@ -61,7 +61,7 @@ NSArray *sortColumns;
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:PREF_DIR_COLUMN_ORDER];
 }
 - (IBAction)saveColumns:(id)sender {
-	[[[[NSApp delegate] myWindowController] currentTvc] saveTableColumns];
+	[[[(QuollEyeTreeAppDelegate *)[NSApp delegate] myWindowController] currentTvc] saveTableColumns];	// Xcode 6.1 error
 }
 #pragma mark Date Format
 - (void)showDate {

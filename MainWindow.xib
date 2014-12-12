@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment defaultVersion="1060" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MyWindowController">
@@ -20,8 +20,8 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
-        <window title="QuollEyeTree" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" wantsToBeColor="NO" frameAutosaveName="WindowSize" animationBehavior="default" id="1">
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="QuollEyeTree" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" frameAutosaveName="WindowSize" animationBehavior="default" id="1">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="348" y="86" width="600" height="600"/>
@@ -53,9 +53,9 @@
                         <size key="minSize" width="95" height="25"/>
                         <size key="maxSize" width="99" height="25"/>
                         <segmentedControl key="view" verticalHuggingPriority="750" tag="-1" id="58">
-                            <rect key="frame" x="0.0" y="14" width="95" height="25"/>
+                            <rect key="frame" x="0.0" y="14" width="98" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <segmentedCell key="cell" alignment="left" style="texturedSquare" trackingMode="momentary" id="59">
+                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="momentary" id="59">
                                 <font key="font" metaFont="system"/>
                                 <segments>
                                     <segment toolTip="Root /" image="NSComputer" width="32">
@@ -105,14 +105,14 @@
                             </connections>
                         </button>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="E015C66F-35C1-48EF-8247-E9B1B129EB77" label="Tag" paletteLabel="Tag" image="D589643B-3B9B-475E-AD6D-0324F9C27D74" selectable="YES" id="55">
+                    <toolbarItem implicitItemIdentifier="E015C66F-35C1-48EF-8247-E9B1B129EB77" label="Tag" paletteLabel="Tag" image="87041169-56D1-4C0A-87D8-FE7B49A182C5" selectable="YES" id="55">
                         <nil key="toolTip"/>
                         <size key="minSize" width="19" height="25"/>
                         <size key="maxSize" width="54" height="25"/>
                         <button key="view" id="56">
                             <rect key="frame" x="0.0" y="14" width="46" height="25"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                            <buttonCell key="cell" type="bevel" title="Tag" bezelStyle="regularSquare" image="D589643B-3B9B-475E-AD6D-0324F9C27D74" imagePosition="left" alignment="left" inset="2" id="57">
+                            <buttonCell key="cell" type="bevel" title="Tag" bezelStyle="regularSquare" image="87041169-56D1-4C0A-87D8-FE7B49A182C5" imagePosition="left" alignment="left" inset="2" id="57">
                                 <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
@@ -121,14 +121,14 @@
                             </connections>
                         </button>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="F6400749-BB05-4389-9B60-DF07045C69B5" explicitItemIdentifier="filefilter" label="File Filter" paletteLabel="FileFilter" selectable="YES" id="52">
+                    <toolbarItem implicitItemIdentifier="F6400749-BB05-4389-9B60-DF07045C69B5" explicitItemIdentifier="filefilter" label="File Filter" paletteLabel="FileFilter" image="Filter" selectable="YES" id="52">
                         <nil key="toolTip"/>
-                        <size key="minSize" width="96" height="22"/>
+                        <size key="minSize" width="95" height="22"/>
                         <size key="maxSize" width="450" height="25"/>
-                        <searchField key="view" verticalHuggingPriority="750" id="60">
-                            <rect key="frame" x="0.0" y="14" width="200" height="22"/>
+                        <searchField key="view" wantsLayer="YES" verticalHuggingPriority="750" id="60">
+                            <rect key="frame" x="0.0" y="14" width="96" height="22"/>
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES"/>
-                            <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="file filter" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" maximumRecents="21" recentsAutosaveName="FileSpecSearch" id="61">
+                            <searchFieldCell key="cell" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="left" placeholderString="file filter" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" maximumRecents="21" recentsAutosaveName="FileSpecSearch" id="61">
                                 <font key="font" metaFont="system"/>
                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -419,6 +419,12 @@ CA
                         <action selector="getDirInfo:" target="-2" id="250"/>
                     </connections>
                 </menuItem>
+                <menuItem title="Go Back" keyEquivalent="" id="f4a-5x-fO0">
+                    <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                    <connections>
+                        <action selector="goBack:" target="-2" id="7pB-4w-SGf"/>
+                    </connections>
+                </menuItem>
                 <menuItem isSeparatorItem="YES" id="212"/>
                 <menuItem title="Compare Dir" keyEquivalent="c" id="210">
                     <modifierMask key="keyEquivalentModifierMask" option="YES"/>
@@ -489,7 +495,7 @@ CA
         </drawer>
     </objects>
     <resources>
-        <image name="D589643B-3B9B-475E-AD6D-0324F9C27D74" width="18" height="18">
+        <image name="87041169-56D1-4C0A-87D8-FE7B49A182C5" width="18" height="18">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGW1xYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK8QFwcI
 ERYbHCc0NTY3ODk6O0JDRElMT1VYVSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNS
@@ -508,10 +514,11 @@ AUMBSAFOAVQBWwFjAWoBcwF4AYMBjAGiAaYBswG8AcUB4QHmAfkB/QIQAhsCIAIoAisCMAI/AkMCSgJS
 Al8CZAJmAmgCbQJ1AngCfQKFAogCmgKdAqIAAAAAAAACAQAAAAAAAABfAAAAAAAAAAAAAAAAAAACpA
 </mutableData>
         </image>
+        <image name="Filter" width="16" height="16"/>
         <image name="NSComputer" width="32" height="32"/>
-        <image name="NSListViewTemplate" width="11" height="10"/>
-        <image name="NSPathTemplate" width="13" height="10"/>
-        <image name="NSQuickLookTemplate" width="21" height="16"/>
+        <image name="NSListViewTemplate" width="14" height="10"/>
+        <image name="NSPathTemplate" width="16" height="10"/>
+        <image name="NSQuickLookTemplate" width="19" height="12"/>
         <image name="SidebarPrefs" width="32" height="32"/>
         <image name="tabBg" width="20" height="42"/>
     </resources>

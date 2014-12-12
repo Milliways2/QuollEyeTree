@@ -375,6 +375,7 @@ extern NSPredicate *notEmptyPredicate;
     textViewer = [[TextViewerController alloc]
                 initWithNibName:@"TextView"
                 bundle:nil];
+	[self.splitViewTop setHidden:YES];	// 2014-12-07 kludge to prevent Directory shading print through in Yosemite
     [[self view] addSubview:[textViewer view]];	// embed new TextView in our host view
     [[textViewer view] setFrame:[[self view] bounds]];	// resize the controller's view to the host size
     textViewer.delegate = self;
@@ -384,6 +385,7 @@ extern NSPredicate *notEmptyPredicate;
 - (void)exitFileViewer {
     [textViewer.view removeFromSuperview];
     textViewer = nil;
+	[self.splitViewTop setHidden:NO];	// 2014-12-07 restore Directory view
     [self.fileList.window makeFirstResponder:self.fileList];
 }
 

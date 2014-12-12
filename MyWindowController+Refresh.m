@@ -14,7 +14,6 @@
 @implementation MyWindowController(Refresh)
 static dispatch_queue_t refreshQueue;
 
-//- (void) refreshDirectories:(NSArray *) dirs treeViewController:(TreeViewController *)tvc {
 void refreshDirectories(NSArray *dirs, TreeViewController *tvc) {
 	dispatch_retain(refreshQueue);
 	dispatch_async(refreshQueue, ^{
