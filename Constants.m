@@ -13,6 +13,8 @@ NSString *const PREF_FILE_ICON = @"iconInFile";
 NSString *const PREF_HIDDEN_FILES = @"hiddenFiles";
 NSString *const PREF_AUTOMATIC_REFRESH = @"automaticRefresh";
 NSString *const PREF_SPLIT_PERCENTAGE = @"splitPercentage";
+NSString *const PREF_SPLIT_PERCENTAGE_H = @"splitPercentageVert";
+NSString *const PREF_SPLIT_ORIENTATION = @"splitVertical";
 NSString *const PREF_DEFAULT_DIR = @"defaultDirectory";
 NSString *const PREF_REFRESH_DIR = @"refreshDirectory";
 
@@ -22,6 +24,13 @@ NSString *const PREF_FILE_COLUMN_ORDER = @"FileColumnOrder";
 NSString *const PREF_DIR_COLUMN_WIDTH = @"DirColumnWidth";
 NSString *const PREF_DIR_COLUMN_HIDDEN = @"DirColumnHidden";
 NSString *const PREF_DIR_COLUMN_ORDER = @"DirColumnOrder";
+
+NSString *const PREF_FILE_RIGHT_COLUMN_WIDTH = @"FileRColumnWidth";
+NSString *const PREF_FILE_RIGHT_COLUMN_HIDDEN = @"FileRColumnHidden";
+NSString *const PREF_FILE_RIGHT_COLUMN_ORDER = @"FileRColumnOrder";
+NSString *const PREF_DIR_LEFT_COLUMN_WIDTH = @"DirLColumnWidth";
+NSString *const PREF_DIR_LEFT_COLUMN_HIDDEN = @"DirLColumnHidden";
+NSString *const PREF_DIR_LEFT_COLUMN_ORDER = @"DirLColumnOrder";
 
 NSString *const PREF_DATE_WIDTH = @"DateWidth";
 NSString *const PREF_DATE_RELATIVE = @"relativeDate";

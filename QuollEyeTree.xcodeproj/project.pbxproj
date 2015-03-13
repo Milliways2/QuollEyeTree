@@ -131,6 +131,89 @@
 		3C6CA6D213DA5F8000B553EF /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6CA6D113DA5F8000B553EF /* PreferencesController.m */; };
 		3C6CA8BA13DBABCB00B553EF /* ImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6CA8B813DBABCB00B553EF /* ImageAndTextCell.m */; };
 		3C6D31C0142A149E00320D83 /* NSString+Parse.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6D31BF142A149E00320D83 /* NSString+Parse.m */; };
+		3C6DC03D1A3FBFAD000D3251 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		3C6DC03E1A3FBFAD000D3251 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
+		3C6DC03F1A3FBFAD000D3251 /* TreeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C25EF2C13A5E41E008BB53E /* TreeView.xib */; };
+		3C6DC0401A3FBFAD000D3251 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CD4AFA713C17AC60062E1C0 /* MainWindow.xib */; };
+		3C6DC0411A3FBFAD000D3251 /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C6C8F4613C2CFEB00B553EF /* ReadMe.txt */; };
+		3C6DC0421A3FBFAD000D3251 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3C6C8F5F13C2D1E600B553EF /* Credits.rtf */; };
+		3C6DC0431A3FBFAD000D3251 /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C6CA6C913DA5BAD00B553EF /* Preferences.xib */; };
+		3C6DC0441A3FBFAD000D3251 /* WhatsNew.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3C4A998F14340084009E488C /* WhatsNew.txt */; };
+		3C6DC0451A3FBFAD000D3251 /* QuollEyeTree.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 3C4A99B714340708009E488C /* QuollEyeTree.pdf */; };
+		3C6DC0461A3FBFAD000D3251 /* tabBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC2D85143D648E00789F65 /* tabBg.png */; };
+		3C6DC0471A3FBFAD000D3251 /* activeTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC2FBF143D99C600789F65 /* activeTab.png */; };
+		3C6DC0481A3FBFAD000D3251 /* inactiveTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CCC2FC1143D99E400789F65 /* inactiveTab.png */; };
+		3C6DC0491A3FBFAD000D3251 /* CopyMovePanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CD301991447A44700DD3A71 /* CopyMovePanel.xib */; };
+		3C6DC04A1A3FBFAD000D3251 /* SidebarPrefs.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3C2A438E145A1D790013D85B /* SidebarPrefs.icns */; };
+		3C6DC04B1A3FBFAD000D3251 /* SidebarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C68F50E145A9677009C8762 /* SidebarView.xib */; };
+		3C6DC04C1A3FBFAD000D3251 /* RenamePanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C9AD526149863EF00AFD274 /* RenamePanel.xib */; };
+		3C6DC04D1A3FBFAD000D3251 /* FolderPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C9AD715149C23D300AFD274 /* FolderPanel.xib */; };
+		3C6DC04E1A3FBFAD000D3251 /* ghostgum.icns in Resources */ = {isa = PBXBuildFile; fileRef = 3C62EB44149C33F900E8D057 /* ghostgum.icns */; };
+		3C6DC04F1A3FBFAD000D3251 /* ComparePanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C6A139F14AD83C300FEBC50 /* ComparePanel.xib */; };
+		3C6DC0501A3FBFAD000D3251 /* QTreeHelp.help in Resources */ = {isa = PBXBuildFile; fileRef = 3C9FBB11152D339B00BE652C /* QTreeHelp.help */; };
+		3C6DC0511A3FBFAD000D3251 /* GoToPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C3664B91536BFBA005BAE4A /* GoToPanel.xib */; };
+		3C6DC0521A3FBFAD000D3251 /* Filter.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CE391861578450300B85577 /* Filter.png */; };
+		3C6DC0531A3FBFAD000D3251 /* SearchPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CF72BC015886BF000E63E73 /* SearchPanel.xib */; };
+		3C6DC0541A3FBFAD000D3251 /* TextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C8524F3159ACC6A00FFCED9 /* TextView.xib */; };
+		3C6DC0551A3FBFAD000D3251 /* close-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C379025165343E100883589 /* close-selected.png */; };
+		3C6DC0561A3FBFAD000D3251 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 3C379026165343E100883589 /* close.png */; };
+		3C6DC0571A3FBFAD000D3251 /* CompareFilePanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3C3C4BA0166ADE00002E8C32 /* CompareFilePanel.xib */; };
+		3C6DC0581A3FBFAD000D3251 /* CompareCmds.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3C5875FE16775614007E3FC2 /* CompareCmds.plist */; };
+		3C6DC0591A3FBFAD000D3251 /* CompareFilterPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CBCEED4168C00E3003A0B0D /* CompareFilterPanel.xib */; };
+		3C6DC05B1A3FBFAD000D3251 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		3C6DC05C1A3FBFAD000D3251 /* QuollEyeTreeAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* QuollEyeTreeAppDelegate.m */; };
+		3C6DC05D1A3FBFAD000D3251 /* DirectoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C25E96113A1B85C008BB53E /* DirectoryItem.m */; };
+		3C6DC05E1A3FBFAD000D3251 /* TreeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C25EEFC13A5E1EF008BB53E /* TreeViewController.m */; };
+		3C6DC05F1A3FBFAD000D3251 /* MyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD4AFA413C17A870062E1C0 /* MyWindowController.m */; };
+		3C6DC0601A3FBFAD000D3251 /* FileItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6C91EC13C7E40C00B553EF /* FileItem.m */; };
+		3C6DC0611A3FBFAD000D3251 /* FileSystemItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6C925313C7ECD400B553EF /* FileSystemItem.m */; };
+		3C6DC0621A3FBFAD000D3251 /* MyTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6CA06213D3F88300B553EF /* MyTableView.m */; };
+		3C6DC0631A3FBFAD000D3251 /* MyOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6CA09B13D40DBD00B553EF /* MyOutlineView.m */; };
+		3C6DC0641A3FBFAD000D3251 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6CA6D113DA5F8000B553EF /* PreferencesController.m */; };
+		3C6DC0651A3FBFAD000D3251 /* ImageAndTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6CA8B813DBABCB00B553EF /* ImageAndTextCell.m */; };
+		3C6DC0661A3FBFAD000D3251 /* NSString+Parse.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6D31BF142A149E00320D83 /* NSString+Parse.m */; };
+		3C6DC0671A3FBFAD000D3251 /* TreeViewController+Files.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C51E0CF143701BF009A0F02 /* TreeViewController+Files.m */; };
+		3C6DC0681A3FBFAD000D3251 /* TreeViewController+Dirs.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA8379E1438179500FD4B86 /* TreeViewController+Dirs.m */; };
+		3C6DC0691A3FBFAD000D3251 /* MyWindowController+Refresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA8392414385A0F00FD4B86 /* MyWindowController+Refresh.m */; };
+		3C6DC06A1A3FBFAD000D3251 /* SFDefaultTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC3039143DCC8F00789F65 /* SFDefaultTab.m */; };
+		3C6DC06B1A3FBFAD000D3251 /* SFTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC303E143DCCBB00789F65 /* SFTabView.m */; };
+		3C6DC06C1A3FBFAD000D3251 /* MyWindowController+FileMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCC38B81441163A00789F65 /* MyWindowController+FileMenu.m */; };
+		3C6DC06D1A3FBFAD000D3251 /* CopyPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD3019E1447B05500DD3A71 /* CopyPanelController.m */; };
+		3C6DC06E1A3FBFAD000D3251 /* NSString+Rename.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CDEEB3D14494F3700B12F24 /* NSString+Rename.m */; };
+		3C6DC06F1A3FBFAD000D3251 /* SidebarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C68F508145A9637009C8762 /* SidebarViewController.m */; };
+		3C6DC0701A3FBFAD000D3251 /* BaseNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C68F50B145A9658009C8762 /* BaseNode.m */; };
+		3C6DC0711A3FBFAD000D3251 /* VolumeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C68F6CE145CBD9C009C8762 /* VolumeItem.m */; };
+		3C6DC0721A3FBFAD000D3251 /* RenamePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C9AD513149863A400AFD274 /* RenamePanelController.m */; };
+		3C6DC0731A3FBFAD000D3251 /* FolderPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C9AD70F149C20C000AFD274 /* FolderPanelController.m */; };
+		3C6DC0741A3FBFAD000D3251 /* TreeViewController+Copy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C4E81DC14A02A2A00C07CAE /* TreeViewController+Copy.m */; };
+		3C6DC0751A3FBFAD000D3251 /* ComparePanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6A13B214AD866F00FEBC50 /* ComparePanelController.m */; };
+		3C6DC0761A3FBFAD000D3251 /* OpenWith.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CB745BB14CD3FBD00DD66E7 /* OpenWith.m */; };
+		3C6DC0771A3FBFAD000D3251 /* DeletedItems.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C04292714D91902004C104B /* DeletedItems.m */; };
+		3C6DC0781A3FBFAD000D3251 /* PathHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C0373D5153574B600396C6F /* PathHelper.m */; };
+		3C6DC0791A3FBFAD000D3251 /* GoToPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3664BC1536C530005BAE4A /* GoToPanelController.m */; };
+		3C6DC07A1A3FBFAD000D3251 /* IBPathTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6AE1B6153B8E2E00A800B0 /* IBPathTextField.m */; };
+		3C6DC07B1A3FBFAD000D3251 /* MyWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6AE1C0153D25A100A800B0 /* MyWindow.m */; };
+		3C6DC07C1A3FBFAD000D3251 /* IBPathPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7AEE7F155A2E8600B44AE7 /* IBPathPopUpButton.m */; };
+		3C6DC07D1A3FBFAD000D3251 /* IBDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7AEEBE155DE41A00B44AE7 /* IBDateFormatter.m */; };
+		3C6DC07E1A3FBFAD000D3251 /* TreeViewController+Filter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF52D9C1566052D0029AE7D /* TreeViewController+Filter.m */; };
+		3C6DC07F1A3FBFAD000D3251 /* NSDate+Today.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF52DA8156C5C0F0029AE7D /* NSDate+Today.m */; };
+		3C6DC0801A3FBFAD000D3251 /* ArrayCountTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C890DF5157DA4A500982367 /* ArrayCountTransformer.m */; };
+		3C6DC0811A3FBFAD000D3251 /* SearchPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF72BBE1588679600E63E73 /* SearchPanelController.m */; };
+		3C6DC0821A3FBFAD000D3251 /* ISO8859String.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8524EE159ACC3700FFCED9 /* ISO8859String.m */; };
+		3C6DC0831A3FBFAD000D3251 /* TextViewerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8524F1159ACC5400FFCED9 /* TextViewerController.m */; };
+		3C6DC0841A3FBFAD000D3251 /* MyTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBCAB0B15A69CB600988ADF /* MyTextView.m */; };
+		3C6DC0851A3FBFAD000D3251 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC3732415C8E6E700B1BDA3 /* Constants.m */; };
+		3C6DC0861A3FBFAD000D3251 /* TextViewerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5684BB15D399D5008F98FD /* TextViewerView.m */; };
+		3C6DC0871A3FBFAD000D3251 /* volume.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7554AB15DB74B6006A795F /* volume.m */; };
+		3C6DC0881A3FBFAD000D3251 /* alias.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD0B6731648BDC600F7515D /* alias.m */; };
+		3C6DC0891A3FBFAD000D3251 /* folderSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CD0B682164B33CF00F7515D /* folderSize.m */; };
+		3C6DC08A1A3FBFAD000D3251 /* DirectoryItem+Branch.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC1C71C16547A7A005D4F4D /* DirectoryItem+Branch.m */; };
+		3C6DC08B1A3FBFAD000D3251 /* CompareFileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3C4B9E166AD8E6002E8C32 /* CompareFileController.m */; };
+		3C6DC08C1A3FBFAD000D3251 /* ArraySumTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBCEECD1689A3A7003A0B0D /* ArraySumTransformer.m */; };
+		3C6DC08D1A3FBFAD000D3251 /* CompareFilterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C25C1F416C5FBBC00727EE0 /* CompareFilterController.m */; };
+		3C6DC08F1A3FBFAD000D3251 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		3C6DC0901A3FBFAD000D3251 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4A961B1432E2AB009E488C /* Quartz.framework */; };
+		3C6DC0911A3FBFAD000D3251 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4A961D1432E2BD009E488C /* QuickLook.framework */; };
 		3C7554AC15DB74B6006A795F /* volume.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7554AB15DB74B6006A795F /* volume.m */; };
 		3C76A75B16EC3C23003E9444 /* CompareFilterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C25C1F416C5FBBC00727EE0 /* CompareFilterController.m */; };
 		3C7AEE81155A2E8700B44AE7 /* IBPathPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C7AEE7F155A2E8600B44AE7 /* IBPathPopUpButton.m */; };
@@ -252,6 +335,8 @@
 		3C6CA8B913DBABCB00B553EF /* ImageAndTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAndTextCell.h; sourceTree = "<group>"; };
 		3C6D31BE142A149E00320D83 /* NSString+Parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Parse.h"; sourceTree = "<group>"; };
 		3C6D31BF142A149E00320D83 /* NSString+Parse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Parse.m"; sourceTree = "<group>"; };
+		3C6DC0951A3FBFAD000D3251 /* QuollEyeTreeV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuollEyeTreeV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C6DC0961A3FBFAD000D3251 /* QuollEyeTreeV-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "QuollEyeTreeV-Info.plist"; path = "/Users/ian/Projects2/QuollEyeTreeApp/QuollEyeTree/QuollEyeTreeV-Info.plist"; sourceTree = "<absolute>"; };
 		3C7554AB15DB74B6006A795F /* volume.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = volume.m; sourceTree = "<group>"; };
 		3C7AEE7F155A2E8600B44AE7 /* IBPathPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IBPathPopUpButton.m; sourceTree = "<group>"; };
 		3C7AEE80155A2E8700B44AE7 /* IBPathPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IBPathPopUpButton.h; sourceTree = "<group>"; };
@@ -331,6 +416,16 @@
 				3C25C1EB16C3861A00727EE0 /* Cocoa.framework in Frameworks */,
 				3C25C1EC16C3861A00727EE0 /* Quartz.framework in Frameworks */,
 				3C25C1ED16C3861A00727EE0 /* QuickLook.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C6DC08E1A3FBFAD000D3251 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C6DC08F1A3FBFAD000D3251 /* Cocoa.framework in Frameworks */,
+				3C6DC0901A3FBFAD000D3251 /* Quartz.framework in Frameworks */,
+				3C6DC0911A3FBFAD000D3251 /* QuickLook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +533,7 @@
 			children = (
 				3C9FBB11152D339B00BE652C /* QTreeHelp.help */,
 				8D1107310486CEB800E47090 /* QuollEyeTree-Info.plist */,
+				3C6DC0961A3FBFAD000D3251 /* QuollEyeTreeV-Info.plist */,
 				3C4A99B714340708009E488C /* QuollEyeTree.pdf */,
 				3C4A998F14340084009E488C /* WhatsNew.txt */,
 				3C6C8F4613C2CFEB00B553EF /* ReadMe.txt */,
@@ -571,6 +667,7 @@
 			isa = PBXGroup;
 			children = (
 				3C25C1F116C3861A00727EE0 /* QuollEyeTreeNH.app */,
+				3C6DC0951A3FBFAD000D3251 /* QuollEyeTreeV.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -681,6 +778,25 @@
 			productReference = 3C25C1F116C3861A00727EE0 /* QuollEyeTreeNH.app */;
 			productType = "com.apple.product-type.application";
 		};
+		3C6DC03A1A3FBFAD000D3251 /* QuollEyeTreeV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C6DC0921A3FBFAD000D3251 /* Build configuration list for PBXNativeTarget "QuollEyeTreeV" */;
+			buildPhases = (
+				3C6DC03B1A3FBFAD000D3251 /* Increment Build */,
+				3C6DC03C1A3FBFAD000D3251 /* Resources */,
+				3C6DC05A1A3FBFAD000D3251 /* Sources */,
+				3C6DC08E1A3FBFAD000D3251 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QuollEyeTreeV;
+			productInstallPath = "$(HOME)/Applications";
+			productName = FileTestWithBindings;
+			productReference = 3C6DC0951A3FBFAD000D3251 /* QuollEyeTreeV.app */;
+			productType = "com.apple.product-type.application";
+		};
 		8D1107260486CEB800E47090 /* QuollEyeTree */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "QuollEyeTree" */;
@@ -726,6 +842,7 @@
 			targets = (
 				8D1107260486CEB800E47090 /* QuollEyeTree */,
 				3C25C19616C3861A00727EE0 /* QuollEyeTreeNH */,
+				3C6DC03A1A3FBFAD000D3251 /* QuollEyeTreeV */,
 			);
 		};
 /* End PBXProject section */
@@ -764,6 +881,42 @@
 				3C25C1B316C3861A00727EE0 /* CompareFilePanel.xib in Resources */,
 				3C25C1B416C3861A00727EE0 /* CompareCmds.plist in Resources */,
 				3C25C1B516C3861A00727EE0 /* CompareFilterPanel.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C6DC03C1A3FBFAD000D3251 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C6DC03D1A3FBFAD000D3251 /* InfoPlist.strings in Resources */,
+				3C6DC03E1A3FBFAD000D3251 /* MainMenu.xib in Resources */,
+				3C6DC03F1A3FBFAD000D3251 /* TreeView.xib in Resources */,
+				3C6DC0401A3FBFAD000D3251 /* MainWindow.xib in Resources */,
+				3C6DC0411A3FBFAD000D3251 /* ReadMe.txt in Resources */,
+				3C6DC0421A3FBFAD000D3251 /* Credits.rtf in Resources */,
+				3C6DC0431A3FBFAD000D3251 /* Preferences.xib in Resources */,
+				3C6DC0441A3FBFAD000D3251 /* WhatsNew.txt in Resources */,
+				3C6DC0451A3FBFAD000D3251 /* QuollEyeTree.pdf in Resources */,
+				3C6DC0461A3FBFAD000D3251 /* tabBg.png in Resources */,
+				3C6DC0471A3FBFAD000D3251 /* activeTab.png in Resources */,
+				3C6DC0481A3FBFAD000D3251 /* inactiveTab.png in Resources */,
+				3C6DC0491A3FBFAD000D3251 /* CopyMovePanel.xib in Resources */,
+				3C6DC04A1A3FBFAD000D3251 /* SidebarPrefs.icns in Resources */,
+				3C6DC04B1A3FBFAD000D3251 /* SidebarView.xib in Resources */,
+				3C6DC04C1A3FBFAD000D3251 /* RenamePanel.xib in Resources */,
+				3C6DC04D1A3FBFAD000D3251 /* FolderPanel.xib in Resources */,
+				3C6DC04E1A3FBFAD000D3251 /* ghostgum.icns in Resources */,
+				3C6DC04F1A3FBFAD000D3251 /* ComparePanel.xib in Resources */,
+				3C6DC0501A3FBFAD000D3251 /* QTreeHelp.help in Resources */,
+				3C6DC0511A3FBFAD000D3251 /* GoToPanel.xib in Resources */,
+				3C6DC0521A3FBFAD000D3251 /* Filter.png in Resources */,
+				3C6DC0531A3FBFAD000D3251 /* SearchPanel.xib in Resources */,
+				3C6DC0541A3FBFAD000D3251 /* TextView.xib in Resources */,
+				3C6DC0551A3FBFAD000D3251 /* close-selected.png in Resources */,
+				3C6DC0561A3FBFAD000D3251 /* close.png in Resources */,
+				3C6DC0571A3FBFAD000D3251 /* CompareFilePanel.xib in Resources */,
+				3C6DC0581A3FBFAD000D3251 /* CompareCmds.plist in Resources */,
+				3C6DC0591A3FBFAD000D3251 /* CompareFilterPanel.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,6 +974,20 @@
 			shellScript = "${PROJECT_DIR}/tools/incrementBuild.sh ${PROJECT_DIR}/${INFOPLIST_FILE}";
 		};
 		3C2751FC1532ABF800D1796F /* Increment Build */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Increment Build";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/tools/incrementBuild.sh ${PROJECT_DIR}/${INFOPLIST_FILE}";
+		};
+		3C6DC03B1A3FBFAD000D3251 /* Increment Build */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
 			files = (
@@ -892,6 +1059,64 @@
 				3C25C1E616C3861A00727EE0 /* DirectoryItem+Branch.m in Sources */,
 				3C25C1E716C3861A00727EE0 /* CompareFileController.m in Sources */,
 				3C25C1E816C3861A00727EE0 /* ArraySumTransformer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C6DC05A1A3FBFAD000D3251 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C6DC05B1A3FBFAD000D3251 /* main.m in Sources */,
+				3C6DC05C1A3FBFAD000D3251 /* QuollEyeTreeAppDelegate.m in Sources */,
+				3C6DC05D1A3FBFAD000D3251 /* DirectoryItem.m in Sources */,
+				3C6DC05E1A3FBFAD000D3251 /* TreeViewController.m in Sources */,
+				3C6DC05F1A3FBFAD000D3251 /* MyWindowController.m in Sources */,
+				3C6DC0601A3FBFAD000D3251 /* FileItem.m in Sources */,
+				3C6DC0611A3FBFAD000D3251 /* FileSystemItem.m in Sources */,
+				3C6DC0621A3FBFAD000D3251 /* MyTableView.m in Sources */,
+				3C6DC0631A3FBFAD000D3251 /* MyOutlineView.m in Sources */,
+				3C6DC0641A3FBFAD000D3251 /* PreferencesController.m in Sources */,
+				3C6DC0651A3FBFAD000D3251 /* ImageAndTextCell.m in Sources */,
+				3C6DC0661A3FBFAD000D3251 /* NSString+Parse.m in Sources */,
+				3C6DC0671A3FBFAD000D3251 /* TreeViewController+Files.m in Sources */,
+				3C6DC0681A3FBFAD000D3251 /* TreeViewController+Dirs.m in Sources */,
+				3C6DC0691A3FBFAD000D3251 /* MyWindowController+Refresh.m in Sources */,
+				3C6DC06A1A3FBFAD000D3251 /* SFDefaultTab.m in Sources */,
+				3C6DC06B1A3FBFAD000D3251 /* SFTabView.m in Sources */,
+				3C6DC06C1A3FBFAD000D3251 /* MyWindowController+FileMenu.m in Sources */,
+				3C6DC06D1A3FBFAD000D3251 /* CopyPanelController.m in Sources */,
+				3C6DC06E1A3FBFAD000D3251 /* NSString+Rename.m in Sources */,
+				3C6DC06F1A3FBFAD000D3251 /* SidebarViewController.m in Sources */,
+				3C6DC0701A3FBFAD000D3251 /* BaseNode.m in Sources */,
+				3C6DC0711A3FBFAD000D3251 /* VolumeItem.m in Sources */,
+				3C6DC0721A3FBFAD000D3251 /* RenamePanelController.m in Sources */,
+				3C6DC0731A3FBFAD000D3251 /* FolderPanelController.m in Sources */,
+				3C6DC0741A3FBFAD000D3251 /* TreeViewController+Copy.m in Sources */,
+				3C6DC0751A3FBFAD000D3251 /* ComparePanelController.m in Sources */,
+				3C6DC0761A3FBFAD000D3251 /* OpenWith.m in Sources */,
+				3C6DC0771A3FBFAD000D3251 /* DeletedItems.m in Sources */,
+				3C6DC0781A3FBFAD000D3251 /* PathHelper.m in Sources */,
+				3C6DC0791A3FBFAD000D3251 /* GoToPanelController.m in Sources */,
+				3C6DC07A1A3FBFAD000D3251 /* IBPathTextField.m in Sources */,
+				3C6DC07B1A3FBFAD000D3251 /* MyWindow.m in Sources */,
+				3C6DC07C1A3FBFAD000D3251 /* IBPathPopUpButton.m in Sources */,
+				3C6DC07D1A3FBFAD000D3251 /* IBDateFormatter.m in Sources */,
+				3C6DC07E1A3FBFAD000D3251 /* TreeViewController+Filter.m in Sources */,
+				3C6DC07F1A3FBFAD000D3251 /* NSDate+Today.m in Sources */,
+				3C6DC0801A3FBFAD000D3251 /* ArrayCountTransformer.m in Sources */,
+				3C6DC0811A3FBFAD000D3251 /* SearchPanelController.m in Sources */,
+				3C6DC0821A3FBFAD000D3251 /* ISO8859String.m in Sources */,
+				3C6DC0831A3FBFAD000D3251 /* TextViewerController.m in Sources */,
+				3C6DC0841A3FBFAD000D3251 /* MyTextView.m in Sources */,
+				3C6DC0851A3FBFAD000D3251 /* Constants.m in Sources */,
+				3C6DC0861A3FBFAD000D3251 /* TextViewerView.m in Sources */,
+				3C6DC0871A3FBFAD000D3251 /* volume.m in Sources */,
+				3C6DC0881A3FBFAD000D3251 /* alias.m in Sources */,
+				3C6DC0891A3FBFAD000D3251 /* folderSize.m in Sources */,
+				3C6DC08A1A3FBFAD000D3251 /* DirectoryItem+Branch.m in Sources */,
+				3C6DC08B1A3FBFAD000D3251 /* CompareFileController.m in Sources */,
+				3C6DC08C1A3FBFAD000D3251 /* ArraySumTransformer.m in Sources */,
+				3C6DC08D1A3FBFAD000D3251 /* CompareFilterController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1007,6 +1232,46 @@
 			};
 			name = Release;
 		};
+		3C6DC0931A3FBFAD000D3251 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = QuollEyeTree_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					BETA_HEADER,
+					VERTICAL_VIEW,
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/QuollEyeTreeV-Info.plist";
+				PRODUCT_NAME = QuollEyeTreeV;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		3C6DC0941A3FBFAD000D3251 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = QuollEyeTree_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					BETA_HEADER,
+					VERTICAL_VIEW,
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/QuollEyeTreeV-Info.plist";
+				PRODUCT_NAME = QuollEyeTreeV;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1084,7 +1349,16 @@
 				3C25C1F016C3861A00727EE0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
+		};
+		3C6DC0921A3FBFAD000D3251 /* Build configuration list for PBXNativeTarget "QuollEyeTreeV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C6DC0931A3FBFAD000D3251 /* Debug */,
+				3C6DC0941A3FBFAD000D3251 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "QuollEyeTree" */ = {
 			isa = XCConfigurationList;
@@ -1093,7 +1367,7 @@
 				C01FCF4C08A954540054247B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "QuollEyeTree" */ = {
 			isa = XCConfigurationList;
@@ -1102,7 +1376,7 @@
 				C01FCF5008A954540054247B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

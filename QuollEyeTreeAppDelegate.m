@@ -30,6 +30,8 @@
 							  defaultDirectory, PREF_DEFAULT_DIR,
 							  defaultDirectory, PREF_REFRESH_DIR,
 							  @"0.5", PREF_SPLIT_PERCENTAGE,
+							  @"0.5", PREF_SPLIT_PERCENTAGE_H,
+							  @"NO", PREF_SPLIT_ORIENTATION,
 							  [NSNumber numberWithInteger:ISO8601ShortStyle], PREF_DATE_FORMAT,
 							  @"NO", PREF_DATE_RELATIVE,
                               @"NO", PREF_DATE_SHOW_CREATE,
@@ -150,6 +152,9 @@
 }
 - (IBAction)toggleSidebar:(id)sender {
 	[myWindowController toggleSidebar:sender];
+}
+- (IBAction)toggleView:(id)sender {
+	[myWindowController toggleView:sender];
 }
 
 @end

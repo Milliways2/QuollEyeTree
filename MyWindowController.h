@@ -61,6 +61,7 @@
 - (IBAction)addNewTab:(id)sender;
 - (IBAction)removeThisTab: (id)sender;
 - (IBAction)addNewTabAt:(id)sender;
+- (IBAction)toggleView:(id)sender;
 
 - (IBAction)gotoDir:(id)sender;
 - (IBAction)goBack:(id)sender;

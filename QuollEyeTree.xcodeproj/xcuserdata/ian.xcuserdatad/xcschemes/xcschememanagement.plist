@@ -16,10 +16,20 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>QuollEyeTreeV.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>3C25C19616C3861A00727EE0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3C6DC03A1A3FBFAD000D3251</key>
 		<dict>
 			<key>primary</key>
 			<true/>

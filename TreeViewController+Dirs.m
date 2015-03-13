@@ -17,6 +17,7 @@
 #import "FolderPanelController.h"
 #import "ComparePanelController.h"
 #import "DeletedItems.h"
+extern NSImage *aliasBadge;
 
 @interface TreeViewController()
 - (void)setDirMenu;
@@ -503,7 +504,21 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 	if ([[tableColumn identifier] isEqualToString:COLUMNID_NAME]) {
 		if ([cell isKindOfClass:[ImageAndTextCell class]]) {
 			if(![item nodeIcon]) {
-				[item setNodeIcon:[[NSWorkspace sharedWorkspace] iconForFile:[item fullPath]]];
+				NSImage *fileIcon = [[NSWorkspace sharedWorkspace] iconForFile:[item fullPath]];
+				[item setNodeIcon:fileIcon];
+				if([item isAlias]) {	// Check for alias
+//					NSImage *aliasBadge = [[NSImage alloc] initWithContentsOfFile:@"/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AliasBadgeIcon.icns"];
+//					[aliasBadge setSize:[fileIcon size]];
+					if ([NSImage respondsToSelector:@selector(imageWithSize:flipped:drawingHandler:)]) {
+						NSImage *badgedFileIcon = [NSImage imageWithSize:fileIcon.size flipped:NO
+														  drawingHandler:^BOOL (NSRect dstRect){
+															  [fileIcon drawAtPoint:dstRect.origin fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
+															  [aliasBadge drawAtPoint:dstRect.origin fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1];
+															  return YES;
+														  }];
+						[item setNodeIcon:badgedFileIcon];
+					}
+				}
 			}
 			[(ImageAndTextCell*)cell setImage:[item nodeIcon]];	// set the cell's image
 		}

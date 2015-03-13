@@ -1,5 +1,9 @@
 What's new since 1.0
 
+Version 2.03 2014-12-22
+- added Option for Directory and Files side by side
+- added arrow on icon of symlinks (OSX 10.8 or later)
+
 Version 2.02 2014-12-07
 - fixed Directory shading print through in TextView on Yosemite
 - added Delete Chracter '/' to Rename/Copy?Move

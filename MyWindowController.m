@@ -124,6 +124,33 @@ NSOperationQueue *loggingQueue = nil;
 	TreeViewController *tvcNew = [[TreeViewController alloc]
 								  initWithNibName:@"TreeView"
 								  bundle:nil];
+
+//	TreeViewController *tvcNew;
+//	if([[NSUserDefaults standardUserDefaults]boolForKey:PREF_SPLIT_ORIENTATION]) {
+//		tvcNew = [[TreeViewController alloc]
+//				  initWithNibName:@"TreeViewV"
+//				  bundle:nil];
+//		tvcNew.sidebyside = TRUE;
+//	}
+//	else {
+//		tvcNew = [[TreeViewController alloc]
+//				  initWithNibName:@"TreeView"
+//				  bundle:nil];
+//		tvcNew.sidebyside = FALSE;
+//	}
+
+//#ifdef VERTICAL_VIEW
+//	TreeViewController *tvcNew = [[TreeViewController alloc]
+//								  initWithNibName:@"TreeViewV"
+//								  bundle:nil];
+//	tvcNew.sidebyside = TRUE;
+//#else
+//	TreeViewController *tvcNew = [[TreeViewController alloc]
+//								  initWithNibName:@"TreeView"
+//								  bundle:nil];
+//	tvcNew.sidebyside = FALSE;
+//#endif
+//	NSLog(@"newTreeViewControllerAtDir");
 	tvcNew.delegate = self;
 	[tvcNew initWithDir:userDir];
 	return tvcNew;
@@ -535,9 +562,14 @@ NSOperationQueue *loggingQueue = nil;
 - (IBAction)addNewTabAt:(id)sender {
 	[self newTabWithDir:[currentTvc selectedDir]];
 }
+- (IBAction)toggleView:(id)sender {
+//	NSLog(@"toggleView");
+	[currentTvc toggleView];
+}
 - (IBAction)gotoDir:(id)sender {
 	GoToPanelController *gotoPanel = [GoToPanelController new];
 	if ([gotoPanel runModal] == NSOKButton) {
+//	if ([gotoPanel runModal] == NSModalResponseOK) {
 		NSString *newDir = [[gotoPanel directory] stringByExpandingTildeInPath];
         [self selectDirectory:newDir inTab:NO];
     }

@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="TreeViewController">
+            <connections>
+                <outlet property="arrayController" destination="73" id="155"/>
+                <outlet property="currentPath" destination="627" id="636"/>
+                <outlet property="dirTree" destination="5" id="81"/>
+                <outlet property="fileList" destination="62" id="154"/>
+                <outlet property="noFiles" destination="732" id="733"/>
+                <outlet property="progress" destination="656" id="657"/>
+                <outlet property="split" destination="47" id="129"/>
+                <outlet property="splitViewTop" destination="2" id="137"/>
+                <outlet property="statusMessage" destination="734" id="736"/>
+                <outlet property="taggedFilesCount" destination="737" id="745"/>
+                <outlet property="view" destination="93" id="94"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <arrayController objectClassName="FileItem" editable="NO" selectsInsertedObjects="NO" clearsFilterPredicateOnInsertion="NO" automaticallyRearrangesObjects="YES" id="73" userLabel="FileListController">
+            <declaredKeys>
+                <string>relativePath</string>
+                <string>cDate</string>
+                <string>fileSize</string>
+                <string>tag</string>
+                <string>kind</string>
+                <string>wDate</string>
+            </declaredKeys>
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="filesInDir" id="658">
+                    <dictionary key="options">
+                        <bool key="NSConditionallySetsEditable" value="NO"/>
+                    </dictionary>
+                </binding>
+            </connections>
+        </arrayController>
+        <customView id="93" userLabel="Tree View">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <splitView dividerStyle="thin" vertical="YES" id="47">
+                    <rect key="frame" x="0.0" y="20" width="600" height="579"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <scrollView autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="2" userLabel="Directory Tree View">
+                            <rect key="frame" x="0.0" y="0.0" width="300" height="579"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="EUM-gZ-d3d">
+                                <rect key="frame" x="1" y="17" width="598" height="356"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" autosaveName="OutlineExpanded" headerView="6" indentationPerLevel="8" autoresizesOutlineColumn="YES" outlineTableColumn="7" id="5" customClass="MyOutlineView">
+                                        <rect key="frame" x="0.0" y="0.0" width="598" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <size key="intercellSpacing" width="2" height="3"/>
+                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                        <tableColumns>
+                                            <tableColumn identifier="relativePath" editable="NO" width="103" minWidth="16" maxWidth="1000" id="7">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Dir">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="10">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            </tableColumn>
+                                            <tableColumn identifier="sizeOfFiles" editable="NO" width="80" minWidth="40" maxWidth="1000" hidden="YES" id="8">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Size">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" title="Text Cell" id="9">
+                                                    <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="#,##0" negativeFormat="#,##0" numberStyle="decimal" allowsFloats="NO" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="691"/>
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" userResizable="YES"/>
+                                            </tableColumn>
+                                            <tableColumn identifier="wDate" editable="NO" width="125" minWidth="40" maxWidth="1000" id="689">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="690">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" userResizable="YES"/>
+                                            </tableColumn>
+                                            <tableColumn identifier="cDate" editable="NO" width="87" minWidth="40" maxWidth="1000" hidden="YES" id="558">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Created">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="559">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" userResizable="YES"/>
+                                            </tableColumn>
+                                            <tableColumn identifier="kind" editable="NO" width="64" minWidth="32" maxWidth="100" id="332">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Kind">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="333">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" userResizable="YES"/>
+                                            </tableColumn>
+                                        </tableColumns>
+                                        <connections>
+                                            <binding destination="-2" name="doubleClickTarget" keyPath="self" id="388">
+                                                <dictionary key="options">
+                                                    <string key="NSSelectorName">dClickDirectory:</string>
+                                                </dictionary>
+                                            </binding>
+                                            <outlet property="dataSource" destination="-2" id="381"/>
+                                            <outlet property="delegate" destination="-2" id="92"/>
+                                            <outlet property="keyDelegate" destination="-2" id="217"/>
+                                            <outlet property="menu" destination="139" id="486"/>
+                                        </connections>
+                                    </outlineView>
+                                </subviews>
+                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </clipView>
+                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="small" horizontal="YES" id="4">
+                                <rect key="frame" x="1" y="359" width="598" height="14"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </scroller>
+                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="3">
+                                <rect key="frame" x="170" y="17" width="11" height="16"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </scroller>
+                            <tableHeaderView key="headerView" id="6">
+                                <rect key="frame" x="0.0" y="0.0" width="598" height="17"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <connections>
+                                    <outlet property="menu" destination="550" id="552"/>
+                                </connections>
+                            </tableHeaderView>
+                        </scrollView>
+                        <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="59" userLabel="File List View">
+                            <rect key="frame" x="301" y="0.0" width="299" height="579"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <clipView key="contentView" id="TDN-CR-KDl">
+                                <rect key="frame" x="1" y="17" width="598" height="186"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="sequential" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" headerView="63" id="62" customClass="MyTableView">
+                                        <rect key="frame" x="0.0" y="0.0" width="598" height="19"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                        <size key="intercellSpacing" width="3" height="2"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                        <tableColumns>
+                                            <tableColumn identifier="tag" width="14" minWidth="14" maxWidth="14" id="225">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="✔">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                </tableHeaderCell>
+                                                <buttonCell key="dataCell" type="check" bezelStyle="regularSquare" imagePosition="left" alignment="left" enabled="NO" inset="2" id="232">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <binding destination="73" name="value" keyPath="arrangedObjects.tag" id="240">
+                                                        <dictionary key="options">
+                                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                            <bool key="NSCreatesSortDescriptor" value="NO"/>
+                                                        </dictionary>
+                                                    </binding>
+                                                </connections>
+                                            </tableColumn>
+                                            <tableColumn identifier="relativePath" editable="NO" width="200" minWidth="200" maxWidth="1000" id="64">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="File">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" alignment="left" placeholderString="File" id="67">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                <connections>
+                                                    <binding destination="73" name="value" keyPath="arrangedObjects.relativePath" id="650">
+                                                        <dictionary key="options">
+                                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                            <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                                        </dictionary>
+                                                    </binding>
+                                                </connections>
+                                            </tableColumn>
+                                            <tableColumn identifier="fileSize" editable="NO" width="84" minWidth="10" maxWidth="1000" id="112">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Size">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" allowsUndo="NO" alignment="right" placeholderString="" id="113">
+                                                    <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="#,##0" negativeFormat="" thousandSeparator="," id="516">
+                                                        <attributedString key="attributedStringForZero">
+                                                            <fragment content="0"/>
+                                                        </attributedString>
+                                                        <decimal key="minimum" value="NaN"/>
+                                                        <decimal key="maximum" value="NaN"/>
+                                                        <metadata>
+                                                            <real key="inspectorSampleValue" value="1234.75"/>
+                                                        </metadata>
+                                                    </numberFormatter>
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" userResizable="YES"/>
+                                                <connections>
+                                                    <binding destination="73" name="value" keyPath="arrangedObjects.fileSize" id="564">
+                                                        <dictionary key="options">
+                                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                        </dictionary>
+                                                    </binding>
+                                                </connections>
+                                            </tableColumn>
+                                            <tableColumn identifier="wDate" editable="NO" width="125" minWidth="40" maxWidth="1000" id="584">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Written">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" alignment="left" title="Text Cell" id="585">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" userResizable="YES"/>
+                                                <connections>
+                                                    <binding destination="73" name="value" keyPath="arrangedObjects.wDate" id="785">
+                                                        <dictionary key="options">
+                                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                        </dictionary>
+                                                    </binding>
+                                                </connections>
+                                            </tableColumn>
+                                            <tableColumn identifier="cDate" editable="NO" width="87" minWidth="40" maxWidth="1000" id="219">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date Created">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" alignment="left" id="220">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" userResizable="YES"/>
+                                                <connections>
+                                                    <binding destination="73" name="value" keyPath="arrangedObjects.cDate" id="765">
+                                                        <dictionary key="options">
+                                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                        </dictionary>
+                                                    </binding>
+                                                </connections>
+                                            </tableColumn>
+                                            <tableColumn identifier="kind" editable="NO" width="64" minWidth="32" maxWidth="150" hidden="YES" id="553">
+                                                <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Kind">
+                                                    <font key="font" metaFont="smallSystem"/>
+                                                    <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                </tableHeaderCell>
+                                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" alignment="left" id="554">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                                <tableColumnResizingMask key="resizingMask" userResizable="YES"/>
+                                                <connections>
+                                                    <binding destination="73" name="value" keyPath="arrangedObjects.kind" id="557">
+                                                        <dictionary key="options">
+                                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                        </dictionary>
+                                                    </binding>
+                                                </connections>
+                                            </tableColumn>
+                                        </tableColumns>
+                                        <connections>
+                                            <binding destination="73" name="content" keyPath="arrangedObjects" id="111"/>
+                                            <binding destination="73" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="111" id="214"/>
+                                            <binding destination="-2" name="doubleClickTarget" keyPath="self" id="367">
+                                                <dictionary key="options">
+                                                    <string key="NSSelectorName">dClickFile:</string>
+                                                </dictionary>
+                                            </binding>
+                                            <binding destination="73" name="sortDescriptors" keyPath="sortDescriptors" previousBinding="214" id="215"/>
+                                            <outlet property="delegate" destination="-2" id="231"/>
+                                            <outlet property="keyDelegate" destination="-2" id="218"/>
+                                            <outlet property="menu" destination="146" id="153"/>
+                                        </connections>
+                                    </tableView>
+                                </subviews>
+                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </clipView>
+                            <scroller key="horizontalScroller" verticalHuggingPriority="750" controlSize="small" horizontal="YES" id="61">
+                                <rect key="frame" x="1" y="189" width="598" height="14"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </scroller>
+                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="60">
+                                <rect key="frame" x="224" y="17" width="11" height="102"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </scroller>
+                            <tableHeaderView key="headerView" id="63">
+                                <rect key="frame" x="0.0" y="0.0" width="598" height="17"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <connections>
+                                    <outlet property="menu" destination="524" id="528"/>
+                                </connections>
+                            </tableHeaderView>
+                        </scrollView>
+                    </subviews>
+                    <holdingPriorities>
+                        <real value="250"/>
+                        <real value="250"/>
+                    </holdingPriorities>
+                </splitView>
+                <box autoresizesSubviews="NO" transparent="YES" borderWidth="0.0" title="Status Box" boxType="custom" borderType="none" titlePosition="noTitle" id="602" userLabel="Status Box">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
+                    <view key="contentView">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="20"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField verticalHuggingPriority="750" id="737" userLabel="Tagged Files">
+                                <rect key="frame" x="0.0" y="1" width="44" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" alignment="right" placeholderString="(8,888)" usesSingleLineMode="YES" id="738">
+                                    <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="(#,###)" negativeFormat="" localizesFormat="NO" numberStyle="decimal" allowsFloats="NO" paddingCharacter="*" minimumIntegerDigits="0" maximumIntegerDigits="309" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="(" positiveSuffix=")" negativePrefix="-(" negativeSuffix=")" id="739"/>
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="-2" name="value" keyPath="countTaggedFiles" id="753"/>
+                                </connections>
+                            </textField>
+                            <textField verticalHuggingPriority="750" id="597" userLabel="No of Files">
+                                <rect key="frame" x="45" y="1" width="44" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" alignment="left" placeholderString="999,999" id="598">
+                                    <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="626"/>
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="73" name="value" keyPath="arrangedObjects.relativePath" id="655">
+                                        <dictionary key="options">
+                                            <string key="NSValueTransformerName">ArrayCountTransformer</string>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
+                            </textField>
+                            <textField verticalHuggingPriority="750" id="648">
+                                <rect key="frame" x="88" y="1" width="29" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Files" id="649">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" id="627">
+                                <rect key="frame" x="112" y="0.0" width="488" height="19"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <pathCell key="cell" controlSize="small" selectable="YES" alignment="left" id="628">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="backgroundColor" red="0.70979999999999999" green="0.83530000000000004" blue="1" alpha="0.5" colorSpace="deviceRGB"/>
+                                </pathCell>
+                                <connections>
+                                    <binding destination="-2" name="value" keyPath="currDir" id="674"/>
+                                    <outlet property="delegate" destination="-2" id="644"/>
+                                    <outlet property="menu" destination="694" id="725"/>
+                                </connections>
+                            </pathControl>
+                            <progressIndicator maxValue="100" displayedWhenStopped="NO" indeterminate="YES" style="bar" id="656">
+                                <rect key="frame" x="400" y="0.0" width="100" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                            </progressIndicator>
+                            <textField hidden="YES" autoresizesSubviews="NO" verticalHuggingPriority="750" id="734" userLabel="Static Text - Status Message">
+                                <rect key="frame" x="401" y="2" width="199" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" usesSingleLineMode="YES" id="735">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                    </view>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </box>
+            </subviews>
+        </customView>
+        <menu showsStateColumn="NO" autoenablesItems="NO" id="139" userLabel="Directory Context Menu">
+            <items>
+                <menuItem title="Open Dir" id="140">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openDirectory:" target="-2" id="145"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Reveal in Finder" id="495">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="revealDirInFinder:" target="-2" id="497"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Get Info" id="517">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="getDirInfo:" target="-2" id="520"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Show Target" hidden="YES" id="678">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showTargetDir:" target="-2" id="681"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Create Symlink" id="686">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="symlinkToDir:" target="-2" id="688"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="144"/>
+                <menuItem title="Copy Path to Clipboard" id="141">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="copyDirToClipboard:" target="-2" id="188"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Copy Dir" id="441">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="copyDir:" target="-2" id="473"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Open in Terminal" id="142">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openDirInTerminal:" target="-2" id="190"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Open in New Tab" id="479">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openDirInNewTab:" target="-2" id="481"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Make Root" id="490">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="setNewRoot:" target="-2" id="492"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="488"/>
+                <menuItem title="Add to Sidebar" id="487">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="addDirToSidebar:" target="-2" id="489"/>
+                    </connections>
+                </menuItem>
+            </items>
+        </menu>
+        <menu showsStateColumn="NO" autoenablesItems="NO" id="146" userLabel="File Context Menu">
+            <items>
+                <menuItem title="Open File" id="150">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openFile:" target="-2" id="152"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Open With" id="499">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="502"/>
+                <menuItem title="Reveal in Finder" id="493">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="revealFileInFinder:" target="-2" id="501"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Get Info" id="521">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="getFileInfo:" target="-2" id="523"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Show Package Contents" id="503">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showPackageContents:" target="-2" id="505"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Show Target" id="675">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showTarget:" target="-2" id="682"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Create Symlink" id="683">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="symlinkToFile:" target="-2" id="685"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="147"/>
+                <menuItem title="Copy Path" id="149">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="copyFileToClipboard:" target="-2" id="189"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Copy File Name" id="786">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="copyFileNameToClipboard:" target="-2" id="788"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Copy File" id="436">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="copyFile:" target="-2" id="438"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Copy tagged Files" id="439">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="copyTaggedFiles:" target="-2" id="443"/>
+                    </connections>
+                </menuItem>
+            </items>
+        </menu>
+        <menu showsStateColumn="NO" id="694" userLabel="Path Control Context Menu">
+            <items>
+                <menuItem title="Open Dir" id="704">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openPath:" target="-2" id="719"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Reveal in Finder" id="698">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="revealPathInFinder:" target="-2" id="720"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Get Info" id="697">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="getPathInfo:" target="-2" id="727"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="707"/>
+                <menuItem title="Copy Path to Clipboard" id="705">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="copyPathToClipboard:" target="-2" id="721"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Copy Dir" id="703">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="copyPath:" target="-2" id="722"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Open in Terminal" id="706">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openPathInTerminal:" target="-2" id="723"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Open in New Tab" id="702">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="openPathInNewTab:" target="-2" id="724"/>
+                    </connections>
+                </menuItem>
+            </items>
+        </menu>
+        <menu title="DirectoryViewHeaderMenu" id="550">
+            <connections>
+                <outlet property="delegate" destination="-2" id="551"/>
+            </connections>
+        </menu>
+        <menu title="FileViewHeaderMenu" id="524">
+            <connections>
+                <outlet property="delegate" destination="-2" id="549"/>
+            </connections>
+        </menu>
+        <textView editable="NO" selectable="NO" importsGraphics="NO" richText="NO" verticallyResizable="NO" findStyle="panel" spellingCorrection="YES" id="732" userLabel="Text View - No Visible Files">
+            <rect key="frame" x="0.0" y="0.0" width="394" height="49"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+            <size key="minSize" width="230" height="15"/>
+            <size key="maxSize" width="463" height="10000000"/>
+            <attributedString key="textStorage">
+                <fragment content=" No files satisfy File Specification">
+                    <attributes>
+                        <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                        <color key="NSColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <font key="NSFont" size="18" name="Menlo-Regular"/>
+                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                    </attributes>
+                </fragment>
+            </attributedString>
+            <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <size key="minSize" width="230" height="15"/>
+            <size key="maxSize" width="463" height="10000000"/>
+        </textView>
+    </objects>
+</document>

@@ -16,6 +16,8 @@ extern NSString *const PREF_FILE_ICON;
 extern NSString *const PREF_HIDDEN_FILES;
 extern NSString *const PREF_AUTOMATIC_REFRESH;
 extern NSString *const PREF_SPLIT_PERCENTAGE;
+extern NSString *const PREF_SPLIT_PERCENTAGE_H;
+extern NSString *const PREF_SPLIT_ORIENTATION;
 extern NSString *const PREF_DEFAULT_DIR;
 extern NSString *const PREF_REFRESH_DIR;
 
@@ -25,6 +27,13 @@ extern NSString *const PREF_FILE_COLUMN_ORDER;
 extern NSString *const PREF_DIR_COLUMN_WIDTH;
 extern NSString *const PREF_DIR_COLUMN_HIDDEN;
 extern NSString *const PREF_DIR_COLUMN_ORDER;
+
+extern NSString *const PREF_FILE_RIGHT_COLUMN_WIDTH;
+extern NSString *const PREF_FILE_RIGHT_COLUMN_HIDDEN;
+extern NSString *const PREF_FILE_RIGHT_COLUMN_ORDER;
+extern NSString *const PREF_DIR_LEFT_COLUMN_WIDTH;
+extern NSString *const PREF_DIR_LEFT_COLUMN_HIDDEN;
+extern NSString *const PREF_DIR_LEFT_COLUMN_ORDER;
 
 extern NSString *const PREF_DATE_WIDTH;
 extern NSString *const PREF_DATE_RELATIVE;

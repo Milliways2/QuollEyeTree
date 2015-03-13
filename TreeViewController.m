@@ -16,6 +16,7 @@
 #import "IBDateFormatter.h"
 #import "TextViewerController.h"
 
+NSImage *aliasBadge;
 NSPredicate *yesPredicate;
 NSPredicate *tagPredicate;
 NSPredicate *notEmptyPredicate;
@@ -58,6 +59,8 @@ NSPredicate *notEmptyPredicate;
 	self.countTaggedFiles = [taggedObjects count];
 }
 + (void)initialize {
+	aliasBadge = [[NSImage alloc] initWithContentsOfFile:@"/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AliasBadgeIcon.icns"];
+	[aliasBadge setSize:NSMakeSize(32, 32)];
 	yesPredicate = [NSPredicate predicateWithValue:YES];
 	tagPredicate = [NSPredicate predicateWithFormat:@"SELF.tag == YES"];
     notEmptyPredicate = [NSPredicate predicateWithFormat:@"(SELF.fileSize > 0) AND (SELF.isPackage == NO)"];
@@ -167,7 +170,7 @@ NSPredicate *notEmptyPredicate;
 }
 - (void)saveTableColumns {
     NSTableColumn *col;
-    NSArray * tables;
+    NSArray *tables;
     NSString *identifier;
     tables = [self.fileList tableColumns];
     NSMutableDictionary *columnWidths = [NSMutableDictionary dictionaryWithCapacity:[tables count]];
@@ -179,9 +182,16 @@ NSPredicate *notEmptyPredicate;
         [columnHidden setValue:[NSNumber numberWithBool:[col isHidden]] forKey:identifier];
         [columnOrder addObject:[col identifier]];
     }
-    [[NSUserDefaults standardUserDefaults] setObject:columnWidths forKey:PREF_FILE_COLUMN_WIDTH];
-    [[NSUserDefaults standardUserDefaults] setObject:columnHidden forKey:PREF_FILE_COLUMN_HIDDEN];
-    [[NSUserDefaults standardUserDefaults] setObject:columnOrder forKey:PREF_FILE_COLUMN_ORDER];
+	if (self.sidebyside) {
+		[[NSUserDefaults standardUserDefaults] setObject:columnWidths forKey:PREF_FILE_RIGHT_COLUMN_WIDTH];
+		[[NSUserDefaults standardUserDefaults] setObject:columnHidden forKey:PREF_FILE_RIGHT_COLUMN_HIDDEN];
+		[[NSUserDefaults standardUserDefaults] setObject:columnOrder forKey:PREF_FILE_RIGHT_COLUMN_ORDER];
+	}
+	else {
+		[[NSUserDefaults standardUserDefaults] setObject:columnWidths forKey:PREF_FILE_COLUMN_WIDTH];
+		[[NSUserDefaults standardUserDefaults] setObject:columnHidden forKey:PREF_FILE_COLUMN_HIDDEN];
+		[[NSUserDefaults standardUserDefaults] setObject:columnOrder forKey:PREF_FILE_COLUMN_ORDER];
+	}
     tables = [self.dirTree tableColumns];
     columnWidths = [NSMutableDictionary dictionaryWithCapacity:[tables count]];
     columnHidden = [NSMutableDictionary dictionaryWithCapacity:[tables count]];
@@ -191,9 +201,16 @@ NSPredicate *notEmptyPredicate;
         [columnHidden setValue:[NSNumber numberWithBool:[col isHidden]] forKey:[[col headerCell] title]];
         [columnOrder addObject:[col identifier]];
     }
-    [[NSUserDefaults standardUserDefaults] setObject:columnWidths forKey:PREF_DIR_COLUMN_WIDTH];
-    [[NSUserDefaults standardUserDefaults] setObject:columnHidden forKey:PREF_DIR_COLUMN_HIDDEN];
-    [[NSUserDefaults standardUserDefaults] setObject:columnOrder forKey:PREF_DIR_COLUMN_ORDER];
+	if (self.sidebyside) {
+		[[NSUserDefaults standardUserDefaults] setObject:columnWidths forKey:PREF_DIR_LEFT_COLUMN_WIDTH];
+		[[NSUserDefaults standardUserDefaults] setObject:columnHidden forKey:PREF_DIR_LEFT_COLUMN_HIDDEN];
+		[[NSUserDefaults standardUserDefaults] setObject:columnOrder forKey:PREF_DIR_LEFT_COLUMN_ORDER];
+	}
+	else {
+		[[NSUserDefaults standardUserDefaults] setObject:columnWidths forKey:PREF_DIR_COLUMN_WIDTH];
+		[[NSUserDefaults standardUserDefaults] setObject:columnHidden forKey:PREF_DIR_COLUMN_HIDDEN];
+		[[NSUserDefaults standardUserDefaults] setObject:columnOrder forKey:PREF_DIR_COLUMN_ORDER];
+	}
 }
 - (void)updateDateColumns:(NSNotification *)notification {
     NSString *identifier;
@@ -210,9 +227,13 @@ NSPredicate *notEmptyPredicate;
     NSString *identifier;
     NSTableColumn *col;
     NSDictionary *columnDefaults;
-    NSArray *tables = [self.fileList tableColumns];
-    NSDictionary *widths = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_DATE_WIDTH];
-    columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_FILE_COLUMN_WIDTH];
+	NSArray *columnOrder;
+	NSArray *tables;
+	NSDictionary *widths;
+
+	tables = [self.fileList tableColumns];
+	widths = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_DATE_WIDTH];
+	columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:self.sidebyside ? PREF_FILE_RIGHT_COLUMN_WIDTH : PREF_FILE_COLUMN_WIDTH];
     if (columnDefaults)
         for (col in tables) {
             identifier = [[col headerCell] title];
@@ -222,28 +243,29 @@ NSPredicate *notEmptyPredicate;
         for (identifier in widths) {
             [[self.fileList tableColumnWithIdentifier:identifier] setWidth:[[widths objectForKey:identifier] floatValue]];
         }
-    columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_FILE_COLUMN_HIDDEN];
+
+	columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:self.sidebyside ? PREF_FILE_RIGHT_COLUMN_HIDDEN : PREF_FILE_COLUMN_HIDDEN];
     if (columnDefaults)
         for (col in tables) {
             identifier = [[col headerCell] title];
             [col setHidden:[[columnDefaults objectForKey:identifier] boolValue]];
         }
-    NSArray *columnOrder = [[NSUserDefaults standardUserDefaults] arrayForKey:PREF_FILE_COLUMN_ORDER];
-    if (columnOrder) {
+	columnOrder = [[NSUserDefaults standardUserDefaults] arrayForKey:self.sidebyside ? PREF_FILE_RIGHT_COLUMN_ORDER : PREF_FILE_COLUMN_ORDER];
+	if (columnOrder) {
 		NSUInteger indx = 2;
-        for (NSUInteger index = indx; index < [columnOrder count]; index++) {
-            identifier = [columnOrder objectAtIndex:index];
-            NSInteger colIndex = [self.fileList columnWithIdentifier:identifier];
+		for (NSUInteger index = indx; index < [columnOrder count]; index++) {
+			identifier = [columnOrder objectAtIndex:index];
+			NSInteger colIndex = [self.fileList columnWithIdentifier:identifier];
 			if (colIndex < 0)	continue;
-            if (indx != colIndex)
+			if (indx != colIndex)
 				[self.fileList moveColumn:colIndex toColumn:indx];
 			indx++;
-        }
-        }
+		}
+	}
     [self.fileList sizeToFit];
 
     tables = [self.dirTree tableColumns];
-    columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_DIR_COLUMN_WIDTH];
+    columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:self.sidebyside ? PREF_DIR_LEFT_COLUMN_WIDTH : PREF_DIR_COLUMN_WIDTH];
     if (columnDefaults)
         for (col in tables) {
             identifier = [[col headerCell] title];
@@ -253,13 +275,13 @@ NSPredicate *notEmptyPredicate;
         for (identifier in widths) {
             [[self.dirTree tableColumnWithIdentifier:identifier] setWidth:[[widths objectForKey:identifier] floatValue]];
         }
-    columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:PREF_DIR_COLUMN_HIDDEN];
+    columnDefaults = [[NSUserDefaults standardUserDefaults] dictionaryForKey:self.sidebyside ? PREF_DIR_LEFT_COLUMN_HIDDEN : PREF_DIR_COLUMN_HIDDEN];
     if (columnDefaults)
         for (col in tables) {
             identifier = [[col headerCell] title];
             [col setHidden:[[columnDefaults objectForKey:identifier] boolValue]];
         }
-    columnOrder = [[NSUserDefaults standardUserDefaults] arrayForKey:PREF_DIR_COLUMN_ORDER];
+    columnOrder = [[NSUserDefaults standardUserDefaults] arrayForKey:self.sidebyside ? PREF_DIR_LEFT_COLUMN_ORDER : PREF_DIR_COLUMN_ORDER];
     if (columnOrder) {
 		NSUInteger indx = 1;
         for (NSUInteger index = indx; index < [columnOrder count]; index++) {
@@ -287,9 +309,23 @@ NSPredicate *notEmptyPredicate;
 	}
     [self.dirTree sizeToFit];
 }
+- (void)restoreSplit {
+	if (self.sidebyside) {
+		CGFloat defaultSplit = [[NSUserDefaults standardUserDefaults] floatForKey:PREF_SPLIT_PERCENTAGE_H];
+		[self.split setPosition:[self.split frame].size.width * defaultSplit ofDividerAtIndex:0];
+	} else {
+		CGFloat defaultSplit = [[NSUserDefaults standardUserDefaults] floatForKey:PREF_SPLIT_PERCENTAGE];
+		[self.split setPosition:[self.split frame].size.height * defaultSplit ofDividerAtIndex:0];
+	}
+}
+
 - (void)awakeFromNib {
-	CGFloat defaultSplit = [[NSUserDefaults standardUserDefaults] floatForKey:PREF_SPLIT_PERCENTAGE];
-	[self.split setPosition:[self.split frame].size.height * defaultSplit ofDividerAtIndex:0];
+//	[self restoreSplit];
+	self.sidebyside = [[NSUserDefaults standardUserDefaults]boolForKey:PREF_SPLIT_ORIENTATION];
+	[self.split setVertical:self.sidebyside];
+	[self restoreSplit];
+	[self restoreColumns];
+
 	// make our outline view appear with gradient selection, and behave like the Finder, iTunes, etc.
 	[self.dirTree setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleSourceList];
 	[self.split adjustSubviews];
@@ -365,7 +401,13 @@ NSPredicate *notEmptyPredicate;
 	[self.dirTree reloadData];
 	[self.arrayController rearrangeObjects];
 }
-
+- (void)toggleView {
+	[self.split setVertical:![self.split isVertical]];
+	self.sidebyside = !self.sidebyside;
+	[self restoreSplit];
+	[self.split adjustSubviews];
+	[self restoreColumns];
+}
 #pragma mark Delegate Actions - Services Support
 - (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard types:(NSArray *)types {
 	if (inFileView)

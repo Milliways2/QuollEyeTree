@@ -14,6 +14,7 @@
 }
 @property (unsafe_unretained) IBOutlet NSButton *sizeMode;
 @property (unsafe_unretained) IBOutlet NSButton *sizeTotalMode;
+@property (unsafe_unretained) IBOutlet NSMatrix *splitType;
 
 @property (unsafe_unretained) IBOutlet NSMatrix *sort;
 @property (unsafe_unretained) IBOutlet NSButton *ascending;
@@ -25,6 +26,7 @@
 @property (unsafe_unretained) IBOutlet IBPathPopUpButton *defaultPathButton;
 @property (unsafe_unretained) IBOutlet IBPathPopUpButton *refreshPathButton;
 
+- (IBAction)splitAppearance:(id)sender;
 - (IBAction)sortField:(id)sender;
 - (IBAction)sortDirection:(id)sender;
 - (IBAction)iconInDirectory:(id)sender;

@@ -46,6 +46,7 @@
 @property (unsafe_unretained) IBOutlet NSArrayController *arrayController;
 @property (unsafe_unretained) IBOutlet MyOutlineView *dirTree;
 @property (unsafe_unretained) IBOutlet NSTableView *fileList;
+@property (unsafe_unretained) BOOL sidebyside;
 @property (unsafe_unretained) IBOutlet NSPathControl *currentPath;
 @property (unsafe_unretained) IBOutlet NSProgressIndicator *progress;
 @property (unsafe_unretained) IBOutlet NSTextField *statusMessage;
@@ -70,6 +71,7 @@
 - (void)segControlClicked:(id)sender;
 - (void)togglePreviewPanel;
 - (void)toggleShowTagged;
+- (void)toggleView;
 // PreferencesController Actions
 - (void)saveTableColumns;
 @end

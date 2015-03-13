@@ -15,7 +15,7 @@
 static dispatch_queue_t refreshQueue;
 
 void refreshDirectories(NSArray *dirs, TreeViewController *tvc) {
-	dispatch_retain(refreshQueue);
+	dispatch_retain(refreshQueue);	// No supported 10.8
 	dispatch_async(refreshQueue, ^{
 		for(DirectoryItem *node in dirs) {
 			[node updateDirectory];

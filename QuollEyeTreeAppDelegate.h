@@ -28,5 +28,6 @@
 - (IBAction)toggleToolbarShown:(id)sender;
 - (IBAction)addNewTabAt:(id)sender;
 - (IBAction)toggleSidebar:(id)sender;
+- (IBAction)toggleView:(id)sender;
 
 @end
