@@ -17,16 +17,14 @@
 	}
 	return self;
 }
-// this method is only to enable DirectoryItem fullPath completion
+// this method is only to enable DirectoryItem fullPath completion (it overrides DirectoryItem fullPath)
 - (NSString *)fullPath {
 	return self.relativePath;
 }
-// Returns path to this Volume e.g. path with /Volumes/VOLUME_NAME or /
 - (NSString *)volumePath {
 	return [self.volumeRoot fullPath];
 }
-// Returns local path i.e. path with /Volumes stripped
-- (NSString *)localPath:(NSString *)path {
+- (NSString *)relativePathOnVolume:(NSString *)path {
 	NSRange range = [path rangeOfString:self.relativePath];
 	if (range.length)
 		return [path substringFromIndex:range.length+1];

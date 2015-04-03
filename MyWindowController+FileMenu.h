@@ -32,6 +32,7 @@
 
 - (IBAction)moveToTrash:(id)sender;
 - (IBAction)moveTaggedToTrash:(id)sender;
+- (IBAction)deleteTagged:(id)sender;
 - (IBAction)putBack:(id)sender;
 - (IBAction)copyFileTo:(id)sender;
 - (IBAction)moveFileTo:(id)sender;

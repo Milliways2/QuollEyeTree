@@ -10,6 +10,8 @@
 
 @interface DirectoryItem (Branch)
 - (NSMutableArray *)filesInBranch;
+/*! @brief log all subdirectories in Branch
+ */
 - (void)logBranch;
 - (NSArray *)directoriesInBranch;
 - (void)updateBranch;

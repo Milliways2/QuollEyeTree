@@ -230,31 +230,90 @@ extern NSPredicate *notEmptyPredicate;
     return YES;
 }
 
+// 2015-03-14 New delete - no Trash
+- (void)deleteTagged {
+	NSArray *taggedContents = [[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate];
+	NSString *prompt = [NSString stringWithFormat:@"Warning: This will permanently delete \"%lu\" files.", [taggedContents count]];
+	NSAlert *permremove = [NSAlert new];
+	[permremove setMessageText:prompt];
+	[permremove setAlertStyle:NSWarningAlertStyle];
+	[permremove addButtonWithTitle:@"Continue"];
+	[permremove addButtonWithTitle:@"Stop"];
+	NSInteger result = [permremove runModal];
+	if(result != NSAlertFirstButtonReturn) {
+		return;
+	}
+	[self.delegate treeViewController:self pauseRefresh:YES];
+	NSError *error = nil;
+	NSFileManager *fileManager = [NSFileManager new];
+	for (FileItem *node in taggedContents) {
+		if([fileManager removeItemAtPath:node.fullPath error:&error]) {
+			if (inBranch) {
+				NSMutableArray *files = [(DirectoryItem *)[node parent] files];
+				[files removeObject:node];
+			}
+			[self.filesInDir removeObject:node];
+			[self.arrayController rearrangeObjects];
+		} else {
+		 NSAlert *alert = [NSAlert alertWithError:error];
+		 [alert runModal];
+		}
+	}
+	[self.delegate treeViewController:self pauseRefresh:NO];
+}
+
+
 - (void)moveToTrash {
 	NSArray *selection = [self.arrayController selectedObjects];
 	if ([selection count] == 1) {
 		__block FileItem *node = [selection objectAtIndex:0];
         if (![self checkFileLocked:node])   return;
-		NSArray *filesToDelete = [NSArray arrayWithObject:node.url];
+
+//		NSArray *filesToDelete = [NSArray arrayWithObject:node.url];
+//		[self.delegate treeViewController:self pauseRefresh:YES];
+//		[[NSWorkspace sharedWorkspace] recycleURLs:filesToDelete
+//								 completionHandler:^(NSDictionary *newURLs, NSError *error) {
+//									 if (error == nil) {
+//                                         [[DeletedItems sharedDeletedItems] addWithPath:node.fullPath trashLocation:[[newURLs objectForKey:node.url] path]];
+//										 if (inBranch) {
+//											 NSMutableArray *files = [(DirectoryItem *)[node parent] files];
+//											 [files removeObject:node];
+//										 }
+//										 [self.filesInDir removeObject:node];
+//										 [self.arrayController rearrangeObjects];
+//                                         node = NULL;
+//									 }
+//									 else {
+//										 NSAlert *alert = [NSAlert alertWithError:error];
+//										 [alert runModal];
+//									 }
+//									 [self.delegate treeViewController:self pauseRefresh:NO];
+//								 } ];
+
+// 2015-03-13 test delete 10.8 or later
+		NSURL *deletedURL;
+		NSError *error;
 		[self.delegate treeViewController:self pauseRefresh:YES];
-		[[NSWorkspace sharedWorkspace] recycleURLs:filesToDelete
-								 completionHandler:^(NSDictionary *newURLs, NSError *error) {
-									 if (error == nil) {
-                                         [[DeletedItems sharedDeletedItems] addWithPath:node.fullPath trashLocation:[[newURLs objectForKey:node.url] path]];
-										 if (inBranch) {
-											 NSMutableArray *files = [(DirectoryItem *)[node parent] files];
-											 [files removeObject:node];
-										 }
-										 [self.filesInDir removeObject:node];
-										 [self.arrayController rearrangeObjects];
-                                         node = NULL;
-									 }
-									 else {
-										 NSAlert *alert = [NSAlert alertWithError:error];
-										 [alert runModal];
-									 }
-									 [self.delegate treeViewController:self pauseRefresh:NO];
-								 } ];
+		[[NSFileManager defaultManager] trashItemAtURL:node.url
+									  resultingItemURL:&deletedURL
+												 error:&error];
+		if (error == nil) {
+			[[DeletedItems sharedDeletedItems] addWithPath:node.fullPath
+											 trashLocation:deletedURL.path];
+			if (inBranch) {
+				NSMutableArray *files = [(DirectoryItem *)[node parent] files];
+				[files removeObject:node];
+			}
+			[self.filesInDir removeObject:node];
+			[self.arrayController rearrangeObjects];
+			node = NULL;
+		}
+		else {
+			NSAlert *alert = [NSAlert alertWithError:error];
+			[alert runModal];
+		}
+		[self.delegate treeViewController:self pauseRefresh:NO];
+
 	}
 }
 - (void)updateTargetNames:(id)sender target:(id)panel {
@@ -385,7 +444,9 @@ extern NSPredicate *notEmptyPredicate;
 - (void)exitFileViewer {
     [textViewer.view removeFromSuperview];
     textViewer = nil;
-	[self.splitViewTop setHidden:NO];	// 2014-12-07 restore Directory view
+//	[self.splitViewTop setHidden:NO];	// 2014-12-07 restore Directory view
+	[self.splitViewTop setHidden:self->inBranch];	// 2015-03-30 restore Directory view (fix for Branch View)
+
     [self.fileList.window makeFirstResponder:self.fileList];
 }
 

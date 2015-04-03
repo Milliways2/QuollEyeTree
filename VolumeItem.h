@@ -12,12 +12,21 @@
 @interface VolumeItem : NSObject {
 }
 
+/*! @brief This property contains the DirectoryItem which is the root directory of the Volume
+ */
 @property (strong) DirectoryItem *volumeRoot;
 @property (copy) NSString *relativePath;
 @property (assign) id parent;
 
 - (NSString *)fullPath;
+/*! @brief An NSString object containing the full path to this Volume e.g. path with leading /Volumes/VOLUME_NAME  or /
+ */
 - (NSString *)volumePath;
-- (NSString *)localPath:(NSString *)path;
+/*!	@brief	local path i.e. path with /Volumes stripped
+ @discussion	This is the path relative to the root of the volume
+ @param	path
+ @return	An NSString object containing the local path with /Volumes stripped
+*/
+- (NSString *)relativePathOnVolume:(NSString *)path;
 
 @end

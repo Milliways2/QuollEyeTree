@@ -6,4 +6,8 @@
 //
 //
 
+/*! @brief	Get size of a directory
+ @param	directoryToScan url of directory.
+ @return	An NSNumber object containing the size of a directory, formed by summing components.
+ */
 extern NSNumber *folderSize(NSURL *directoryToScan);

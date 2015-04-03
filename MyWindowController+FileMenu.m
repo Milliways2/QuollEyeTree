@@ -38,6 +38,9 @@
 - (IBAction)moveTaggedToTrash:(id)sender {
 	[currentTvc moveTaggedToTrash];
 }
+- (IBAction)deleteTagged:(id)sender {
+	[currentTvc deleteTagged];
+}
 - (IBAction)putBack:(id)sender {
 // This is a dummy so validateMenuItem: will populate the putBackMenu
 }

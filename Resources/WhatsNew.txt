@@ -1,5 +1,9 @@
 What's new since 1.0
 
+Version 2.04 2015-03-30
+- fixed View Branch followed by View File corrupted display (since 2.02)
+- added tagged File Delete, immediate (do not move to Trash)
+
 Version 2.03 2014-12-22
 - added Option for Directory and Files side by side
 - added arrow on icon of symlinks (OSX 10.8 or later)

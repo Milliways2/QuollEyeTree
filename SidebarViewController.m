@@ -175,11 +175,11 @@
 }
 
 #pragma mark Monitor Volumes
-- (void)addVolume:(NSString *)path {
+- (void)addSidebarVolume:(NSString *)path {
 	[treeController setSelectionIndexPath:devices];	// select devices Folder
 	[self addDirectoryToFolder:path];
 }
-- (void)removeVolume:(NSString *)path {
+- (void)removeSidebarVolume:(NSString *)path {
 	BaseNode *deviceNode = [[[treeController arrangedObjects] descendantNodeAtIndexPath:devices] representedObject];
 	NSUInteger i = 0;
 	for (BaseNode *volume in [deviceNode children]) {
@@ -200,10 +200,10 @@ void volumeEvents_callback(ConstFSEventStreamRef streamRef,
 	size_t i;
 	for(i=0; i<numEvents; i++){
 		if (eventFlags[i] == kFSEventStreamEventFlagMount) {
-			[sidebar addVolume:[(__bridge NSArray *)eventPaths objectAtIndex:i]];
+			[sidebar addSidebarVolume:[(__bridge NSArray *)eventPaths objectAtIndex:i]];
 		}
 		if (eventFlags[i] == kFSEventStreamEventFlagUnmount) {
-			[sidebar removeVolume:[(__bridge NSArray *)eventPaths objectAtIndex:i]];
+			[sidebar removeSidebarVolume:[(__bridge NSArray *)eventPaths objectAtIndex:i]];
 			[sidebar.delegate sidebarViewController:sidebar shouldRemoveVolume:[(__bridge NSArray *)eventPaths objectAtIndex:i]];	// notify delegate
 		}
 	}

@@ -102,8 +102,8 @@
 
 #pragma mark Button Actions
 - (IBAction)openReadMe:(id)sender {
-	NSString *fullPath = [[NSBundle mainBundle] pathForResource:@"ReadMe" ofType:@"txt"];
-	[[NSWorkspace sharedWorkspace] openFile:fullPath];
+	NSString *fullReadMePath = [[NSBundle mainBundle] pathForResource:@"ReadMe" ofType:@"txt"];
+	[[NSWorkspace sharedWorkspace] openFile:fullReadMePath];
 }
 
 - (IBAction)openPreferences:(id)sender {

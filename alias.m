@@ -16,7 +16,6 @@ NSURL *targetOfAlias(NSURL *url) {
 	return CFBridgingRelease(resolvedUrl);
 }
 
-// Check Alias (including Symbolic Links) to determine if these target Directories
 BOOL isAliasFolder(NSURL *url) {
 	id value = nil;
 	NSURL *target;

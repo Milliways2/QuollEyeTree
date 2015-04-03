@@ -8,6 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+/*! @class FileSystemItem
+
+ @brief The FileSystemItem class
+
+ @discussion    This is a base class containing common properties/methods to support Files and Directories.
+ @classdesign	This class should only be used when no distinction is needed betweeen Files and Directories.
+ */
 @interface FileSystemItem: NSObject {
     NSString *relativePath;
     id __unsafe_unretained parent;

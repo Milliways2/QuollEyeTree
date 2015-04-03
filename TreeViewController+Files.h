@@ -21,6 +21,7 @@
 
 - (void)moveToTrash;
 - (void)moveTaggedToTrash;
+- (void)deleteTagged;
 - (void)copyFileTo;
 - (void)moveFileTo;
 - (void)copyTaggedFilesTo;
