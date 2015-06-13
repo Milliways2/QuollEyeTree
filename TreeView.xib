@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14C1514" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment defaultVersion="1060" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TreeViewController">
@@ -21,7 +21,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <arrayController objectClassName="FileItem" editable="NO" selectsInsertedObjects="NO" clearsFilterPredicateOnInsertion="NO" automaticallyRearrangesObjects="YES" id="73" userLabel="FileListController">
             <declaredKeys>
                 <string>relativePath</string>
@@ -81,12 +81,7 @@
                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                 </tableHeaderCell>
                                                 <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="right" title="Text Cell" id="9">
-                                                    <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="#,##0" negativeFormat="#,##0" numberStyle="decimal" allowsFloats="NO" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="0" id="691">
-                                                        <real key="roundingIncrement" value="0.0"/>
-                                                        <metadata>
-                                                            <bool key="localizesFormat" value="YES"/>
-                                                        </metadata>
-                                                    </numberFormatter>
+                                                    <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="#,##0" negativeFormat="#,##0" numberStyle="decimal" allowsFloats="NO" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="691"/>
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -152,7 +147,7 @@
                                 <rect key="frame" x="1" y="359" width="598" height="14"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </scroller>
-                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="3">
+                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" controlSize="small" horizontal="NO" id="3">
                                 <rect key="frame" x="170" y="17" width="11" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </scroller>
@@ -175,7 +170,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="598" height="186"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                         <size key="intercellSpacing" width="3" height="2"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                         <tableColumns>
                                             <tableColumn identifier="tag" width="14" minWidth="14" maxWidth="14" id="225">
@@ -232,7 +227,6 @@
                                                         <decimal key="minimum" value="NaN"/>
                                                         <decimal key="maximum" value="NaN"/>
                                                         <metadata>
-                                                            <bool key="localizesFormat" value="YES"/>
                                                             <real key="inspectorSampleValue" value="1234.75"/>
                                                         </metadata>
                                                     </numberFormatter>
@@ -312,12 +306,12 @@
                                         </tableColumns>
                                         <connections>
                                             <binding destination="73" name="content" keyPath="arrangedObjects" id="111"/>
+                                            <binding destination="73" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="111" id="214"/>
                                             <binding destination="-2" name="doubleClickTarget" keyPath="self" id="367">
                                                 <dictionary key="options">
                                                     <string key="NSSelectorName">dClickFile:</string>
                                                 </dictionary>
                                             </binding>
-                                            <binding destination="73" name="selectionIndexes" keyPath="selectionIndexes" previousBinding="111" id="214"/>
                                             <binding destination="73" name="sortDescriptors" keyPath="sortDescriptors" previousBinding="214" id="215"/>
                                             <outlet property="delegate" destination="-2" id="231"/>
                                             <outlet property="keyDelegate" destination="-2" id="218"/>
@@ -331,7 +325,7 @@
                                 <rect key="frame" x="1" y="189" width="598" height="14"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </scroller>
-                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="60">
+                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" controlSize="small" horizontal="NO" id="60">
                                 <rect key="frame" x="224" y="17" width="11" height="102"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </scroller>
@@ -360,12 +354,7 @@
                                 <rect key="frame" x="0.0" y="1" width="44" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" alignment="right" placeholderString="(8,888)" usesSingleLineMode="YES" id="738">
-                                    <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="(#,###)" negativeFormat="" localizesFormat="NO" numberStyle="decimal" allowsFloats="NO" minimumIntegerDigits="0" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="0" positivePrefix="(" positiveSuffix=")" negativePrefix="-(" negativeSuffix=")" id="739">
-                                        <real key="roundingIncrement" value="0.0"/>
-                                        <metadata>
-                                            <bool key="localizesFormat" value="NO"/>
-                                        </metadata>
-                                    </numberFormatter>
+                                    <numberFormatter key="formatter" formatterBehavior="custom10_4" positiveFormat="(#,###)" negativeFormat="" localizesFormat="NO" numberStyle="decimal" allowsFloats="NO" paddingCharacter="*" minimumIntegerDigits="0" maximumIntegerDigits="309" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="(" positiveSuffix=")" negativePrefix="-(" negativeSuffix=")" id="739"/>
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -378,12 +367,7 @@
                                 <rect key="frame" x="45" y="1" width="44" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" alignment="left" placeholderString="999,999" id="598">
-                                    <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="626">
-                                        <real key="roundingIncrement" value="0.0"/>
-                                        <metadata>
-                                            <bool key="localizesFormat" value="YES"/>
-                                        </metadata>
-                                    </numberFormatter>
+                                    <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="626"/>
                                     <font key="font" metaFont="smallSystem"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

@@ -251,6 +251,7 @@
 		3CE391871578450300B85577 /* Filter.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CE391861578450300B85577 /* Filter.png */; };
 		3CF52D9D1566052D0029AE7D /* TreeViewController+Filter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF52D9C1566052D0029AE7D /* TreeViewController+Filter.m */; };
 		3CF52DA9156C5C0F0029AE7D /* NSDate+Today.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF52DA8156C5C0F0029AE7D /* NSDate+Today.m */; };
+		3CF552821AEB2453006F9D4A /* volumeForPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF552811AEB2453006F9D4A /* volumeForPath.m */; };
 		3CF72BBF1588679600E63E73 /* SearchPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CF72BBE1588679600E63E73 /* SearchPanelController.m */; };
 		3CF72BC115886BF000E63E73 /* SearchPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3CF72BC015886BF000E63E73 /* SearchPanel.xib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -401,6 +402,8 @@
 		3CF52D9C1566052D0029AE7D /* TreeViewController+Filter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TreeViewController+Filter.m"; sourceTree = "<group>"; };
 		3CF52DA7156C5C0F0029AE7D /* NSDate+Today.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Today.h"; sourceTree = "<group>"; };
 		3CF52DA8156C5C0F0029AE7D /* NSDate+Today.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Today.m"; sourceTree = "<group>"; };
+		3CF552801AEB2453006F9D4A /* volumeForPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = volumeForPath.h; sourceTree = "<group>"; };
+		3CF552811AEB2453006F9D4A /* volumeForPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = volumeForPath.m; sourceTree = "<group>"; };
 		3CF72BBD1588679600E63E73 /* SearchPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPanelController.h; sourceTree = "<group>"; };
 		3CF72BBE1588679600E63E73 /* SearchPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchPanelController.m; sourceTree = "<group>"; };
 		3CF72BC015886BF000E63E73 /* SearchPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchPanel.xib; sourceTree = "<group>"; };
@@ -752,6 +755,8 @@
 				3C68F6CE145CBD9C009C8762 /* VolumeItem.m */,
 				3CB0A4FD1643F062007369C9 /* volume.h */,
 				3C7554AB15DB74B6006A795F /* volume.m */,
+				3CF552801AEB2453006F9D4A /* volumeForPath.h */,
+				3CF552811AEB2453006F9D4A /* volumeForPath.m */,
 			);
 			name = Volumes;
 			sourceTree = "<group>";
@@ -1147,6 +1152,7 @@
 				3C68F50A145A9637009C8762 /* SidebarViewController.m in Sources */,
 				3C68F50D145A9658009C8762 /* BaseNode.m in Sources */,
 				3C68F6CF145CBD9C009C8762 /* VolumeItem.m in Sources */,
+				3CF552821AEB2453006F9D4A /* volumeForPath.m in Sources */,
 				3C9AD515149863A400AFD274 /* RenamePanelController.m in Sources */,
 				3C9AD710149C20C000AFD274 /* FolderPanelController.m in Sources */,
 				3C4E81DD14A02A2A00C07CAE /* TreeViewController+Copy.m in Sources */,
@@ -1277,6 +1283,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_MODEL_TUNING = G5;
@@ -1295,6 +1302,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

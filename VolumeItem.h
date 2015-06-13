@@ -24,7 +24,7 @@
 - (NSString *)volumePath;
 /*!	@brief	local path i.e. path with /Volumes stripped
  @discussion	This is the path relative to the root of the volume
- @param	path
+ @param	path A string object containing an absolute path
  @return	An NSString object containing the local path with /Volumes stripped
 */
 - (NSString *)relativePathOnVolume:(NSString *)path;

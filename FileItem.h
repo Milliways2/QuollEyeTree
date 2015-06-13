@@ -9,9 +9,16 @@
 #import <Cocoa/Cocoa.h>
 #import "FileSystemItem.h"
 
+/*! @class FileItem
+
+ @brief The FileItem class
+
+ @discussion    This class containing common properties/methods to support Files.
+ */
 @interface FileItem: FileSystemItem {
 }
 
+/*! @brief size of file */
 @property (strong) NSNumber *fileSize;
 @property (assign) BOOL tag;
 

@@ -12,6 +12,7 @@
 @end
 
 @interface MyTextView : NSTextView
-@property (assign) IBOutlet NSObject <MyTextViewDelegate> *delegate;
+//@property (assign) IBOutlet NSObject <MyTextViewDelegate> *delegate;
+@property (assign) IBOutlet id delegate;
 - (NSRange)visibleRange;
 @end

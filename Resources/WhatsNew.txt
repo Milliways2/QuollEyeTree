@@ -1,5 +1,9 @@
 What's new since 1.0
 
+Version 2.05 2015-05-07
+- changed logging to enhance responsiveness
+- added	Internal documentation
+
 Version 2.04 2015-03-30
 - fixed View Branch followed by View File corrupted display (since 2.02)
 - added tagged File Delete, immediate (do not move to Trash)

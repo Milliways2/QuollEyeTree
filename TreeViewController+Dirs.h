@@ -9,6 +9,10 @@
 #import <Cocoa/Cocoa.h>
 #import "TreeViewController.h"
 
+/*!
+ @category TreeViewController(Dirs)
+ @discussion A collection of methods for operating on Directories or Directory Tree
+ */
 @interface TreeViewController(Dirs)
 
 // Menu Actions

@@ -3,7 +3,7 @@
 //  QuollEyeTree
 //
 //  Created by Ian Binnie on 2/10/11.
-//  Copyright 2011-2013 Ian Binnie. All rights reserved.
+//  Copyright 2011-2015 Ian Binnie. All rights reserved.
 //
 
 #import "TreeViewController+Dirs.h"
@@ -388,7 +388,9 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 	}];
 }
 - (void)expandDir:(id)item {
+//	NSLog(@"expandDir %@", [(DirectoryItem *)item loggedSubDirectories]);
 	if ([item isDirPlus1Loaded])	return;	// already Loaded
+//	NSLog(@"Not Loaded");
 	[self runBlockOnQueue:^{
 		[item logDirPlus1];
 		[[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -507,8 +509,6 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 				NSImage *fileIcon = [[NSWorkspace sharedWorkspace] iconForFile:[item fullPath]];
 				[item setNodeIcon:fileIcon];
 				if([item isAlias]) {	// Check for alias
-//					NSImage *aliasBadge = [[NSImage alloc] initWithContentsOfFile:@"/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AliasBadgeIcon.icns"];
-//					[aliasBadge setSize:[fileIcon size]];
 					if ([NSImage respondsToSelector:@selector(imageWithSize:flipped:drawingHandler:)]) {
 						NSImage *badgedFileIcon = [NSImage imageWithSize:fileIcon.size flipped:NO
 														  drawingHandler:^BOOL (NSRect dstRect){
@@ -550,7 +550,8 @@ void getAllMatching(DirectoryItem *source, DirectoryItem *target, NSMutableArray
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item {
-    return (item == nil) ? YES : ([item numberOfSubDirs] != 0);
+//    return (item == nil) ? YES : ([item numberOfSubDirs] != 0);
+	return (item == nil) ? YES : [(DirectoryItem *)item isDirectoryExpandable];
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {

@@ -15,6 +15,22 @@
 @class RenamePanelController;
 @class TextViewerController;
 @class OpenWith;
+/*!
+ @indexgroup ViewController
+*/
+
+/*!
+ @class TreeViewController
+ @brief The TreeViewController class
+
+ @discussion    This class is the QuollEyeTree ViewController which controls:-
+
+  Directory Window - a tree display of Directories.
+
+  File Window - a list of Files in the currently selected Directory.
+ 
+  Status Bar - the path of the current directory and file count.
+ */
 
 @interface TreeViewController : NSViewController <NSMenuDelegate, MyOutlineViewDelegate> {
 	DirectoryItem *__unsafe_unretained dataRoot;

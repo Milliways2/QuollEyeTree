@@ -10,7 +10,6 @@
 extern NSArray *fileSortDescriptor;
 
 @interface DirectoryItem()
-- (void)loadSubDirectories;
 - (BOOL)isLeafNode;
 @end
 

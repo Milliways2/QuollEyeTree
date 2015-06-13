@@ -13,6 +13,9 @@
 /*! @brief log all subdirectories in Branch
  */
 - (void)logBranch;
+/*! @brief get all logged subdirectories in Branch
+ @return NSArray containing all logged SubDirectories in the Branch.
+ */
 - (NSArray *)directoriesInBranch;
 - (void)updateBranch;
 

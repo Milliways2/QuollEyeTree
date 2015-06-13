@@ -11,7 +11,7 @@
  */
 extern NSString *getTarget(NSString *fPath);
 /*! @brief	Check Alias (including Symbolic Links) to determine if these target Directories
- @param	url url of Alias/symlink
- @return	BOOL
+ @param	url URL of Alias/symlink
+ @return	YES if Alias is a Directories
  */
 extern BOOL isAliasFolder(NSURL *url);
