@@ -45,6 +45,7 @@ extern NSString *const PREF_COMPARE_COMMAND;
 extern NSString *const DEFAULT_COMPARE_COMMAND;
 extern NSString *const PREF_EDIT_COMMAND;
 extern NSString *const DEFAULT_EDIT_COMMAND;
+extern NSString *const PREF_BATCH_CMD;
 
 extern NSString *const PreferencesControllerDateWidthsDidChangeNotification;
 extern NSString *const DirectoryItemDidRemoveDirectoriesNotification;

@@ -64,7 +64,16 @@ NSPredicate *notEmptyPredicate;
 	yesPredicate = [NSPredicate predicateWithValue:YES];
 	tagPredicate = [NSPredicate predicateWithFormat:@"SELF.tag == YES"];
     notEmptyPredicate = [NSPredicate predicateWithFormat:@"(SELF.fileSize > 0) AND (SELF.isPackage == NO)"];
-	[NSApp registerServicesMenuSendTypes:[NSArray arrayWithObjects:(__bridge NSString *)kUTTypeDirectory, (__bridge NSString *)kUTTypeFileURL, nil] returnTypes:nil];
+//	[NSApp registerServicesMenuSendTypes:[NSArray arrayWithObjects:(__bridge NSString *)kUTTypeDirectory,
+//										  (__bridge NSString *)kUTTypeFileURL,
+//										  nil]
+//							 returnTypes:nil];
+	[NSApp registerServicesMenuSendTypes:[NSArray arrayWithObjects:(__bridge NSString *)kUTTypeDirectory,
+										  (__bridge NSString *)kUTTypeFileURL,
+										  nil]
+							 returnTypes:[NSArray arrayWithObjects:(__bridge NSString *)kUTTypeDirectory,
+										  (__bridge NSString *)kUTTypeFileURL,
+										  nil]];
 }
 - (void)setRoot {
 	[self setTreeRootNode:[self.selectedDir rootDir]];

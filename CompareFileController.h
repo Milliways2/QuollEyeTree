@@ -14,8 +14,8 @@
 @property (assign) IBOutlet NSComboBox *name;
 @property (assign) IBOutlet NSComboBox *destComboBox;
 @property (assign) id delegate;
-- (IBAction)cancelCopy:(id)sender;
-- (IBAction)performCopy:(id)sender;
+- (IBAction)cancelCompare:(id)sender;
+- (IBAction)performCompare:(id)sender;
 - (IBAction)targetDirSelected:(id)sender;
 
 - (NSInteger)runModal;

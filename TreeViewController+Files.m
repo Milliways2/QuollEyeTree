@@ -41,6 +41,7 @@ extern NSPredicate *notEmptyPredicate;
 - (void)copyTaggedTo:(NSArray *)objectsToCopy;
 - (void)moveTaggedTo:(NSArray *)objectsToCopy;
 - (void)renameTaggedTo:(NSArray *)objects;
+- (void)batchForTagged:(NSArray *)objectsToCopy;
 - (void)symlinkTo:(FileSystemItem *)node;
 @end
 
@@ -98,7 +99,7 @@ extern NSPredicate *notEmptyPredicate;
 	return[[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate];
 }
 - (void)searchTagged {
-    NSArray *objectsToSearch = [[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate];
+	NSArray *objectsToSearch = self.taggedFiles;
 	SearchPanelController *searchPanel = [SearchPanelController singleton];
     NSUInteger noObjects = [objectsToSearch count];
 	if ([searchPanel runModal] == NSOKButton) {
@@ -158,8 +159,7 @@ extern NSPredicate *notEmptyPredicate;
     [self copyTo:node];
 }
 - (void)copyTaggedFilesTo {
-	NSArray *objectsToCopy = [[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate];
-	[self copyTaggedTo:objectsToCopy];
+	[self copyTaggedTo:self.taggedFiles];
 }
 - (void)moveFileTo {
     FileItem *node = [self selectedFile];
@@ -176,8 +176,11 @@ extern NSPredicate *notEmptyPredicate;
     [self renameTo:node];
 }
 - (void)renameTaggedFilesTo {
-	NSArray *objectsToRename = [[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate];
-	[self renameTaggedTo:objectsToRename];
+	[self renameTaggedTo:self.taggedFiles];
+}
+// New 2015-06-19
+- (void)batchForTaggedFiles {
+	[self batchForTagged:self.taggedFiles];
 }
 - (void)moveTaggedToTrash {
 	NSArray *taggedContents = [[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate];
@@ -262,34 +265,11 @@ extern NSPredicate *notEmptyPredicate;
 	[self.delegate treeViewController:self pauseRefresh:NO];
 }
 
-
 - (void)moveToTrash {
 	NSArray *selection = [self.arrayController selectedObjects];
 	if ([selection count] == 1) {
 		__block FileItem *node = [selection objectAtIndex:0];
         if (![self checkFileLocked:node])   return;
-
-//		NSArray *filesToDelete = [NSArray arrayWithObject:node.url];
-//		[self.delegate treeViewController:self pauseRefresh:YES];
-//		[[NSWorkspace sharedWorkspace] recycleURLs:filesToDelete
-//								 completionHandler:^(NSDictionary *newURLs, NSError *error) {
-//									 if (error == nil) {
-//                                         [[DeletedItems sharedDeletedItems] addWithPath:node.fullPath trashLocation:[[newURLs objectForKey:node.url] path]];
-//										 if (inBranch) {
-//											 NSMutableArray *files = [(DirectoryItem *)[node parent] files];
-//											 [files removeObject:node];
-//										 }
-//										 [self.filesInDir removeObject:node];
-//										 [self.arrayController rearrangeObjects];
-//                                         node = NULL;
-//									 }
-//									 else {
-//										 NSAlert *alert = [NSAlert alertWithError:error];
-//										 [alert runModal];
-//									 }
-//									 [self.delegate treeViewController:self pauseRefresh:NO];
-//								 } ];
-
 // 2015-03-13 test delete 10.8 or later
 		NSURL *deletedURL;
 		NSError *error;
@@ -701,6 +681,10 @@ extern NSPredicate *notEmptyPredicate;
         [self viewFiles:[[self.arrayController arrangedObjects] filteredArrayUsingPredicate:tagPredicate]];
 		return YES;
 	}
+//	if (character == 'b') {
+//		[self batchForTaggedFiles];
+//		return YES;
+//	}
 	return NO;
 }
 - (void)validateTableContextMenu:(NSMenu *)menu {

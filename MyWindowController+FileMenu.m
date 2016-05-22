@@ -79,6 +79,10 @@
 	[currentTvc renameTaggedFilesTo];
 }
 
+- (IBAction)batchForTaggedFiles:(id)sender {
+	[currentTvc batchForTaggedFiles];
+}
+
 
 // Dir Menu Actions
 - (IBAction)copyDirTo:(id)sender {

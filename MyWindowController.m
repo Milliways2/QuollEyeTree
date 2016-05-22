@@ -124,33 +124,6 @@ NSOperationQueue *loggingQueue = nil;
 	TreeViewController *tvcNew = [[TreeViewController alloc]
 								  initWithNibName:@"TreeView"
 								  bundle:nil];
-
-//	TreeViewController *tvcNew;
-//	if([[NSUserDefaults standardUserDefaults]boolForKey:PREF_SPLIT_ORIENTATION]) {
-//		tvcNew = [[TreeViewController alloc]
-//				  initWithNibName:@"TreeViewV"
-//				  bundle:nil];
-//		tvcNew.sidebyside = TRUE;
-//	}
-//	else {
-//		tvcNew = [[TreeViewController alloc]
-//				  initWithNibName:@"TreeView"
-//				  bundle:nil];
-//		tvcNew.sidebyside = FALSE;
-//	}
-
-//#ifdef VERTICAL_VIEW
-//	TreeViewController *tvcNew = [[TreeViewController alloc]
-//								  initWithNibName:@"TreeViewV"
-//								  bundle:nil];
-//	tvcNew.sidebyside = TRUE;
-//#else
-//	TreeViewController *tvcNew = [[TreeViewController alloc]
-//								  initWithNibName:@"TreeView"
-//								  bundle:nil];
-//	tvcNew.sidebyside = FALSE;
-//#endif
-//	NSLog(@"newTreeViewControllerAtDir");
 	tvcNew.delegate = self;
 	[tvcNew initWithDir:userDir];
 	return tvcNew;
@@ -204,9 +177,10 @@ NSOperationQueue *loggingQueue = nil;
 	return self;
 }
 
+/*! @brief This method receives Automator Action QETNotification (sent by OpeninQuollEyeTree
+ */
 - (void)doAutomatorAction:(NSNotification *)notification {
     id dir = [[notification userInfo] valueForKey:@"Directory"];
-//	NSLog(@"%@", dir);
     NSString *path = [dir objectAtIndex:0];
     [self selectDirectory:path inTab:YES];
 }

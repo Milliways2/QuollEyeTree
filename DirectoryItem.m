@@ -503,9 +503,6 @@ static NSArray *properties = nil;
 		return (_subDirectories == leafNode ? NO : [_subDirectories count]>0);
 	}
 	return [[self subDirectories] count]>0;	// Log Directory
-//	if(!self.isAlias)	return [[self subDirectories] count]>0;	// Log Directory if not Alias
-//	if ([[self.rootDir fullPath] isEqualToString:volumeForPath(getTarget([self fullPath]))]) return [[self subDirectories] count]>0;
-//	return NO;	// Don't expand Alias if on different Volume
 }
 
 @end

@@ -37,6 +37,7 @@
                               @"NO", PREF_DATE_SHOW_CREATE,
 							  DEFAULT_COMPARE_COMMAND, PREF_COMPARE_COMMAND,
 							  DEFAULT_EDIT_COMMAND, PREF_EDIT_COMMAND,
+							  @"%1", PREF_BATCH_CMD,
 							  nil];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 

@@ -16,11 +16,11 @@
 	}
 	return self;
 }
-- (IBAction)cancelCopy:(id)sender {
+- (IBAction)cancelCompare:(id)sender {
 	[self close];
 	[NSApp stopModalWithCode:NSCancelButton];
 }
-- (IBAction)performCopy:(id)sender {
+- (IBAction)performCompare:(id)sender {
 	[self close];
 	[NSApp stopModalWithCode:NSOKButton];
 }

@@ -1,8 +1,11 @@
 What's new since 1.0
 
-Version 2.05 2015-05-07
+Version 2.05 2016-05-22
+- added Batch command
 - changed logging to enhance responsiveness
 - added	Internal documentation
+- changed Refresh to NSOperationQueue
+- added	PREVIOUS_RELEASE FOR pre 10.9 to Target QuollEyeTree2
 
 Version 2.04 2015-03-30
 - fixed View Branch followed by View File corrupted display (since 2.02)
@@ -16,7 +19,7 @@ Version 2.02 2014-12-07
 - fixed Directory shading print through in TextView on Yosemite
 - added Delete Chracter '/' to Rename/Copy?Move
 - added Go Back to previous tab content (removed 2014-10-08)
-- fixed F3 refresh Branch did not refresh Dir contents 
+- fixed F3 refresh Branch did not refresh Dir contents
 
 Version 2.01 2014-02-09
 - added Edit File commands

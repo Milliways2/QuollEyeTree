@@ -50,7 +50,6 @@ NSArray *sortColumns;
 - (IBAction)percentageSplit:(id)sender {
 	[[NSUserDefaults standardUserDefaults]
 	 setFloat:[self.percentage floatValue]
-//	 forKey:PREF_SPLIT_PERCENTAGE];
 	 forKey:[[[(QuollEyeTreeAppDelegate *)[NSApp delegate] myWindowController] currentTvc] sidebyside]
 			 ? PREF_SPLIT_PERCENTAGE_H : PREF_SPLIT_PERCENTAGE ];
 }

@@ -12,6 +12,7 @@
 
 @class DirectoryItem;
 @class CopyPanelController;
+@class BatchPanelController;
 @class RenamePanelController;
 @class TextViewerController;
 @class OpenWith;
@@ -46,6 +47,7 @@
 	CopyPanelController *copyPanel;
 	RenamePanelController *renamePanel;
     TextViewerController *textViewer;
+	BatchPanelController *batchPanel;
     OpenWith *openWithClass;    // need to hang on to class for ARC
     NSArray *filesToView;
     NSUInteger currentFileToView;

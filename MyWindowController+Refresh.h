@@ -9,6 +9,10 @@
 #import <Cocoa/Cocoa.h>
 #import "MyWindowController.h"
 
+/*!
+ @category MyWindowController(Refresh)
+ @discussion A collection of methods for refreshing TreeView display
+ */
 @interface MyWindowController(Refresh)
 
 - (void)startMonitoring;

@@ -43,6 +43,7 @@
 - (IBAction)compareFile:(id)sender;
 - (IBAction)editFile:(id)sender;
 - (IBAction)editTaggedFiles:(id)sender;
+- (IBAction)batchForTaggedFiles:(id)sender;
 // Dir Context & Menu Actions
 - (IBAction)openDirectory:(id)sender;
 - (IBAction)copyDir:(id)sender;

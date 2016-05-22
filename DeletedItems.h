@@ -21,6 +21,4 @@
 - (NSMenu *)restoreMenu;
 
 @property id delegate;
-//@property (copy) NSString *dataFile;
-//@property (retain) NSMutableArray *items;
 @end

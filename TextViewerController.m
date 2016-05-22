@@ -184,7 +184,7 @@ static NSStringEncoding encodingForData(NSData *data) {
     [self findBefore:[myTextView visibleRange].location];    // find last before startOfScreen 
     [self showFound];
 }
-
+#ifdef PREVIOUS_RELEASE
 BOOL lionSupport(void) {
     SInt32 major, minor;
     Gestalt(gestaltSystemVersionMajor, &major);
@@ -192,6 +192,7 @@ BOOL lionSupport(void) {
     if(major>=10 &&  minor>=7) return YES;
     return NO;
 }
+#endif
 
 - (BOOL)keyPressedInTextView:(NSEvent *)theEvent {
 	unichar keyChar = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
@@ -209,7 +210,11 @@ BOOL lionSupport(void) {
 	}
     if (keyChar == 'f') {
         SearchPanelController *searchPanel = [SearchPanelController singleton];
-        [searchPanel allowRegex:lionSupport()];
+#ifdef PREVIOUS_RELEASE
+       [searchPanel allowRegex:lionSupport()];
+#else
+		[searchPanel allowRegex:YES];
+#endif
         if ([searchPanel runModal] == NSOKButton) {
             if(searchPanel.searchString)
                 [self searchFirst:searchPanel.searchString regexSearch:searchPanel.regexSearch caseSensitive:searchPanel.isCaseSensitive];
