@@ -12,6 +12,10 @@
 @interface NSString(Rename)
 
 - (NSString *)stringByRenamingingPathComponent:(NSString *)renameFilter;
+/*! @brief  Rename the last path component (abc.xyz) of the receiver in accordance with the renameFilter
+ @discussion The mask may contain * ? or / (which deletes the character at that position)
+ @param	renameFilter containing the rename mask
+ */
 - (NSString *)stringByRenamingingLastPathComponent:(NSString *)renameFilter;
 
 @end

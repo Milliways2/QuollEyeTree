@@ -1,5 +1,10 @@
 What's new since 1.0
 
+Version 2.06 2016-11-26
+- fixed Rename/Copy/Move did not allow adjacent Delete Chracters '/'
+- added	Rename retain mask
+
+
 Version 2.05 2016-05-22
 - added Batch command
 - changed logging to enhance responsiveness
@@ -17,7 +22,7 @@ Version 2.03 2014-12-22
 
 Version 2.02 2014-12-07
 - fixed Directory shading print through in TextView on Yosemite
-- added Delete Chracter '/' to Rename/Copy?Move
+- added Delete Chracter '/' to Rename/Copy/Move
 - added Go Back to previous tab content (removed 2014-10-08)
 - fixed F3 refresh Branch did not refresh Dir contents
 

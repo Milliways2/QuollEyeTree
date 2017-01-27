@@ -3,7 +3,7 @@
 //  FileSpecTest
 //
 //  Created by Ian Binnie on 15/10/11.
-//  Copyright 2011 Ian Binnie. All rights reserved.
+//  Copyright 2011-2016 Ian Binnie. All rights reserved.
 //
 
 #import "NSString+Rename.h"
@@ -40,9 +40,15 @@ NSString *const DEL_CHAR_MARKER = @"\0";
 
 }
 
+// 2016-11-26 Previous version did not allow adjacent "/" deletes in mask
 - (NSString *)stringByRenamingingLastPathComponent:(NSString *)renameFilter {
-	NSString *filename = [[self stringByDeletingPathExtension] stringByRenamingingPathComponent:[renameFilter stringByDeletingPathExtension]];
-	NSString *ext = [[self pathExtension] stringByRenamingingPathComponent:[renameFilter pathExtension]];
+	NSRange extDivider = [renameFilter rangeOfString:@"." options:NSBackwardsSearch];
+	if(extDivider.length == 0 || extDivider.location == 0) {	// No extension in Mask, or leading .
+		return [[self stringByDeletingPathExtension] stringByRenamingingPathComponent:renameFilter];	// Name
+	}
+
+	NSString *filename = [[self stringByDeletingPathExtension] stringByRenamingingPathComponent:[renameFilter substringToIndex:extDivider.location]];	// Name
+	NSString *ext = [[self pathExtension] stringByRenamingingPathComponent:[renameFilter substringFromIndex:extDivider.location+1]];	// Ext
 	if ([ext length])
 		return [filename stringByAppendingPathExtension:ext];
 	return filename;

@@ -54,20 +54,18 @@ static NSArray *properties = nil;
 	showHiddenFiles = [[NSUserDefaults standardUserDefaults] boolForKey:PREF_HIDDEN_FILES];
 }
 + (void)initialize {
-//	if (self == [DirectoryItem class]) {
-        leafNode = [[NSMutableArray alloc] init];
-		[self loadPreferences];
-        properties = [NSArray arrayWithObjects:
-                      NSURLNameKey,
-                      NSURLFileSizeKey, NSURLIsAliasFileKey, NSURLIsPackageKey,
-                      NSURLIsDirectoryKey, NSURLIsSymbolicLinkKey, NSURLIsRegularFileKey,
-                      NSURLCreationDateKey, NSURLContentModificationDateKey,
-                      NSURLLocalizedTypeDescriptionKey, nil];
-		dirSortDescriptor = [NSArray arrayWithObject:
-                             [[NSSortDescriptor alloc] initWithKey:COLUMNID_NAME
-                                                         ascending:YES
-                                                          selector:@selector(localizedStandardCompare:)]];
-//    }
+	leafNode = [[NSMutableArray alloc] init];
+	[self loadPreferences];
+	properties = [NSArray arrayWithObjects:
+				  NSURLNameKey,
+				  NSURLFileSizeKey, NSURLIsAliasFileKey, NSURLIsPackageKey,
+				  NSURLIsDirectoryKey, NSURLIsSymbolicLinkKey, NSURLIsRegularFileKey,
+				  NSURLCreationDateKey, NSURLContentModificationDateKey,
+				  NSURLLocalizedTypeDescriptionKey, nil];
+	dirSortDescriptor = [NSArray arrayWithObject:
+						 [[NSSortDescriptor alloc] initWithKey:COLUMNID_NAME
+													 ascending:YES
+													  selector:@selector(localizedStandardCompare:)]];
 }
 
 - (DirectoryItem *)rootDir {

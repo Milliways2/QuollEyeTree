@@ -36,7 +36,7 @@ NSPredicate *notEmptyPredicate;
 - (void)applyFileAndTagFilter:(NSPredicate *)filePredicate;
 @end
 @interface TreeViewController(Filter)
-- (void) checkFilter;
+- (void)checkFilter;
 @end
 @interface TreeViewController(Files)
 - (FileItem *)selectedFile;
@@ -44,10 +44,10 @@ NSPredicate *notEmptyPredicate;
 @end
 @interface TreeViewController(Dirs)
 - (void)updateSelectedDir;
--(IBAction)setNewRoot:(id)sender;
+- (IBAction)setNewRoot:(id)sender;
 @end
 @interface TreeViewController(Copy)
-- (void) runBlockOnQueue:(void (^)(void))block;
+- (void)runBlockOnQueue:(void (^)(void))block;
 @end
 
 @implementation TreeViewController
@@ -64,10 +64,6 @@ NSPredicate *notEmptyPredicate;
 	yesPredicate = [NSPredicate predicateWithValue:YES];
 	tagPredicate = [NSPredicate predicateWithFormat:@"SELF.tag == YES"];
     notEmptyPredicate = [NSPredicate predicateWithFormat:@"(SELF.fileSize > 0) AND (SELF.isPackage == NO)"];
-//	[NSApp registerServicesMenuSendTypes:[NSArray arrayWithObjects:(__bridge NSString *)kUTTypeDirectory,
-//										  (__bridge NSString *)kUTTypeFileURL,
-//										  nil]
-//							 returnTypes:nil];
 	[NSApp registerServicesMenuSendTypes:[NSArray arrayWithObjects:(__bridge NSString *)kUTTypeDirectory,
 										  (__bridge NSString *)kUTTypeFileURL,
 										  nil]
@@ -329,7 +325,6 @@ NSPredicate *notEmptyPredicate;
 }
 
 - (void)awakeFromNib {
-//	[self restoreSplit];
 	self.sidebyside = [[NSUserDefaults standardUserDefaults]boolForKey:PREF_SPLIT_ORIENTATION];
 	[self.split setVertical:self.sidebyside];
 	[self restoreSplit];
@@ -489,6 +484,7 @@ NSPredicate *notEmptyPredicate;
 	return dataRoot;
 }
 - (void)initWithDir:(DirectoryItem *)node {
+	[self setRenameMask:@"*.*"];	// init default
 	dataRoot = node;
 }
 - (void)expandRoot {

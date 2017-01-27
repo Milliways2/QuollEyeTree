@@ -452,8 +452,9 @@ static BOOL createTargetDir(NSString *targetDir, NSFileManager *fileManager) {
     renamePanel = [RenamePanelController new];
 	[renamePanel setTitle:@"Rename Tagged Files"];
 	[renamePanel setFrom:[NSString stringWithFormat:@"%ld tagged Files", [objects count]]];
-	[renamePanel setFilename:@"*.*"];
+	[renamePanel setFilename:self.renameMask];
 	if ([renamePanel runModal] == NSOKButton) {
+		[self setRenameMask:[renamePanel filename]];	// Update saved mask
 		[self.delegate treeViewController:self pauseRefresh:YES];
 		for (FileItem *node in objects) {
 			[self renameSingle:node];

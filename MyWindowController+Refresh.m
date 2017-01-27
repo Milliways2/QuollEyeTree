@@ -38,7 +38,6 @@ static NSOperationQueue *queue;
 //	[queue addOperation:op];
 //}
 void refreshDirectories(NSArray *dirs, MyWindowController *wc) {
-	NSLog(@"refreshDirectories");
 	if(queue == NULL) {
 		queue = [NSOperationQueue new];
 		[queue setMaxConcurrentOperationCount:10];
@@ -54,7 +53,6 @@ void refreshDirectories(NSArray *dirs, MyWindowController *wc) {
 			TreeViewController *tvc = wc->currentTvc;
 			if(tvc)	[tvc reloadData];
 			FSEventStreamStart(wc->stream);	//2016-05-07
-			NSLog(@"end refreshDirectories");
 		}];
 	}];
 	[queue addOperation:op];

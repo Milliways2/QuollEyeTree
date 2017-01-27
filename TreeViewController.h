@@ -73,6 +73,7 @@
 @property (unsafe_unretained) NSMutableArray *filesInDir;
 @property (unsafe_unretained) DirectoryItem *selectedDir;    // item to display
 @property (copy) NSURL *currDir;    // binding to NSPathControl *currentPath
+@property (unsafe_unretained) NSString *renameMask;
 
 - (NSString *)getTargetFile;
 - (NSString *)rootDirName;
@@ -84,7 +85,7 @@
 - (DirectoryItem *)treeRootNode;
 - (BOOL)shouldTerminate;
 - (void)refreshCounters;
-	
+
 // Toolbar Actions
 - (void)segControlClicked:(id)sender;
 - (void)togglePreviewPanel;
